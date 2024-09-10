@@ -145,10 +145,9 @@ const IncomeSumPage = () => {
                 </SubTitleCard>
             </div>
 
-            <div className='grid lg:grid-cols-1  grid-cols-1 gap-6'>
+            <div>
                 <LineChartIncome />
             </div>
-
 
             <TitleCard topMargin="mt-6" title="Manage Invoices">
                 <div className="flex justify-between items-center mb-4">
