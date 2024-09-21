@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import TitleCard from "../../components/Cards/TitleCard";
 import CardOption from "../../components/Cards/CardOption";
-import LineChartIncome from "./components/LineChartIncome";
+import LineChartInEx from "./components/LineChartInEx";
 import { ACCOUNTSTATEMENT_DATA } from "../../utils/dummyData";
 import SubTitleCard from "../../components/Cards/CardSubTitle";
 import MonthlyDataTable from "./tabledata/monthlydata";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-const IncomeSumPage = () => {
-  const [accstatementData, setAccstatementData] = useState(ACCOUNTSTATEMENT_DATA);
+const IncomeVSExpense = () => {
+  const [accstatementData, setAccstatementData] = useState(
+    ACCOUNTSTATEMENT_DATA
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +23,7 @@ const IncomeSumPage = () => {
   };
 
   const handleReset = () => {
-    setSearchTerm(""); 
+    setSearchTerm("");
     console.log("Reset clicked");
   };
 
@@ -39,7 +42,9 @@ const IncomeSumPage = () => {
       (accstatement.amount &&
         accstatement.amount.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (accstatement.description &&
-        accstatement.description.toLowerCase().includes(searchTerm.toLowerCase()))
+        accstatement.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredAccstatement.length / itemsPerPage);
@@ -69,57 +74,65 @@ const IncomeSumPage = () => {
   return (
     <>
       <CardOption topMargin="mt-2" title={"Select By :"}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-2 text-sm">Period</div>
-            <div className="flex items-center">
-              <select className="select select-bordered w-full lg:w-full text-sm">
-                <option>Select Period</option>
-                <option>Monthly</option>
-                <option>Quarterly</option>
-                <option>Half Yearly</option>
-                <option>Yearly</option>
-              </select>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* Income Period */}
+          <div className="w-full md:w-auto sm:mr-4">
+            <label className="block mb-2 text-sm">Income Period</label>
+            <select className="select select-bordered w-full md:w-full text-sm">
+              <option>Monthly</option>
+              <option>Quarterly</option>
+              <option>Half Yearly</option>
+              <option>Yearly</option>
+            </select>
           </div>
 
-          <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-2 text-sm">Year</div>
-            <div className="flex items-center">
-              <select className="select select-bordered w-full lg:w-full text-sm">
-                <option>Select Year</option>
-                <option>2024</option>
-                <option>2023</option>
-                <option>2022</option>
-                <option>2021</option>
-                <option>2020</option>
-                <option>2019</option>
-              </select>
-            </div>
+          {/* Year */}
+          <div className="w-full md:w-auto sm:mr-4">
+            <label className="block mb-2 text-sm">Year</label>
+            <select className="select select-bordered w-full md:w-full text-sm">
+              <option>2024</option>
+              <option>2023</option>
+              <option>2022</option>
+              <option>2021</option>
+              <option>2020</option>
+              <option>2019</option>
+            </select>
           </div>
 
-          <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-2 text-sm">Category</div>
-            <div className="flex items-center">
-              <select className="select select-bordered w-full lg:w-full text-sm">
-                <option>Select Category</option>
-                <option>Bussiness Preofit</option>
-                <option>Dividends</option>
-              </select>
-            </div>
+          {/* Category */}
+          <div className="w-full md:w-auto sm:mr-4">
+            <label className="block mb-2 text-sm">Category</label>
+            <select className="select select-bordered w-full md:w-full text-sm">
+              <option>Select Category</option>
+              <option>Business Profit</option>
+              <option>Dividends</option>
+            </select>
           </div>
 
-          <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-2 text-sm">Customer</div>
-            <div className="flex items-center">
-              <select className="select select-bordered w-full lg:w-full text-sm">
-                <option>Select Customer</option>
-                <option>Keire</option>
-                <option>Protiong</option>
-              </select>
-            </div>
+          {/* Customer */}
+          <div className="w-full md:w-auto sm:mr-4">
+            <label className="block mb-2 text-sm">Customer</label>
+            <select className="select select-bordered w-full md:w-full text-sm">
+              <option>Select Customer</option>
+              <option>Keire</option>
+              <option>Protiong</option>
+            </select>
           </div>
 
+          {/* Vendor */}
+          <div className="w-full md:w-auto sm:mr-4">
+            <label className="block mb-2 text-sm">Vendor</label>
+            <select className="select select-bordered w-full md:w-full text-sm">
+              <option>Select Vendor</option>
+              <option>Anthony B Renfoe</option>
+              <option>Kim J Gibson</option>
+              <option>Adrienne J Reed</option>
+              <option>Eugene A Hughes</option>
+              <option>Pearl W Poole</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
           <div className="md:col-span-3 w-72 flex justify-start gap-4">
             <button
               className="btn btn-primary flex-1 text-sm"
@@ -137,7 +150,7 @@ const IncomeSumPage = () => {
         </div>
       </CardOption>
 
-      <div className="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <SubTitleCard className="w-full" title={"Report :"} bottomMargin="mb-4">
           <div className="flex items-center justify-left text-center text-md">
             Transaction Summary
@@ -155,7 +168,7 @@ const IncomeSumPage = () => {
       </div>
 
       <div>
-        <LineChartIncome />
+        <LineChartInEx />
       </div>
 
       <TitleCard topMargin="mt-6" title="Manage Invoices">
@@ -165,4 +178,4 @@ const IncomeSumPage = () => {
   );
 };
 
-export default IncomeSumPage;
+export default IncomeVSExpense;

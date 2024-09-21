@@ -77,14 +77,15 @@ const CreditPage = () => {
 
     return (
         <>
-           
-
             <TitleCard topMargin="mt-2" title="Manage Invoices">
-                <div className="flex justify-between items-center mb-4">
-                    <div className="mr-4">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+                    <div className="flex items-center w-full md:w-auto">
+                        <label htmlFor="entriesPerPage" className="mr-2">
+                            Entries per page:
+                        </label>
                         <select
                             id="entriesPerPage"
-                            className="select select-bordered"
+                            className="select select-bordered w-full md:w-auto"
                             value={itemsPerPage}
                             onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                         >
@@ -93,15 +94,12 @@ const CreditPage = () => {
                             <option value={15}>15</option>
                             <option value={20}>20</option>
                         </select>
-                        <label htmlFor="entriesPerPage" className="ml-2">
-                            Entries per page:
-                        </label>
                     </div>
-                    <div className="ml-auto">
+                    <div className="w-full md:w-64">
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="input input-bordered"
+                            className="input input-bordered w-full"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -129,7 +127,7 @@ const CreditPage = () => {
                                         </button>
                                     </td>
                                     <td className="min-w-[150px]">{credit.customer}</td>
-                                    <td className="min-w-[150px]">{credit.date}</td> {/* Corrected from credit.Date to credit.date */}
+                                    <td className="min-w-[150px]">{credit.date}</td>
                                     <td className="min-w-[150px]">{credit.amount}</td>
                                     <td className="min-w-[150px]">{credit.description}</td>
                                     <td className="min-w-[200px]">
@@ -154,25 +152,31 @@ const CreditPage = () => {
                     </table>
                 </div>
 
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={handlePrevPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <div>
+                {/* Pagination dan Informasi */}
+        <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                    {/* Informasi */}
+                    <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCredit.length)} of {filteredCredit.length} entries
                     </div>
-                    <button
-                        onClick={handleNextPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                    {/* Kontrol Pagination */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={handlePrevPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
+
             </TitleCard>
 
             {showModal && (

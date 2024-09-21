@@ -197,27 +197,27 @@ const routes = [
     name: 'Report', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/transaction',
+        path: '/app/Transaction',
         icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
         name: 'Transaction',
       },
       {
-        path: '/app/accountstatement',
+        path: '/app/AccountStatement',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Account Statement',
       },
       {
-        path: '/app/incomesummary',
+        path: '/app/IncomeSummary',
         icon: <ClipBoardIcon className={submenuIconClasses}/>,
         name: 'Income Summary',
       },
       {
-        path: '/app/balance',
+        path: '/app/ExpenseSummary',
         icon: <ScaleIcon className={submenuIconClasses}/>,
         name: 'Expense Summary',
       },
       {
-        path: '/app/TrialBalance',
+        path: '/app/IncomeVsExpense',
         icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
         name: 'Income VS Expense',
       },

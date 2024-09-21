@@ -7,7 +7,7 @@ function InternalPage(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Balance Sheets"}))
+        dispatch(setPageTitle({ title : "Trial Balance"}))
       }, [])
 
 

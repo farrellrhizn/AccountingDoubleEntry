@@ -13,18 +13,18 @@ const TopSideButtons = ({ onToggleView }) => {
     return (
         <div className="flex space-x-2">
             <button 
-                className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white"
+                className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white p-2 rounded-md"
                 onClick={onToggleView}
             >
                 {'<|>'}
             </button>
-            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white">
+            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white p-2 rounded-md">
                 <FunnelIcon className={iconClasses} />
             </button>
-            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white">
+            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white p-2 rounded-md">
                 <DocumentPlus className={iconClasses} />
             </button>
-            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white">
+            <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white p-2 rounded-md">
                 <PrinterIcon className={iconClasses} />
             </button>
         </div>
@@ -48,15 +48,25 @@ export default function Balance() {
         setView(view === 'cardVertical' ? 'titleCard' : 'cardVertical');
     };
 
+    // Mapping level to padding-left classes
+    const paddingMap = {
+        0: 'pl-0',
+        1: 'pl-4',
+        2: 'pl-8',
+        3: 'pl-12',
+        4: 'pl-16',
+        // Tambahkan lebih banyak jika diperlukan
+    };
+
     const renderRows = (items, level = 0) => {
         return items.map((item, index) => (
             <React.Fragment key={`${item.account}-${index}`}>
                 <tr>
-                    <td className={`px-${4 * level} py-2 ${level === 0 ? 'font-bold' : ''} ${item.account === "Petty Cash" || item.account === "Inventory" ? 'text-primary' : ''}`}>
+                    <td className={`py-2 ${paddingMap[level] || 'pl-0'} ${level === 0 ? 'font-bold' : 'font-medium'} ${item.account === "Petty Cash" || item.account === "Inventory" ? 'text-primary' : 'text-gray-700'} text-sm md:text-base`}>
                         {item.account}
                     </td>
-                    <td className="px-4 py-2">{item.accountCode || ''}</td>
-                    <td className={`px-4 py-2 text-right ${item.account === "Petty Cash" || item.account === "Inventory" ? 'text-primary' : ''}`}>
+                    <td className="px-4 py-2 text-sm md:text-base">{item.accountCode || ''}</td>
+                    <td className={`px-4 py-2 text-right text-sm md:text-base ${item.account === "Petty Cash" || item.account === "Inventory" ? 'text-primary' : 'text-gray-700'}`}>
                         {item.total !== null ? `$${item.total.toFixed(2)}` : ''}
                     </td>
                 </tr>
@@ -65,43 +75,29 @@ export default function Balance() {
         ));
     };
 
+    // Menentukan komponen card yang akan digunakan
+    const CardComponent = view === 'cardVertical' ? CardVertical : TitleCard;
+
     return (
-        <>
-            {view === 'cardVertical' ? (
-                <CardVertical title="Balance Sheet" topMargin="mt-2" TopSideButtons={<TopSideButtons onToggleView={handleToggleView} />}>
-                    <div className="overflow-x-auto mt-4">
-                        <table className="table w-full">
-                            <thead>
-                                <tr>
-                                    <th className="px-4 py-2 text-left">Account</th>
-                                    <th className="px-4 py-2 text-left">Account Code</th>
-                                    <th className="px-4 py-2 text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {renderRows(balances)}
-                            </tbody>
-                        </table>
-                    </div>
-                </CardVertical>
-            ) : (
-                <TitleCard title="Balance Sheet" topMargin="mt-2" TopSideButtons={<TopSideButtons onToggleView={handleToggleView} />}>
-                    <div className="overflow-x-auto mt-4">
-                        <table className="table w-full">
-                            <thead>
-                                <tr>
-                                    <th className="px-4 py-2 text-left">Account</th>
-                                    <th className="px-4 py-2 text-left">Account Code</th>
-                                    <th className="px-4 py-2 text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {renderRows(balances)}
-                            </tbody>
-                        </table>
-                    </div>
-                </TitleCard>
-            )}
-        </>
+        <CardComponent 
+            title="Balance Sheet" 
+            topMargin="mt-2" 
+            TopSideButtons={<TopSideButtons onToggleView={handleToggleView} />}
+        >
+            <div className="overflow-x-auto mt-4">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account Code</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {renderRows(balances)}
+                    </tbody>
+                </table>
+            </div>
+        </CardComponent>
     );
 }

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
+import EyeIcon from '@heroicons/react/24/outline/EyeIcon';
+import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
 import EditOrderModal from './components/EditOrderModal';
 import TitleCard from '../../components/Cards/TitleCard';
 import { ORDER_DATA } from '../../utils/dummyData';
-import { DocumentIcon } from '@heroicons/react/24/outline';
 
 const OrderPage = () => {
     const [orderData, setOrderData] = useState(ORDER_DATA);
@@ -13,6 +16,16 @@ const OrderPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+
+    const handleEditClick = (order) => {
+        setSelectedOrder(order);
+        setShowModal(true);
+    };
+
+    const handleDetailClick = (order) => {
+        setSelectedOrder(order);
+        setShowDetail(true);
+    };
 
     const filteredOrders = orderData.filter(order =>
         order.order_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -26,45 +39,55 @@ const OrderPage = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [itemsPerPage]);
+    }, [itemsPerPage, searchTerm]);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
+            setCurrentPage(prev => prev + 1);
         }
     };
 
     const handlePrevPage = () => {
         if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
+            setCurrentPage(prev => prev - 1);
         }
     };
 
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedOrders = filteredOrders.slice(startIndex, startIndex + itemsPerPage);
+    const paginatedOrders = filteredOrders.slice(
+        startIndex,
+        startIndex + itemsPerPage
+    );
 
     // Function to determine the status class
     const getStatusClass = (status) => {
         switch (status) {
+            case 'Approved':
+                return 'bg-green-500';
+            case 'Success':
+                return 'bg-blue-500';
+            case 'Succeeded':
+                return 'bg-indigo-500';
             case 'Pending':
-                return 'bg-yellow-400'; // Light orange/yellow color
-            case 'Active':
-                return 'bg-green-400'; // Green color
-            case 'Inactive':
-                return 'bg-red-400'; // Red color
+                return 'bg-orange-500';
             default:
-                return ''; // Default case (optional)
+                return 'bg-gray-400';
         }
     };
 
     return (
         <>
-            <TitleCard topMargin="mt-2" title="Manage Contract Accounts">
-                <div className="flex justify-between items-center mb-4">
-                    <div className="mr-4">
+            <TitleCard topMargin="mt-2" title="Manage Orders">
+                {/* Kontrol Atas Responsif */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
+                    {/* Entries per page */}
+                    <div className="flex items-center space-x-2">
+                        <label htmlFor="entriesPerPage" className="text-sm md:text-base">
+                            Entries per page:
+                        </label>
                         <select
                             id="entriesPerPage"
-                            className="select select-bordered"
+                            className="select select-bordered w-24"
                             value={itemsPerPage}
                             onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                         >
@@ -73,120 +96,196 @@ const OrderPage = () => {
                             <option value={15}>15</option>
                             <option value={20}>20</option>
                         </select>
-                        <label htmlFor="entriesPerPage" className="ml-2">
-                            Entries per page:
-                        </label>
                     </div>
-                    <div className="ml-auto">
+                    {/* Search Bar */}
+                    <div className="w-full md:w-1/3">
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="input input-bordered"
+                            className="input input-bordered w-full"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
+                {/* Tabel Responsif */}
                 <div className="overflow-x-auto">
                     <table className="table w-full min-w-max">
-                        <thead>
-                        <tr>
-                            <th className="w-28 px-4 py-2">ORDER ID</th>
-                            <th className="w-24 px-4 py-2">DATE</th>
-                            <th className="w-36 px-4 py-2">NAME</th>
-                            <th className="w-36 px-4 py-2">PLAN NAME</th>
-                            <th className="w-32 px-4 py-2">PRICE</th>
-                            <th className="w-36 px-4 py-2">PAYMENT TYPE</th>
-                            <th className="w-28 px-4 py-2">STATUS</th>
-                            <th className="w-28 px-4 py-2">COUPON</th>
-                            <th className="w-40 px-4 py-2">INVOICE</th>
-                        </tr>
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ORDER ID</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DATE</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAME</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PLAN NAME</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PRICE</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PAYMENT TYPE</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">COUPON</th>
+                                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">INVOICE</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                            {paginatedOrders.map((order, index) => (
-                                <tr key={index}>
-                                    <td>{order.order_id}</td>
-                                    <td>{order.date}</td>
-                                    <td>{order.name}</td>
-                                    <td>{order.plan_name}</td>
-                                    <td>{order.price}</td>
-                                    <td>{order.payment_type}</td>
-                                    <td>{order.status}</td>
-                                    <td>{order.coupon}</td>
-                                    <td>
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <a href="https://demo.workdo.io/accountgo-saas/storage/uploads/bank_receipt/1685429855_payment.png" target="_blank" rel="noopener noreferrer">
-                                            <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
-                                                <DocumentIcon className="h-5 w-5" />
-                                            </button>
-                                        </a>
-                                    </div>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {paginatedOrders.length > 0 ? (
+                                paginatedOrders.map((order) => (
+                                    <tr key={order.order_id}>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.order_id}</td>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.date}</td>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.name}</td>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.plan_name}</td>
+                                        <td className="px-4 py-2 text-sm md:text-base">
+                                            {typeof order.price === 'number' ? `$${order.price.toFixed(2)}` : '-'}
+                                        </td>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.payment_type}</td>
+                                        <td className="px-4 py-2">
+                                            <span
+                                                className={`flex items-center justify-center px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(order.status)}`}
+                                            >
+                                                {order.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-2 text-sm md:text-base">{order.coupon || '-'}</td>
+                                        <td className="px-4 py-2 text-center">
+                                            <div className="flex justify-center space-x-2">
+                                                <a href={order.invoice} target="_blank" rel="noopener noreferrer">
+                                                    <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
+                                                        <DocumentIcon className="h-5 w-5" />
+                                                    </button>
+                                                </a>
+                                                <button
+                                                    onClick={() => handleDetailClick(order)}
+                                                    className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
+                                                >
+                                                    <EyeIcon className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleEditClick(order)}
+                                                    className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
+                                                >
+                                                    <PencilIcon className="h-5 w-5" />
+                                                </button>
+                                                <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
+                                                    <TrashIcon className="h-5 w-5" />
+                                                </button>
+                                                <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
+                                                    <KeyIcon className="h-5 w-5" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="9" className="px-4 py-2 text-center text-gray-500">
+                                        No orders found.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
 
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={handlePrevPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <div>
+                {/* Pagination dan Informasi */}
+                <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                    {/* Informasi */}
+                    <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredOrders.length)} of {filteredOrders.length} entries
                     </div>
-                    <button
-                        onClick={handleNextPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                    {/* Kontrol Pagination */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={handlePrevPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             </TitleCard>
-            {showModal &&
+
+            {/* Modal Edit Order */}
+            {showModal && (
                 <EditOrderModal
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     order={selectedOrder}
                 />
-            }
-            {showDetail &&
+            )}
+
+            {/* Modal Detail Order */}
+            {showDetail && (
                 <DetailView
                     order={selectedOrder}
                     onClose={() => setShowDetail(false)}
                 />
-            }
+            )}
         </>
     );
 };
 
+// Komponen DetailView yang Diperbaiki
 const DetailView = ({ order, onClose }) => {
     if (!order) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Contract Details</h2>
-                <p><strong>ID:</strong> {order.id}</p>
-                <p><strong>Subject:</strong> {order.subject}</p>
-                <p><strong>Customer:</strong> {order.customer}</p>
-                <p><strong>Type:</strong> {order.type}</p>
-                <p><strong>Value:</strong> {order.value}</p>
-                <p><strong>Start Date:</strong> {order.startDate}</p>
-                <p><strong>End Date:</strong> {order.endDate}</p>
-                <p><strong>Status:</strong> {order.status}</p>
-                <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                <h2 className="text-xl font-bold mb-4">Order Details</h2>
+                <p className="mb-2"><strong>Order ID:</strong> {order.order_id}</p>
+                <p className="mb-2"><strong>Date:</strong> {order.date}</p>
+                <p className="mb-2"><strong>Name:</strong> {order.name}</p>
+                <p className="mb-2"><strong>Plan Name:</strong> {order.plan_name}</p>
+                <p className="mb-2"><strong>Price:</strong> {typeof order.price === 'number' ? `$${order.price.toFixed(2)}` : '-'}</p>
+                <p className="mb-2"><strong>Payment Type:</strong> {order.payment_type}</p>
+                <p className="mb-2"><strong>Status:</strong> 
+                    <span
+                        className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(order.status)}`}
+                    >
+                        {order.status}
+                    </span>
+                </p>
+                <p className="mb-2"><strong>Coupon:</strong> {order.coupon || '-'}</p>
+                <p className="mb-2"><strong>Invoice:</strong> 
+                    {order.invoice ? (
+                        <a href={order.invoice} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                            View Invoice
+                        </a>
+                    ) : (
+                        '-'
+                    )}
+                </p>
+                <button
+                    onClick={onClose}
+                    className="mt-4 btn bg-primary text-white hover:bg-secondary w-full"
+                >
                     Close
                 </button>
             </div>
         </div>
     );
+};
+
+// Fungsi getStatusClass harus didefinisikan di luar DetailView atau dijadikan prop
+// Untuk kemudahan, definisikan ulang di sini atau pass sebagai prop
+const getStatusClass = (status) => {
+    switch (status) {
+        case 'Pending':
+            return 'bg-yellow-400';
+        case 'Active':
+            return 'bg-green-400';
+        case 'Inactive':
+            return 'bg-red-400';
+        default:
+            return 'bg-gray-400';
+    }
 };
 
 export default OrderPage;

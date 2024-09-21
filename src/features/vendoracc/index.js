@@ -4,8 +4,6 @@ import EyeIcon from '@heroicons/react/24/outline/EyeIcon';
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import EditVendorModal from './components/EditVendorModal';
-import { useDispatch, useSelector } from "react-redux"
-import { CONFIRMATION_MODAL_CLOSE_TYPES, MODAL_BODY_TYPES } from '../../utils/globalConstantUtil'
 import TitleCard from '../../components/Cards/TitleCard';
 import { VENDOR_ACC } from '../../utils/dummyData';
 
@@ -18,7 +16,6 @@ const VendorAcc = () => {
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
 
-    
     const handleEditClick = (vendor) => {
         setSelectedVendor(vendor);
         setShowModal(true);
@@ -57,12 +54,17 @@ const VendorAcc = () => {
 
     return (
         <>
-            <TitleCard topMargin="mt-2" title="Manage Vendor"  >
-                <div className="flex justify-between items-center mb-4">
-                    <div className="mr-4">
+            <TitleCard topMargin="mt-2" title="Manage Vendor">
+                {/* Kontrol Responsif untuk Entries dan Search */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+                    {/* Entries Per Page */}
+                    <div className="flex items-center">
+                        <label htmlFor="entriesPerPage" className="mr-2 text-sm">
+                            Entries per page:
+                        </label>
                         <select
                             id="entriesPerPage"
-                            className="select select-bordered"
+                            className="select select-bordered text-sm w-full md:w-auto"
                             value={itemsPerPage}
                             onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                         >
@@ -71,94 +73,105 @@ const VendorAcc = () => {
                             <option value={15}>15</option>
                             <option value={20}>20</option>
                         </select>
-                        <label htmlFor="entriesPerPage" className="ml-2">
-                            Entries per page:
-                        </label>
                     </div>
-                    <div className="ml-auto">
+                    {/* Search Bar */}
+                    <div className="w-full md:w-64">
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="input input-bordered"
+                            className="input input-bordered w-full text-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
+                {/* Tabel Responsif */}
                 <div className="overflow-x-auto">
-                <table className="table w-full min-w-max">
-                    <thead>
-                        <tr>
-                            <th className="w-32 px-4 py-2">ID</th>
-                            <th className="w-32 px-4 py-2">NAME</th>
-                            <th className="w-32 px-4 py-2">CONTACT</th>
-                            <th className="w-32 px-4 py-2">EMAIL</th>
-                            <th className="w-32 px-4 py-2">BALANCE</th>
-                            <th className="w-38 px-4 py-2">LAST LOGIN AT</th>
-                            <th className="w-50 px-4 py-2">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedVendors.map((vendor, index) => (
-                            <tr key={index}>
-                                <td>
-                                    <button className='btn bg-transparent border-primary hover:bg-primary hover:text-white group'>
-                                        {vendor.id}
-                                    </button>
-                                </td>
-                                <td>{vendor.name}</td>
-                                <td>{vendor.contact}</td>
-                                <td>{vendor.email}</td>
-                                <td>{vendor.balance}</td>
-                                <td>{vendor.lastLoginAt}</td>
-                                <td>
-                                    <div className="grid grid-cols-4 gap-2">
-                                    <button 
-                                        className=" btn bg-transparent border-primary hover:bg-primary hover:text-white group">
-                                        <KeyIcon className="h-5 w-5" />
-                                    </button>
-                                    <button 
-                                        onClick={() => handleDetailClick(vendor)}
-                                        className=" btn bg-transparent border-primary hover:bg-primary hover:text-white group">
-                                        <EyeIcon className="h-5 w-5" />
-                                    </button>
-                                    <button 
-                                        onClick={() => handleEditClick(vendor)}
-                                        className=" btn bg-transparent border-primary hover:bg-primary hover:text-white group">
-                                        <PencilIcon className="h-5 w-5" />
-                                    </button>
-                                    <button 
-                                        className=" btn bg-transparent border-primary hover:bg-primary hover:text-white group">
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
-                                    </div>
-                                </td>
+                    <table className="table w-full">
+                        <thead>
+                            <tr>
+                                <th className="px-4 py-2">ID</th>
+                                <th className="px-4 py-2">NAME</th>
+                                <th className="px-4 py-2">CONTACT</th>
+                                <th className="px-4 py-2">EMAIL</th>
+                                <th className="px-4 py-2">BALANCE</th>
+                                <th className="px-4 py-2">LAST LOGIN AT</th>
+                                <th className="px-4 py-2">ACTION</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {selectedVendors.map((vendor, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <button className='btn bg-transparent border-primary hover:bg-primary hover:text-white group text-sm'>
+                                            {vendor.id}
+                                        </button>
+                                    </td>
+                                    <td className="text-sm">{vendor.name}</td>
+                                    <td className="text-sm">{vendor.contact}</td>
+                                    <td className="text-sm">{vendor.email}</td>
+                                    <td className="text-sm">{vendor.balance}</td>
+                                    <td className="text-sm">{vendor.lastLoginAt}</td>
+                                    <td>
+                                        <div className="flex space-x-2">
+                                            <button 
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
+                                                onClick={() => handleDetailClick(vendor)}
+                                            >
+                                                <EyeIcon className="h-5 w-5" />
+                                            </button>
+                                            <button 
+                                                onClick={() => handleEditClick(vendor)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
+                                            >
+                                                <PencilIcon className="h-5 w-5" />
+                                            </button>
+                                            <button 
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
+                                            >
+                                                <TrashIcon className="h-5 w-5" />
+                                            </button>
+                                            <button 
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2">
+                                                <KeyIcon className="h-5 w-5" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-                <div className="flex justify-between mt-4">
-                    <button 
-                        onClick={handlePrevPage} 
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <div>
+
+                {/* Pagination dan Informasi */}
+                <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                    {/* Informasi */}
+                    <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of {filteredVendors.length} entries
                     </div>
-                    <button 
-                        onClick={handleNextPage} 
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                    {/* Kontrol Pagination */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={handlePrevPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
+
             </TitleCard>
+
+            {/* Modal Edit Vendor */}
             {showModal && 
                 <EditVendorModal 
                     showModal={showModal} 
@@ -166,29 +179,32 @@ const VendorAcc = () => {
                     vendor={selectedVendor} 
                 />
             }
-            {showDetail &&
+
+            {/* Detail View */}
+            {showDetail && selectedVendor && (
                 <DetailView 
                     vendor={selectedVendor} 
                     onClose={() => setShowDetail(false)} 
                 />
-            }
+            )}
         </>
-    );
-};
+    ); // Menambahkan tanda kurung tutup untuk return
+
+}; // Menutup fungsi VendorAcc
 
 const DetailView = ({ vendor, onClose }) => {
     if (!vendor) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
+            <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
                 <h2 className="text-xl font-bold mb-4">Vendor Details</h2>
-                <p><strong>ID:</strong> {vendor.id}</p>
-                <p><strong>Name:</strong> {vendor.name}</p>
-                <p><strong>Contact:</strong> {vendor.contact}</p>
-                <p><strong>Email:</strong> {vendor.email}</p>
-                <p><strong>Balance:</strong> {vendor.balance}</p>
-                <p><strong>Last Login At:</strong> {vendor.lastLoginAt}</p>
+                <p className="text-sm"><strong>ID:</strong> {vendor.id}</p>
+                <p className="text-sm"><strong>Name:</strong> {vendor.name}</p>
+                <p className="text-sm"><strong>Contact:</strong> {vendor.contact}</p>
+                <p className="text-sm"><strong>Email:</strong> {vendor.email}</p>
+                <p className="text-sm"><strong>Balance:</strong> {vendor.balance}</p>
+                <p className="text-sm"><strong>Last Login At:</strong> {vendor.lastLoginAt}</p>
                 <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
                     Close
                 </button>

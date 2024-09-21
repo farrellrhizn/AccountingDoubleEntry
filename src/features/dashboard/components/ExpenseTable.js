@@ -9,7 +9,7 @@ const userSourceData = [
     {date : "Feb 9, 2022", customer : "Protiong", amountdue : "$5.000,00"},
 ];
 
-function UserChannels() {
+function ExpenseTable() {
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 10;
 
@@ -29,7 +29,7 @@ function UserChannels() {
     const selectedData = userSourceData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <TitleCard title={"Latest Income"}>
+        <TitleCard title={"Latest Expense"}>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
@@ -76,5 +76,5 @@ function UserChannels() {
     );
 }
 
-export default UserChannels;
+export default ExpenseTable;
     

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import TitleCard from "../../components/Cards/TitleCard";
 import CardOption from "../../components/Cards/CardOption";
-import LineChartIncome from "./components/LineChartIncome";
+import LineChartExpense from "./components/LineChartExpense";
 import { ACCOUNTSTATEMENT_DATA } from "../../utils/dummyData";
 import SubTitleCard from "../../components/Cards/CardSubTitle";
 import MonthlyDataTable from "./tabledata/monthlydata";
 
-const IncomeSumPage = () => {
+const ExpenseSumPage = () => {
   const [accstatementData, setAccstatementData] = useState(ACCOUNTSTATEMENT_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -14,6 +14,10 @@ const IncomeSumPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedAccstatement, setSelectedAccstatement] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+
+  useEffect(() => {
+    console.log("ExpenseSumPage rendered");
+    }, []); 
 
   const handleSearch = () => {
     console.log("Search clicked");
@@ -140,7 +144,7 @@ const IncomeSumPage = () => {
       <div className="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
         <SubTitleCard className="w-full" title={"Report :"} bottomMargin="mb-4">
           <div className="flex items-center justify-left text-center text-md">
-            Transaction Summary
+            Expense Summary
           </div>
         </SubTitleCard>
         <SubTitleCard
@@ -155,14 +159,14 @@ const IncomeSumPage = () => {
       </div>
 
       <div>
-        <LineChartIncome />
+        <LineChartExpense />
       </div>
 
-      <TitleCard topMargin="mt-6" title="Manage Invoices">
+      <TitleCard topMargin="mt-6" title="Manage Expense">
         <MonthlyDataTable />
       </TitleCard>
     </>
   );
 };
 
-export default IncomeSumPage;
+export default ExpenseSumPage;

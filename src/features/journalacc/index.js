@@ -32,24 +32,58 @@ export default function JournalAcc() {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [journals, setJournals] = useState(JOURNAL_ACCOUNTS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
+  // Update totalPages whenever journals or entriesPerPage changes
+  useEffect(() => {
+    setTotalPages(Math.ceil(journals.length / entriesPerPage));
+    // Ensure currentPage is within bounds
+    if (currentPage > Math.ceil(journals.length / entriesPerPage)) {
+      setCurrentPage(Math.ceil(journals.length / entriesPerPage) || 1);
+    }
+  }, [journals, entriesPerPage, currentPage]);
+
+  // Handle search term changes and filter journals
   useEffect(() => {
     handleSearchTerm();
+    setCurrentPage(1); // Reset to first page on search
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
+
+  const handleSearchTerm = () => {
+    const filteredJournals = JOURNAL_ACCOUNTS.filter((journal) => {
+      const searchText = searchTerm.toLowerCase();
+      return (
+        journal.journalId.toLowerCase().includes(searchText) ||
+        moment(journal.date).format("DD MMM YY").toLowerCase().includes(searchText) ||
+        journal.amount.toString().includes(searchText) ||
+        journal.description.toLowerCase().includes(searchText)
+      );
+    });
+    setJournals(filteredJournals);
+  };
 
   const removeFilter = () => {
     setJournals(JOURNAL_ACCOUNTS);
+    setSearchTerm("");
   };
 
   const getDummyStatus = (index) => {
-    if (index % 5 === 0) return <div className="badge">Not Interested</div>;
-    else if (index % 5 === 1) return <div className="badge badge-primary">In Progress</div>;
-    else if (index % 5 === 2) return <div className="badge badge-secondary">Sold</div>;
-    else if (index % 5 === 3) return <div className="badge badge-accent">Need Followup</div>;
-    else return <div className="badge badge-ghost">Open</div>;
+    switch (index % 5) {
+      case 0:
+        return <div className="badge">Not Interested</div>;
+      case 1:
+        return <div className="badge badge-primary">In Progress</div>;
+      case 2:
+        return <div className="badge badge-secondary">Sold</div>;
+      case 3:
+        return <div className="badge badge-accent">Need Followup</div>;
+      default:
+        return <div className="badge badge-ghost">Open</div>;
+    }
   };
 
-  // Fungsi untuk menghapus jurnal
   const handleDelete = (index) => {
     const updatedJournals = journals.filter((_, i) => i !== index);
     setJournals(updatedJournals);
@@ -71,83 +105,76 @@ export default function JournalAcc() {
     }));
   };
 
-  const [dateValue, setDateValue] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-
-  const handleDatePickerValueChange = (newValue) => {
-    setDateValue(newValue);
-  };
-
-  const handleSearch = () => {
-    console.log("Search clicked");
-  };
-
-  const handleReset = () => {
-    setDateValue({
-      startDate: new Date(),
-      endDate: new Date(),
-    });
-    setSearchTerm("");
-    console.log("Reset clicked");
-  };
-
   const handleEntriesChange = (event) => {
-    setEntriesPerPage(event.target.value);
+    setEntriesPerPage(parseInt(event.target.value, 10));
+    setCurrentPage(1); // Reset to first page when entries per page changes
   };
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchTerm = () => {
-    const filteredJournals = JOURNAL_ACCOUNTS.filter((journal) => {
-      const searchText = searchTerm.toLowerCase();
-      return (
-        journal.journalId.toLowerCase().includes(searchText) ||
-        moment(journal.date).format("DD MMM YY").toLowerCase().includes(searchText) ||
-        journal.amount.toString().includes(searchText) ||
-        journal.description.toLowerCase().includes(searchText)
-      );
-    });
-    setJournals(filteredJournals);
+  // Pagination Logic
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
   };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
+  const startIndex = (currentPage - 1) * entriesPerPage;
+  const paginatedJournals = journals.slice(startIndex, startIndex + entriesPerPage);
 
   return (
     <>
       <TitleCard title="Manage Journal" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
         <div>
-          <div className="flex items-center mb-4">
-            <div className="mr-4">
+          {/* Search and Entries Per Page */}
+          <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+            <div className="flex items-center">
+              <label htmlFor="entriesPerPage" className="mr-2 text-sm font-medium">
+                Entries per page:
+              </label>
               <select
                 id="entriesPerPage"
                 value={entriesPerPage}
                 onChange={handleEntriesChange}
-                className="select select-bordered"
+                className="select select-bordered w-full md:w-auto"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
                 <option value={15}>15</option>
                 <option value={20}>20</option>
               </select>
-              <label htmlFor="entriesPerPage" className="ml-2">
-                Entries per page:
-              </label>
             </div>
-            <div className="ml-auto">
+            <div className="w-full md:w-64 relative">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchTermChange}
                 placeholder="Search..."
-                className="input input-bordered"
+                className="input input-bordered w-full pr-10"
               />
+              {searchTerm && (
+                <button
+                  onClick={removeFilter}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 btn btn-sm btn-ghost"
+                  aria-label="Clear search"
+                >
+                  ×
+                </button>
+              )}
             </div>
           </div>
 
+          {/* Journal Table */}
           <div className="overflow-x-auto w-full">
-            <table className="table w-full">
+            <table className="table w-full min-w-max">
               <thead>
                 <tr>
                   <th>Journal ID</th>
@@ -158,37 +185,75 @@ export default function JournalAcc() {
                 </tr>
               </thead>
               <tbody>
-                {journals.map((l, k) => (
-                  <tr key={k}>
-                    <td>
-                      <button
-                        className="btn bg bg-transparent border-primary hover:bg-primary hover:text-white"
-                        onClick={() => openJournalDetail(l.journalId)}
-                      >
-                        {l.journalId}
-                      </button>
-                    </td>
-                    <td>{moment(l.date).format("DD MMM YY")}</td>
-                    <td>${l.amount}</td>
-                    <td>{l.description}</td>
-                    <td>
-                      <button
-                        className="m-2 btn bg-transparent border-primary hover:bg-primary hover:text-white group"
-                        onClick={() => openEditModal(k)}
-                      >
-                        <PencilIcon className="h-5 w-5 text-primary group-hover:text-white" />
-                      </button>
-                      <button
-                        className="m-2 btn bg-transparent border-secondary hover:bg-secondary hover:text-white group"
-                        onClick={() => handleDelete(k)}
-                      >
-                        <TrashIcon className="h-5 w-5 text-secondary group-hover:text-white" />
-                      </button>
+                {paginatedJournals.length > 0 ? (
+                  paginatedJournals.map((journal, index) => (
+                    <tr key={startIndex + index}>
+                      <td>
+                        <button
+                          className="btn bg-transparent border-primary hover:bg-primary hover:text-white"
+                          onClick={() => openJournalDetail(startIndex + index)}
+                        >
+                          {journal.journalId}
+                        </button>
+                      </td>
+                      <td>{moment(journal.date).format("DD MMM YY")}</td>
+                      <td>${journal.amount.toLocaleString()}</td>
+                      <td>{journal.description}</td>
+                      <td className="flex justify-center">
+                        <button
+                          className="m-2 btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                          onClick={() => openEditModal(startIndex + index)}
+                        >
+                          <PencilIcon className="h-5 w-5 text-primary group-hover:text-white" />
+                        </button>
+                        <button
+                          className="m-2 btn bg-transparent border-secondary hover:bg-secondary hover:text-white group"
+                          onClick={() => handleDelete(startIndex + index)}
+                        >
+                          <TrashIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No journals found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Pagination and Information */}
+        <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+          {/* Information */}
+          <div className="text-sm text-gray-700">
+            Showing {journals.length === 0 ? 0 : startIndex + 1} to{" "}
+            {Math.min(startIndex + entriesPerPage, journals.length)} of {journals.length} entries
+          </div>
+          {/* Pagination Controls */}
+          <div className="flex space-x-2">
+            <button
+              onClick={handlePrevPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              Next
+            </button>
           </div>
         </div>
       </TitleCard>
