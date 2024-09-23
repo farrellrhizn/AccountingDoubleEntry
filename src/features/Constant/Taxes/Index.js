@@ -1,14 +1,32 @@
-import React from 'react';
-import { FaEye, FaCopy, FaEdit, FaTrash, FaPlus, FaFileExport, FaSearch, FaSync } from 'react-icons/fa'; // Import ikon yang diperlukan
+import React, { useState } from 'react';
+import { FaEye, FaCopy, FaEdit, FaTrash, FaPlus, FaFileExport, FaSearch, FaSync } from 'react-icons/fa';
+import CreateTaxModal from './CreateTaxModal'; // Import CreateTaxModal
+import EditTaxModal from './EditTaxModal'; // Import EditTaxModal
 
 function Taxes() {
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false); // State for Create Modal
+    const [isEditModalOpen, setEditModalOpen] = useState(false); // State for Edit Modal
+    const [selectedTax, setSelectedTax] = useState(null); // State for selected tax in Edit
+
+    // Handle opening and closing modals
+    const handleOpenCreateModal = () => setCreateModalOpen(true);
+    const handleCloseCreateModal = () => setCreateModalOpen(false);
+
+    const handleOpenEditModal = (tax) => {
+        setSelectedTax(tax);
+        setEditModalOpen(true);
+    };
+    const handleCloseEditModal = () => setEditModalOpen(false);
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Manage Tax Rate</h2>
                 <div className="flex space-x-2">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
-                        <FaPlus className="mr-2"/>
+                    <button 
+                        className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none"
+                        onClick={handleOpenCreateModal} // Open Create Modal
+                    >
+                        <FaPlus className="mr-2" />
                     </button>
                 </div>
             </div>
@@ -53,7 +71,12 @@ function Taxes() {
                                 <td className="py-2 whitespace-nowrap">10</td>
                                 <td className="py-2 whitespace-nowrap">
                                     <div className="flex space-x-2">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md"><FaEdit /></button>
+                                        <button 
+                                            className="bg-blue-500 text-white px-2 py-1 rounded-md"
+                                            onClick={() => handleOpenEditModal({ name: 'Cost', rate: 10 })} // Open Edit Modal
+                                        >
+                                            <FaEdit />
+                                        </button>
                                         <button className="bg-pink-500 text-white px-2 py-1 rounded-md"><FaTrash /></button>
                                     </div>
                                 </td>
@@ -70,6 +93,9 @@ function Taxes() {
                     </div>
                 </div>
             </div>
+            {/* Render Modals */}
+            {isCreateModalOpen && <CreateTaxModal onClose={handleCloseCreateModal} />}
+            {isEditModalOpen && <EditTaxModal tax={selectedTax} onClose={handleCloseEditModal} />}
         </div>
     );
 }

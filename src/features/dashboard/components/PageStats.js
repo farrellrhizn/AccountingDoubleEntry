@@ -8,20 +8,20 @@ function PageStats({}){
   
   <div className="stat">
     <div className="stat-figure invisible md:visible">
-        <HeartIcon className='mb-4 w-8 h-8'/>
+        <HeartIcon className='w-8 h-8'/>
     </div>
-    <div className="stat-title">Expense Today</div>
-    <div className="stat-value text-primary">$56.00K</div>
-    <div className="text-red-500 stat-desc">21% more than last month</div>
+    <div className="stat-title">Total Likes</div>
+    <div className="stat-value">25.9K</div>
+    <div className="stat-desc">21% more than last month</div>
   </div>
   
   <div className="stat">
     <div className="stat-figure invisible md:visible">
-        <BoltIcon className='mb-4 w-8 h-8'/>
+        <BoltIcon className='w-8 h-8'/>
     </div>
-    <div className="stat-title">Expense This Month</div>
-    <div className="stat-value text-primary">$3680,20</div>
-    <div className="text-red-500 stat-desc">14% more than last month</div>
+    <div className="stat-title">Page Views</div>
+    <div className="stat-value">2.6M</div>
+    <div className="stat-desc">14% more than last month</div>
   </div>
 </div>
     )

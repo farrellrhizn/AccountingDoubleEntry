@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FunnelIcon, TrashIcon, PlusIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentPlusIcon, LockClosedIcon, EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
+import CreateGoalModal from './CreateGoalModal'; // Import modal
+import EditGoalModal from './EditGoalModal'; // Import modal
 
 function Goals() {
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [selectedGoal, setSelectedGoal] = useState(null);
+
+    const handleCreateClick = () => setCreateModalOpen(true);
+    const handleEditClick = (goal) => {
+        setSelectedGoal(goal);
+        setEditModalOpen(true);
+    };
+
+    const closeCreateModal = () => setCreateModalOpen(false);
+    const closeEditModal = () => setEditModalOpen(false);
+
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
@@ -16,7 +31,10 @@ function Goals() {
                 <div className="flex justify-between items-center mb-4">
                     {/* Buttons Import, Export, Create */}
                     <div className="flex space-x-2">
-                        <button className="btn bg-green-500 text-white hover:bg-green-700 p-2">
+                        <button
+                            className="btn bg-green-500 text-white hover:bg-green-700 p-2"
+                            onClick={handleCreateClick}
+                        >
                             <DocumentPlusIcon className="w-5 h-5" />
                         </button>
                     </div>
@@ -63,7 +81,10 @@ function Goals() {
                                 <td className="border px-4 py-2">$150.00</td>
                                 <td className="border px-4 py-2">
                                     <div className="flex space-x-2">
-                                        <button className="btn btn-sm bg-green-500 text-white hover:bg-green-700">
+                                        <button
+                                            className="btn btn-sm bg-green-500 text-white hover:bg-green-700"
+                                            onClick={() => handleEditClick({ name: 'Bicycle parts', code: 'BC001CLE' })}
+                                        >
                                             <PencilIcon className="w-4 h-4" />
                                         </button>
                                         <button className="btn btn-sm bg-red-500 text-white hover:bg-red-700">
@@ -77,8 +98,8 @@ function Goals() {
                     </table>
                 </div>
 
-                 {/* Pagination Section */}
-                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4">
+                {/* Pagination Section */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4">
                     <div className="text-sm text-gray-700">
                         Showing 1 to 10 of 13 entries
                     </div>
@@ -101,6 +122,10 @@ function Goals() {
                     </nav>
                 </div>
             </div>
+
+            {/* Modals */}
+            <CreateGoalModal isOpen={isCreateModalOpen} onClose={closeCreateModal} />
+            <EditGoalModal goal={selectedGoal} isOpen={isEditModalOpen} onClose={closeEditModal} />
         </div>
     );
 }

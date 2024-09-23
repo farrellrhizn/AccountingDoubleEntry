@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+
+const CreateGoalModal = ({ isOpen, onClose }) => {
+  // Initialize form data with default empty values
+  const [formData, setFormData] = useState({
+    name: '',
+    type: '',
+    from: '',
+    to: '',
+    amount: '',
+    isDashboardDisplay: false,
+  });
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Create goal submitted:", formData);
+    // Add form submission logic here
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 className="text-xl font-semibold mb-4">Create Goal</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Type</label>
+            <input
+              type="text"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">From</label>
+            <input
+              type="text"
+              name="from"
+              value={formData.from}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">To</label>
+            <input
+              type="text"
+              name="to"
+              value={formData.to}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Amount</label>
+            <input
+              type="text"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                name="isDashboardDisplay"
+                checked={formData.isDashboardDisplay}
+                onChange={handleChange}
+                className="form-checkbox"
+              />
+              <span className="ml-2 text-sm text-gray-700">Is Dashboard Display</span>
+            </label>
+          </div>
+          <div className="flex justify-end mt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CreateGoalModal;

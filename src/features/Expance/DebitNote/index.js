@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaEye, FaCopy, FaEdit, FaTrash, FaPlus, FaFileExport, FaSearch, FaSync } from 'react-icons/fa'; // Import ikon yang diperlukan
+import CreateModal from './CreateModal'; // Import modal create
+import EditModal from './EditModal'; 
+
 
 function ManageDebitNote() {
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const openCreateModal = () => setIsCreateModalOpen(true);
+    const closeCreateModal = () => setIsCreateModalOpen(false);
+
+    const openEditModal = (item) => {
+        setSelectedItem(item);
+        setIsEditModalOpen(true);
+    };
+    const closeEditModal = () => setIsEditModalOpen(false);
+
+    const handleEditClick = (item) => {
+        openEditModal(item);
+    };
     return (
         <div className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
                 <h2 className="text-lg sm:text-2xl font-bold mb-4 sm:mb-0">Manage Debit Note</h2>
                 <div className="flex space-x-2">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
+                    <button onClick={openCreateModal} className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
                         <FaPlus className="mr-2" />
-                        <span className="hidden sm:inline">Add New</span>
                     </button>
                 </div>
             </div>
@@ -62,7 +80,7 @@ function ManageDebitNote() {
                                 <td className="py-2 whitespace-nowrap">Lorem ipsum dolor sit amet...</td>
                                 <td className="py-2 whitespace-nowrap">
                                     <div className="flex space-x-2">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md"><FaEdit /></button>
+                                        <button onClick={() => handleEditClick({ id: 1 })} className="bg-blue-500 text-white px-2 py-1 rounded-md"><FaEdit /></button>
                                         <button className="bg-pink-500 text-white px-2 py-1 rounded-md"><FaTrash /></button>
                                     </div>
                                 </td>
@@ -79,7 +97,10 @@ function ManageDebitNote() {
                     </div>
                 </div>
             </div>
-        </div>
+         {/* Modals */}
+         {isCreateModalOpen && <CreateModal onClose={closeCreateModal} />}
+         {isEditModalOpen && <EditModal item={selectedItem} onClose={closeEditModal} />}
+     </div>
     );
 }
 

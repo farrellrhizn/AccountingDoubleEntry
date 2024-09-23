@@ -1,14 +1,40 @@
-import React from 'react';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'; // Import ikon yang diperlukan
+import React, { useState } from 'react';
+import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import CreateCustomFieldModal from './CreateCustomFieldModal';
+import EditCustomFieldModal from './EditCustomFieldModal';
 
 function CustomField() {
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [selectedField, setSelectedField] = useState(null);
+
+    const handleCreateClick = () => {
+        setCreateModalOpen(true);
+    };
+
+    const handleEditClick = (field) => {
+        setSelectedField(field);
+        setEditModalOpen(true);
+    };
+
+    const handleCloseCreateModal = () => {
+        setCreateModalOpen(false);
+    };
+
+    const handleCloseEditModal = () => {
+        setEditModalOpen(false);
+        setSelectedField(null);
+    };
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Manage Custom Field</h2>
                 <div className="flex space-x-2">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
-                        <FaPlus className="mr-2"/>
+                    <button
+                        className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none"
+                        onClick={handleCreateClick}
+                    >
+                        <FaPlus className="mr-2" />
                     </button>
                 </div>
             </div>
@@ -55,7 +81,12 @@ function CustomField() {
                                 <td className="py-2 whitespace-nowrap">User</td>
                                 <td className="py-2 whitespace-nowrap">
                                     <div className="flex space-x-2">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md"><FaEdit /></button>
+                                        <button 
+                                            className="bg-blue-500 text-white px-2 py-1 rounded-md" 
+                                            onClick={() => handleEditClick({ fieldName: 'Medical', fieldType: 'Text', fieldModule: 'User' })}
+                                        >
+                                            <FaEdit />
+                                        </button>
                                         <button className="bg-pink-500 text-white px-2 py-1 rounded-md"><FaTrash /></button>
                                     </div>
                                 </td>
@@ -72,6 +103,9 @@ function CustomField() {
                     </div>
                 </div>
             </div>
+             {/* Modals */}
+             {isCreateModalOpen && <CreateCustomFieldModal onClose={handleCloseCreateModal} />}
+            {isEditModalOpen && <EditCustomFieldModal fieldData={selectedField} onClose={handleCloseEditModal} />}
         </div>
     );
 }

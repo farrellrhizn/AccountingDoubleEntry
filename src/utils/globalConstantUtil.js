@@ -16,4 +16,3 @@ module.exports = Object.freeze({
         LEAD_DELETE : "LEAD_DELETE",
     },
 });
-

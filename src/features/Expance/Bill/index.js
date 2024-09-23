@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaEye, FaCopy, FaEdit, FaTrash, FaPlus, FaFileExport, FaSearch, FaSync } from 'react-icons/fa';
+import CreateBillModal from './CreateBillModal';
+import ViewBillModal from './ViewBillModal';
+import EditBillModal from './EditBillModal';
 
 function ManageBill() {
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedBill, setSelectedBill] = useState(null);
+
+    const handleViewClick = (bill) => {
+        setSelectedBill(bill);
+        setShowViewModal(true);
+    };
+
+    const handleEditClick = (bill) => {
+        setSelectedBill(bill);
+        setShowEditModal(true);
+    };
+
     return (
         <div className="p-6">
             {/* Header Section */}
@@ -11,7 +29,7 @@ function ManageBill() {
                     <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
                         <FaFileExport className="mr-2" />
                     </button>
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
+                    <button onClick={() => setShowCreateModal(true)} className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
                         <FaPlus className="mr-2" />
                     </button>
                 </div>
@@ -94,16 +112,24 @@ function ManageBill() {
                                 </td>
                                 <td className="py-2 whitespace-nowrap">
                                     <div className="flex space-x-2">
-                                        <button className="bg-green-500 text-white px-2 py-1 rounded-md"><FaEye /></button>
+                                    <button onClick={() => handleViewClick({id: 1})} className="bg-blue-500 text-white px-3 py-1 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none">
+                                        <FaEye />
+                                    </button>
                                         <button className="bg-gray-500 text-white px-2 py-1 rounded-md"><FaCopy /></button>
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md"><FaEdit /></button>
+                                        <button onClick={() => handleEditClick({id: 1})} className="bg-yellow-500 text-white px-3 py-1 rounded-md shadow-sm hover:bg-yellow-600 focus:outline-none mx-2">
+                                            <FaEdit />
+                                        </button>
                                         <button className="bg-pink-500 text-white px-2 py-1 rounded-md"><FaTrash /></button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                {/* Modals */}
+                {showCreateModal && <CreateBillModal onClose={() => setShowCreateModal(false)} />}
+                {showViewModal && <ViewBillModal data={selectedBill} onClose={() => setShowViewModal(false)} />}
+                {showEditModal && <EditBillModal data={selectedBill} onClose={() => setShowEditModal(false)} />}
+            </div>
 
                 {/* Pagination Section */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4">

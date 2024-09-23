@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FunnelIcon, TrashIcon, PlusIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentPlusIcon, LockClosedIcon, EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
 
+import ViewModal from './ViewModal'; 
+import EditModal from './EditModal'; 
+import CreateModal from './CreateModal';
+
 function BudgetPlanners() {
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleCreate = () => {
+        setIsCreateModalOpen(true);
+    };
+
+    const handleView = (item) => {
+        setSelectedItem(item);
+        setIsViewModalOpen(true);
+    };
+
+    const handleEdit = (item) => {
+        setSelectedItem(item);
+        setIsEditModalOpen(true);
+    };
+
+    const closeCreateModal = () => setIsCreateModalOpen(false);
+    const closeViewModal = () => setIsViewModalOpen(false);
+    const closeEditModal = () => setIsEditModalOpen(false);
+
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
@@ -16,7 +43,7 @@ function BudgetPlanners() {
                 <div className="flex justify-between items-center mb-4">
                     {/* Buttons Import, Export, Create */}
                     <div className="flex space-x-2">
-                        <button className="btn bg-green-500 text-white hover:bg-green-700 p-2">
+                        <button className="btn bg-green-500 text-white hover:bg-green-700 p-2" onClick={handleCreate}>
                             <DocumentPlusIcon className="w-5 h-5" />
                         </button>
                     </div>
@@ -57,11 +84,11 @@ function BudgetPlanners() {
                                 <td className="border px-4 py-2">$150.00</td>
                                 <td className="border px-4 py-2">
                                     <div className="flex space-x-2">
-                                        <button className="btn btn-sm bg-gray-500 text-white hover:bg-gray-700">
-                                            <EyeIcon className="w-4 h-4" />
+                                        <button className="btn btn-sm bg-gray-500 text-white hover:bg-gray-700" onClick={() => handleView({name: 'Sample Item', from: 'Sample Source', budget: '2024'})}>
+                                            <EyeIcon className="w-5 h-5" />
                                         </button>
-                                        <button className="btn btn-sm bg-green-500 text-white hover:bg-green-700">
-                                            <PencilIcon className="w-4 h-4" />
+                                        <button className="btn btn-sm bg-green-500 text-white hover:bg-green-700" onClick={() => handleEdit({name: 'Sample Item', from: 'Sample Source', budget: '2024'})}>
+                                            <PencilIcon className="w-5 h-5" />
                                         </button>
                                         <button className="btn btn-sm bg-red-500 text-white hover:bg-red-700">
                                             <TrashIcon className="w-4 h-4" />
@@ -73,6 +100,11 @@ function BudgetPlanners() {
                         </tbody>
                     </table>
                 </div>
+                 {/* Modals */}
+            {isCreateModalOpen && <CreateModal onClose={closeCreateModal} />}
+            {isViewModalOpen && <ViewModal item={selectedItem} onClose={closeViewModal} />}
+            {isEditModalOpen && <EditModal item={selectedItem} onClose={closeEditModal} />}
+        </div>
 
                  {/* Pagination Section */}
                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4">
@@ -98,7 +130,6 @@ function BudgetPlanners() {
                     </nav>
                 </div>
             </div>
-        </div>
     );
 }
 

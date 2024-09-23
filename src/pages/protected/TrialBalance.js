@@ -1,18 +1,18 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
-import Trialbalance from '../../features/trlbalance'
+import TrialBalance from '../../features/TrialBalance'
 
 function InternalPage(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Balance Sheets"}))
+        dispatch(setPageTitle({ title : "Double Entry"}))
       }, [])
 
 
     return(
-        <Trialbalance />
+        <TrialBalance />
     )
 }
 

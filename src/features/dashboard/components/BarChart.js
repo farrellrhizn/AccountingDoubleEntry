@@ -12,7 +12,7 @@ import TitleCard from '../../../components/Cards/TitleCard';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function BarChart() {
+function BarChart(){
 
     const options = {
         responsive: true,
@@ -21,34 +21,33 @@ function BarChart() {
             position: 'top',
           }
         },
-        maintainAspectRatio: false, // Menonaktifkan aspect ratio bawaan agar height bisa diatur manual
-    };
-
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    const data = {
+      };
+      
+      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+      
+      const data = {
         labels,
         datasets: [
           {
-            label: 'Income',
+            label: 'Store 1',
             data: labels.map(() => { return Math.random() * 1000 + 500 }),
-            backgroundColor: 'rgb(74, 0, 255)',
+            backgroundColor: 'rgba(255, 99, 132, 1)',
           },
           {
-            label: 'Expense',
+            label: 'Store 2',
             data: labels.map(() => { return Math.random() * 1000 + 500 }),
-            backgroundColor: 'rgb(164, 127, 255)',
+            backgroundColor: 'rgba(53, 162, 235, 1)',
           },
         ],
-    };
+      };
 
-    return (
-      <TitleCard title={"Income vs Expense"}>
-            <div className="h-72">
-                <Bar options={options} data={data} />
-            </div>
+    return(
+      <TitleCard title={"Revenue"}>
+            <Bar options={options} data={data} />
       </TitleCard>
-    );
+
+    )
 }
 
-export default BarChart;
+
+export default BarChart
