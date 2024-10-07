@@ -1,48 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaSearch, FaTimes, FaDownload } from 'react-icons/fa';
-import { Bar } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import InvoiceChart from './InvoiceChart';
+import InvoiceTable from './InvoiceTable';
 
 function InvoiceSummary() {
-    const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [
-            {
-                label: 'Invoices',
-                data: [200, 400, 600, 300, 100, 450, 650, 500, 400, 600, 800, 200],
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
+    const [showChart, setShowChart] = useState(true);
 
     return (
         <div className="p-6">
-
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Invoice Summary</h2>
                 <button className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm flex items-center hover:bg-green-600 focus:outline-none">
-                    <FaDownload className="mr-2"/> 
+                    <FaDownload className="mr-2" /> 
                 </button>
             </div>
+
             {/* Breadcrumb Navigation */}
             <nav className="text-sm mb-6">
                 <span className="text-gray-500">Dashboard</span> &gt;
@@ -124,9 +96,23 @@ function InvoiceSummary() {
                 </div>
             </div>
 
-            {/* Bar Chart */}
             <div className="bg-white p-4 rounded-md shadow-md mb-6">
-                <Bar data={data} options={{ responsive: true, maintainAspectRatio: false }} />
+                <div className="flex mb-4">
+                    <button
+                        className={`px-4 py-2 rounded-l-md ${showChart ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                        onClick={() => setShowChart(true)}
+                    >
+                        Summary
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-r-md ${!showChart ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                        onClick={() => setShowChart(false)}
+                    >
+                        Invoice
+                    </button>
+                </div>
+
+                {showChart ? <InvoiceChart /> : <InvoiceTable />}
             </div>
         </div>
     );

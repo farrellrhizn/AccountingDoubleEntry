@@ -51,12 +51,10 @@ function CashFlow() {
                         <FaFilter />
                     </button>
                     <button className="bg-red-500 text-white p-2 rounded-md">
-                        <FaTimes /> {/* Ikon ini menggantikan ikon filter untuk tombol "Clear" */}
+                        <FaTimes />
                     </button>
                 </div>
             </div>
-
-            {/* Bagian Report dan Duration dengan jarak di antara mereka */}
             <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-x-4">
                 <div className="w-full md:w-1/2 bg-white p-4 rounded-md shadow-md">
                     <h4 className="font-bold">Report:</h4>
@@ -67,8 +65,6 @@ function CashFlow() {
                     <p>Jan-2024 to Dec-2024</p>
                 </div>
             </div>
-
-            {/* Render tabel berdasarkan pilihan */}
             <div className="mt-4 bg-white p-4 rounded-md shadow-md overflow-x-auto">
                 {view === 'monthly' && <Monthly />}
                 {view === 'quarterly' && <Quarterly />}

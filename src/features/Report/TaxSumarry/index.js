@@ -36,8 +36,8 @@ function TaxSummary() {
                 </div>
             </div>
 
-            {/* Report Information and Duration Section */}
-            <div className="bg-transparent p-4 rounded-md flex justify-between space-x-4 mb-4">
+           {/* Report Information and Duration Section */}
+            <div className="bg-transparent p-4 rounded-md flex space-x-4 mb-4">
                 <div className="bg-white p-4 rounded-md shadow-md w-1/2">
                     <p className="text-lg font-semibold text-left">Report: <span className="font-normal">Tax Summary</span></p>
                 </div>
@@ -45,6 +45,7 @@ function TaxSummary() {
                     <p className="text-left">Duration: <span className="font-semibold">Jan-2024 to Dec-2024</span></p>
                 </div>
             </div>
+
 
 
             {/* Income Section */}

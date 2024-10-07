@@ -1,39 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaSearch, FaTimes, FaDownload } from 'react-icons/fa';
-import { Bar } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import BillChart from './BillChart';
+import BillTable from './BillTable';
 
 function BillSummary() {
-    const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [
-            {
-                label: 'Bills',
-                data: [150, 250, 350, 200, 300, 400, 500, 450, 300, 400, 600, 350],
-                backgroundColor: 'rgba(255, 159, 64, 0.6)',
-                borderColor: 'rgba(255, 159, 64, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
-
+    const [showChart, setShowChart] = useState(true);
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
@@ -126,9 +97,23 @@ function BillSummary() {
                 </div>
             </div>
 
-            {/* Bar Chart */}
-            <div className="bg-white p-4 rounded-md shadow-md">
-                <Bar data={data} options={{ responsive: true, maintainAspectRatio: false }} />
+            <div className="bg-white p-4 rounded-md shadow-md mb-6">
+                <div className="flex mb-4">
+                    <button
+                        className={`px-4 py-2 rounded-l-md ${showChart ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                        onClick={() => setShowChart(true)}
+                    >
+                        Summary
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-r-md ${!showChart ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                        onClick={() => setShowChart(false)}
+                    >
+                        Invoice
+                    </button>
+                </div>
+
+                {showChart ? <BillChart /> : <BillTable />}
             </div>
         </div>
     );
