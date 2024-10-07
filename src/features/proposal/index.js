@@ -4,13 +4,21 @@ import EyeIcon from "@heroicons/react/24/outline/EyeIcon";
 import KeyIcon from "@heroicons/react/24/outline/KeyIcon";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import EditProposalModal from "./components/EditProposalModal";
+import DeletePropModal from "./components/DeletePropModal";
 import TitleCard from "../../components/Cards/TitleCard";
 import Datepicker from "react-tailwindcss-datepicker";
 import { PROPOSAL_DATA } from "../../utils/dummyData";
 import CardOption from "../../components/Cards/CardOption";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+
+// Import Redux hooks and action
+import { useDispatch } from "react-redux";
+import { showNotification } from "../common/headerSlice";
 
 const ProposalPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [proposalData, setProposalData] = useState(PROPOSAL_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -19,18 +27,32 @@ const ProposalPage = () => {
   const [selectedProposal, setSelectedProposal] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
 
+  // State for delete modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [proposalToDelete, setProposalToDelete] = useState(null);
+
   const [dateValue, setDateValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
 
   const handleDatePickerValueChange = (newValue) => {
-    console.log("newValue:", newValue);
     setDateValue(newValue);
+    updateProposalPeriod(newValue);
   };
 
+  const updateProposalPeriod = (newRange) => {
+    setDateValue(newRange); // Update the date range in the state
+    dispatch(
+      showNotification({
+        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
+        status: 1,
+      })
+    );
+  };
+
+
   const handleSearch = () => {
-    // Logic for search action
     console.log("Search clicked");
   };
 
@@ -39,7 +61,6 @@ const ProposalPage = () => {
       startDate: new Date(),
       endDate: new Date(),
     });
-    // Additional reset logic if needed
     console.log("Reset clicked");
   };
 
@@ -48,9 +69,57 @@ const ProposalPage = () => {
     setShowModal(true);
   };
 
+  const handleDetailIDClick = (proposal) => {
+    navigate(`/app/proposal/detailProposal`);
+  };
+
   const handleDetailClick = (proposal) => {
     setSelectedProposal(proposal);
     setShowDetail(true);
+  };
+
+  const handleSaveEdit = (updatedData) => {
+    setProposalData((prevData) =>
+      prevData.map((item) =>
+        item.proposal === selectedProposal.proposal
+          ? { ...item, ...updatedData }
+          : item
+      )
+    );
+
+    dispatch(
+      showNotification({
+        message: `Proposal "${updatedData.proposal}" has been successfully updated!`,
+        status: 1,
+      })
+    );
+  };
+
+  const handleDeleteClick = (proposal) => {
+    setProposalToDelete(proposal);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (proposalToDelete) {
+      const updatedProposalData = proposalData.filter(
+        (item) => item.proposal !== proposalToDelete.proposal
+      );
+      setProposalData(updatedProposalData);
+      setShowDeleteModal(false);
+      dispatch(
+        showNotification({
+          message: `Proposal "${proposalToDelete.proposal}" has been successfully deleted!`,
+          status: 1,
+        })
+      );
+      setProposalToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setProposalToDelete(null);
   };
 
   const filteredProposal = proposalData.filter(
@@ -83,21 +152,20 @@ const ProposalPage = () => {
     startIndex + itemsPerPage
   );
 
-  // Function to determine the status class
   const getStatusClass = (status) => {
     switch (status) {
       case "Draft":
-        return "bg-yellow-400"; // Light orange/yellow color
+        return "bg-orange-500";
       case "Accepted":
-        return "bg-green-400"; // Green color
+        return "bg-green-500";
       case "Open":
-        return "bg-blue-400"; // Blue color
+        return "bg-blue-500";
       case "Close":
-        return "bg-pink-400"; // Pink color
+        return "bg-indigo-500";
       case "Declined":
-        return "bg-red-400"; // Red color
+        return "bg-gray-400";
       default:
-        return ""; // Default case (optional)
+        return "bg-gray-400";
     }
   };
 
@@ -134,7 +202,6 @@ const ProposalPage = () => {
             <div className="mb-3 text-sm">Select Customer</div>
             <select className="select select-bordered w-full md:w-72 text-sm">
               <option>Select Customer</option>
-              {/* Add customer options here */}
             </select>
           </div>
           <div className="md:col-span-3 flex w-72 justify-start gap-4">
@@ -155,9 +222,7 @@ const ProposalPage = () => {
       </CardOption>
 
       <TitleCard topMargin="mt-2" title="Manage Proposals">
-        {/* Kontrol Responsif untuk Entries dan Search */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
-          {/* Entries Per Page */}
           <div className="flex items-center w-full md:w-auto">
             <label htmlFor="entriesPerPage" className="mr-2 text-sm">
               Entries per page:
@@ -174,7 +239,6 @@ const ProposalPage = () => {
               <option value={20}>20</option>
             </select>
           </div>
-          {/* Search Bar */}
           <div className="w-full md:w-64">
             <input
               type="text"
@@ -186,9 +250,8 @@ const ProposalPage = () => {
           </div>
         </div>
 
-        {/* Tabel Responsif */}
         <div className="overflow-x-auto">
-          <table className="table w-full">
+          <table className="table w-full min-w-max">
             <thead>
               <tr>
                 <th className="px-4 py-2">PROPOSAL</th>
@@ -196,14 +259,15 @@ const ProposalPage = () => {
                 <th className="px-4 py-2">CATEGORY</th>
                 <th className="px-4 py-2">ISSUE DATE</th>
                 <th className="px-4 py-2">STATUS</th>
-                <th className="px-4 py-2">ACTION</th>
+                <th className="px-4 py-2">ACTION</th> {/* Ensure Action column is aligned right */}
               </tr>
             </thead>
             <tbody>
               {paginatedProposal.map((proposal, index) => (
-                <tr key={index}>
+                <tr key={proposal.id || index}>
                   <td className="text-sm truncate" title={proposal.proposal}>
-                    <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                    <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                    onClick={() => handleDetailIDClick(proposal)}>
                       {proposal.proposal}
                     </button>
                   </td>
@@ -216,17 +280,17 @@ const ProposalPage = () => {
                   <td className="text-sm truncate" title={proposal.issueDate}>
                     {proposal.issueDate}
                   </td>
-                  <td className="text-sm">
+                  <td className="px-4 py-2">
                     <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${getStatusClass(
+                      className={`flex items-center justify-center px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(
                         proposal.status
-                      )} text-white`}
+                      )}`}
                     >
                       {proposal.status}
                     </span>
                   </td>
-                  <td className="text-sm">
-                    <div className="flex flex-wrap gap-2">
+                  <td className="text-sm text-right"> {/* Align the action items to the right */}
+                    <div className="flex flex-wrap gap-2"> {/* Adjust alignment */}
                       <button
                         className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
                         aria-label="Key Action"
@@ -255,6 +319,7 @@ const ProposalPage = () => {
                         <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
+                        onClick={() => handleDeleteClick(proposal)}
                         className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
                         aria-label="Delete Proposal"
                       >
@@ -268,59 +333,65 @@ const ProposalPage = () => {
           </table>
         </div>
 
-        {/* Pagination dan Informasi */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
-                    {/* Informasi */}
-                    <div className="text-sm text-gray-700">
-                        Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredProposal.length)} of {filteredProposal.length} entries
-                    </div>
-                    {/* Kontrol Pagination */}
-                    <div className="flex space-x-2">
-                        <button
-                            onClick={handlePrevPage}
-                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <button
-                            onClick={handleNextPage}
-                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                            disabled={currentPage === totalPages || totalPages === 0}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-
+          <div className="text-sm text-gray-700">
+            Showing {startIndex + 1} to{" "}
+            {Math.min(startIndex + itemsPerPage, filteredProposal.length)} of{" "}
+            {filteredProposal.length} entries
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={handlePrevPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === totalPages || totalPages === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </TitleCard>
-      {/* Modal Edit Proposal */}
+
       {showModal && (
         <EditProposalModal
           showModal={showModal}
           onClose={() => setShowModal(false)}
           proposal={selectedProposal}
+          onSave={handleSaveEdit}
         />
       )}
-      {/* Detail View */}
       {showDetail && selectedProposal && (
         <DetailView
           proposal={selectedProposal}
           onClose={() => setShowDetail(false)}
         />
       )}
+      {showDeleteModal && (
+        <DeletePropModal onConfirm={confirmDelete} onCancel={cancelDelete} />
+      )}
     </>
   );
 };
 
-// DetailView Component
 const DetailView = ({ proposal, onClose }) => {
   if (!proposal) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
-        <h2 className="text-xl font-bold mb-4">Proposal Details</h2>
+        <h2 className="text-xl font-bold mb-4">Detail Proposal</h2>
         <p className="text-sm">
           <strong>Proposal ID:</strong> {proposal.proposal}
         </p>

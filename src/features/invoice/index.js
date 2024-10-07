@@ -1,3 +1,5 @@
+// src/features/invoice/index.js
+
 import React, { useState, useEffect } from "react";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import EyeIcon from "@heroicons/react/24/outline/EyeIcon";
@@ -8,8 +10,14 @@ import Datepicker from "react-tailwindcss-datepicker";
 import CardOption from "../../components/Cards/CardOption";
 import { INVOICE_DATA } from "../../utils/dummyData";
 import EditInvoiceModal from "./components/EditInvoiceModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal"; // Import DeleteConfirmModal
+import { useDispatch } from "react-redux";
+import { showNotification } from "../common/headerSlice";
+import { useNavigate } from "react-router-dom";
 
 const InvoicePage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [invoiceData, setInvoiceData] = useState(INVOICE_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -17,6 +25,8 @@ const InvoicePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [invoiceToDelete, setInvoiceToDelete] = useState(null);
   const [dateValue, setDateValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -24,11 +34,12 @@ const InvoicePage = () => {
 
   const handleDatePickerValueChange = (newValue) => {
     setDateValue(newValue);
+    updateInvoicePeriod(newValue);
   };
 
   const handleSearch = () => {
     console.log("Search clicked");
-    // Implementasikan logika pencarian berdasarkan dateValue jika diperlukan
+    // Implement search logic if needed
   };
 
   const handleReset = () => {
@@ -45,15 +56,82 @@ const InvoicePage = () => {
     setShowModal(true);
   };
 
+  const handleUpdateInvoice = (updatedInvoice) => {
+    if (!updatedInvoice.invoice || !updatedInvoice.customer) {
+      dispatch(
+        showNotification({
+          message: "Invoice and Customer cannot be empty!",
+          status: 2, // Ensure status reflects your definition (e.g., 2 for failure)
+        })
+      );
+      return;
+    }
+
+    // Update invoice data
+    setInvoiceData((prevData) =>
+      prevData.map((inv) =>
+        inv.invoice === updatedInvoice.invoice ? updatedInvoice : inv
+      )
+    );
+
+    // Show success notification
+    dispatch(
+      showNotification({
+        message: `Invoice ${updatedInvoice.invoice} has been successfully edited!`,
+        status: 1, // Ensure status reflects your definition (e.g., 1 for success)
+      })
+    );
+
+    // Close modal
+    setShowModal(false);
+  };
+
+  const updateInvoicePeriod = (newRange) => {
+    setDateValue(newRange); // Update the date range in the state
+    dispatch(
+      showNotification({
+        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
+        status: 1,
+      })
+    );
+  };
+
+  const handleDetailIDClick = (invoice) => {
+    navigate(`/app/invoice/detailInvoice`);
+  }
   const handleDetailClick = (invoice) => {
     setSelectedInvoice(invoice);
     setShowDetail(true);
   };
 
-  // Definisikan handleDeleteClick untuk menghapus invoice
   const handleDeleteClick = (invoice) => {
-    const updatedInvoiceData = invoiceData.filter((item) => item !== invoice);
-    setInvoiceData(updatedInvoiceData);
+    setInvoiceToDelete(invoice);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (invoiceToDelete) {
+      const updatedInvoiceData = invoiceData.filter((item) => item !== invoiceToDelete);
+      setInvoiceData(updatedInvoiceData);
+      setShowDeleteConfirm(false);
+      setInvoiceToDelete(null);
+      
+      // Log deletion
+      console.log(`Invoice ${invoiceToDelete.invoice} has been deleted.`);
+      
+      // Send notification using dispatch
+      dispatch(
+        showNotification({
+          message: `Invoice ${invoiceToDelete.invoice} has been successfully deleted!`,
+          status: 1,
+        })
+      );
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setInvoiceToDelete(null);
   };
 
   const filteredInvoice = invoiceData.filter(
@@ -121,11 +199,9 @@ const InvoicePage = () => {
             <div className="mb-3 text-sm">Select Status</div>
             <select className="select select-bordered w-full md:w-72 text-sm">
               <option>Select Status</option>
-              <option>Draft</option>
-              <option>Open</option>
-              <option>Accepted</option>
-              <option>Declined</option>
-              <option>Close</option>
+              <option>Paid</option>
+              <option>Partially Paid</option>
+              <option>Sent</option>
             </select>
           </div>
           <div>
@@ -153,9 +229,7 @@ const InvoicePage = () => {
       </CardOption>
 
       <TitleCard topMargin="mt-2" title="Manage Invoices">
-        {/* Kontrol Responsif untuk Entries dan Search */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
-          {/* Entries Per Page */}
           <div className="flex items-center w-full md:w-auto">
             <label htmlFor="entriesPerPage" className="mr-2 text-sm">
               Entries per page:
@@ -172,7 +246,6 @@ const InvoicePage = () => {
               <option value={20}>20</option>
             </select>
           </div>
-          {/* Search Bar */}
           <div className="w-full md:w-64">
             <input
               type="text"
@@ -184,65 +257,62 @@ const InvoicePage = () => {
           </div>
         </div>
 
-        {/* Tabel Responsif */}
+        {/* Responsive Table */}
         <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
+          <table className="table w-full min-w-max">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2">INVOICE</th>
-                <th className="px-4 py-2">CUSTOMER</th>
-                <th className="px-4 py-2">ISSUE DATE</th>
-                <th className="px-4 py-2">DUE DATE</th>
-                <th className="px-4 py-2">AMOUNT DUE</th>
-                <th className="px-4 py-2">STATUS</th>
-                <th className="px-4 py-2">ACTION</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">INVOICE</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CUSTOMER</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISSUE DATE</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DUE DATE</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AMOUNT DUE</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
+                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ACTION</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {paginatedInvoice.map((invoice, index) => (
                 <tr key={index}>
                   <td className="px-4 py-2">
-                    <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group text-sm">
+                    <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group text-sm"
+                      onClick={() => handleDetailIDClick(invoice)}>
                       {invoice.invoice}
                     </button>
                   </td>
-                  <td className="px-4 py-2">{invoice.customer}</td>
-                  <td className="px-4 py-2">{invoice.issueDate}</td>
-                  <td className="px-4 py-2">{invoice.dueDate}</td>
-                  <td className="px-4 py-2">{invoice.amountDue}</td>
-                  <td
-                    className={`flex justify-center mt-2 ml-2 h-12 ${getStatusClass(
-                      invoice.status
-                    )} text-white font-semibold text-center rounded-full w-26 text-sm`}
-                  >
+                  <td className="px-4 py-2 text-sm md:text-base">{invoice.customer}</td>
+                  <td className="px-4 py-2 text-sm md:text-base">{invoice.issueDate}</td>
+                  <td className="px-4 py-2 text-sm md:text-base">{invoice.dueDate}</td>
+                  <td className="px-4 py-2 text-sm md:text-base">{invoice.amountDue}</td>
+                  <td className={`flex items-center justify-center mt-5 px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(invoice.status)}`}>
                     {invoice.status}
                   </td>
-                  <td className="px-4 py-2">
-                    <div className="flex grid-cols-1 gap-2">
+                  <td className="px-4 py-2 text-center">
+                    <div className="flex justify-center space-x-2">
                       <button
                         onClick={() => handleDetailClick(invoice)}
-                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2 text-sm"
+                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2 rounded-md"
                         aria-label="Duplicate Invoice"
                       >
                         <DocumentDuplicateIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDetailClick(invoice)}
-                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2 text-sm"
+                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2 rounded-md"
                         aria-label="View Invoice"
                       >
                         <EyeIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleEditClick(invoice)}
-                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2 text-sm"
+                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2 rounded-md"
                         aria-label="Edit Invoice"
                       >
                         <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDeleteClick(invoice)}
-                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2 text-sm"
+                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2 rounded-md"
                         aria-label="Delete Invoice"
                       >
                         <TrashIcon className="h-5 w-5" />
@@ -255,58 +325,73 @@ const InvoicePage = () => {
           </table>
         </div>
 
-        {/* Pagination dan Informasi */}
+        {/* Pagination and Information */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
-                    {/* Informasi */}
-                    <div className="text-sm text-gray-700">
-                        Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredInvoice.length)} of {filteredInvoice.length} entries
-                    </div>
-                    {/* Kontrol Pagination */}
-                    <div className="flex space-x-2">
-                        <button
-                            onClick={handlePrevPage}
-                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <button
-                            onClick={handleNextPage}
-                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                            disabled={currentPage === totalPages || totalPages === 0}
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
-
+          <div className="text-sm text-gray-700">
+            Showing {startIndex + 1} to{" "}
+            {Math.min(startIndex + itemsPerPage, filteredInvoice.length)} of{" "}
+            {filteredInvoice.length} entries
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={handlePrevPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              className={`btn bg-primary text-white hover:bg-secondary ${
+                currentPage === totalPages || totalPages === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </TitleCard>
 
-      {/* Modal Edit Invoice */}
+      {/* Edit Invoice Modal */}
       {showModal && (
         <EditInvoiceModal
           showModal={showModal}
           onClose={() => setShowModal(false)}
-          invoice={selectedInvoice} // Gunakan prop 'invoice' alih-alih 'proposal'
+          invoice={selectedInvoice}
+          onUpdate={handleUpdateInvoice} // Ensure this prop is passed correctly
         />
       )}
+
       {/* Detail View */}
       {showDetail && (
         <DetailView
-          invoice={selectedInvoice} // Gunakan prop 'invoice' alih-alih 'proposal'
+          invoice={selectedInvoice}
           onClose={() => setShowDetail(false)}
         />
       )}
+
+      {/* Delete Confirm Modal */}
+      {showDeleteConfirm && invoiceToDelete && (
+        <DeleteConfirmModal
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </>
-  ); // Menutup pernyataan return
-}; // Menutup fungsi InvoicePage
+  );
+};
 
 // DetailView Component
 const DetailView = ({ invoice, onClose }) => {
   if (!invoice) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
         <h2 className="text-xl font-bold mb-4">Invoice Details</h2>
         <p className="text-sm">

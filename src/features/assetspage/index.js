@@ -4,10 +4,14 @@ import EyeIcon from "@heroicons/react/24/outline/EyeIcon";
 import KeyIcon from "@heroicons/react/24/outline/KeyIcon";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import EditAssetsModal from "./components/EditAssetsModal";
+import DeleteConfirmModal from "./components/DeleteConfirmModal"; // Import DeleteConfirmModal
 import TitleCard from "../../components/Cards/TitleCard";
 import { ASSETS_DATA } from "../../utils/dummyData";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../common/headerSlice";
 
 const AssetsPage = () => {
+  const dispatch = useDispatch();
   const [assetData, setAssetData] = useState(ASSETS_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -15,6 +19,10 @@ const AssetsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+
+  // State untuk Delete Modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [assetToDelete, setAssetToDelete] = useState(null);
 
   const handleEditClick = (asset) => {
     setSelectedAsset(asset);
@@ -24,6 +32,32 @@ const AssetsPage = () => {
   const handleDetailClick = (asset) => {
     setSelectedAsset(asset);
     setShowDetail(true);
+  };
+
+  const handleDeleteClick = (asset) => {
+    setAssetToDelete(asset);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (assetToDelete) {
+      setAssetData((prevData) =>
+        prevData.filter((asset) => asset.name !== assetToDelete.name)
+      );
+      setAssetToDelete(null);
+      dispatch(
+        showNotification({
+          message: `Asset ${assetToDelete.name} has been successfully deleted!`,
+          status: 1, // Pastikan status sesuai dengan definisi Anda (misalnya, 1 untuk sukses)
+        })
+      );
+    }
+      setShowDeleteModal(false);
+  };
+
+  const cancelDelete = () => {
+    setAssetToDelete(null);
+    setShowDeleteModal(false);
   };
 
   const filteredAssets = assetData.filter(
@@ -130,22 +164,16 @@ const AssetsPage = () => {
                     <td className="px-4 py-2 text-center">
                       <div className="flex justify-center space-x-2">
                         <button
-                          onClick={() => handleDetailClick(asset)}
-                          className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
-                        >
-                          <EyeIcon className="h-5 w-5" />
-                        </button>
-                        <button
                           onClick={() => handleEditClick(asset)}
                           className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
                         >
                           <PencilIcon className="h-5 w-5" />
                         </button>
-                        <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
+                        <button
+                          onClick={() => handleDeleteClick(asset)} // Tambahkan handler delete
+                          className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
+                        >
                           <TrashIcon className="h-5 w-5" />
-                        </button>
-                        <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
-                          <KeyIcon className="h-5 w-5" />
                         </button>
                       </div>
                     </td>
@@ -202,6 +230,14 @@ const AssetsPage = () => {
         <DetailView
           asset={selectedAsset}
           onClose={() => setShowDetail(false)}
+        />
+      )}
+
+      {/* Modal Delete Confirmation */}
+      {showDeleteModal && (
+        <DeleteConfirmModal
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
         />
       )}
     </>

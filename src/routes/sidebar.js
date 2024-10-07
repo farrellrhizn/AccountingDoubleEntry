@@ -30,12 +30,12 @@ const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
 
 const routes = [
-
   {
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses}/>, 
-    name: 'Dashboard',
+    name: 'Dashboard'
   },
+
 
   //   path: '/app/leads', // url
   //   icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
@@ -99,7 +99,7 @@ const routes = [
         name: 'Proposal',
       },
       {
-        path: '/app/journalacc',
+        path: '/app/',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Retainers',
       }
@@ -116,7 +116,7 @@ const routes = [
           name: 'Bank Account',
         },
         {
-          path: '/app/journalacc',
+          path: '/app/',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Transfer',
         }
@@ -133,7 +133,7 @@ const routes = [
           name: 'Invoice',
         },
         {
-          path: '/app/journalacc',
+          path: '/app/',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Revenue',
         },

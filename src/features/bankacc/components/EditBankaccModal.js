@@ -34,111 +34,49 @@ const EditBankaccModal = ({ showModal, onClose, bankacc, onSave }) => {
     };
 
     const handleSave = () => {
-        onSave(formData);
-        onClose();
+        onSave(formData);  // Mengirim data ke fungsi onSave dari induk
+        onClose();  // Menutup modal setelah penyimpanan
     };
 
     if (!showModal) return null;
 
+    const fields = [
+        { id: 'chartOfAccount', label: 'Chart Of Account' },
+        { id: 'name', label: 'Name' },
+        { id: 'bank', label: 'Bank' },
+        { id: 'accountNumber', label: 'Account Number' },
+        { id: 'currentBalance', label: 'Current Balance' },
+        { id: 'contactNumber', label: 'Contact Number' },
+        { id: 'bankBranch', label: 'Bank Branch' },
+    ];
+
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h2 className="text-xl font-semibold mb-4">Edit Bank Account</h2>
-                <div className="space-y-4">
-                    <div>
-                        <label htmlFor="chartOfAccount" className="block text-sm font-medium">
-                            Chart Of Account
-                        </label>
-                        <input
-                            id="chartOfAccount"
-                            name="chartOfAccount"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.chartOfAccount}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="name" className="block text-sm font-medium">
-                            Name
-                        </label>
-                        <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="bank" className="block text-sm font-medium">
-                            Bank
-                        </label>
-                        <input
-                            id="bank"
-                            name="bank"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.bank}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="accountNumber" className="block text-sm font-medium">
-                            Account Number
-                        </label>
-                        <input
-                            id="accountNumber"
-                            name="accountNumber"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.accountNumber}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="currentBalance" className="block text-sm font-medium">
-                            Current Balance
-                        </label>
-                        <input
-                            id="currentBalance"
-                            name="currentBalance"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.currentBalance}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="contactNumber" className="block text-sm font-medium">
-                            Contact Number
-                        </label>
-                        <input
-                            id="contactNumber"
-                            name="contactNumber"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.contactNumber}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="bankBranch" className="block text-sm font-medium">
-                            Bank Branch
-                        </label>
-                        <input
-                            id="bankBranch"
-                            name="bankBranch"
-                            type="text"
-                            className="input input-bordered w-full"
-                            value={formData.bankBranch}
-                            onChange={handleChange}
-                        />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md mx-4 h-auto max-h-screen md:w-1/2 md:h-3/4 flex flex-col">
+                <div className="p-4 border-b">
+                    <h2 className="text-xl font-semibold">Edit Bank Account</h2>
+                </div>
+                <div className="p-4 overflow-y-auto flex-1">
+                    <div className="space-y-4">
+                        {fields.map((field) => (
+                            <div key={field.id}>
+                                <label htmlFor={field.id} className="block text-sm font-medium mb-1">
+                                    {field.label}
+                                </label>
+                                <input
+                                    id={field.id}
+                                    name={field.id}
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    value={formData[field.id]}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
-                <div className="flex justify-end mt-4">
-                    <button onClick={onClose} className="btn btn-secondary mr-2">
+                <div className="p-4 border-t flex justify-end space-x-2">
+                    <button onClick={onClose} className="btn btn-secondary">
                         Cancel
                     </button>
                     <button onClick={handleSave} className="btn btn-primary">

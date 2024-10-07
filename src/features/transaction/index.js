@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Ensure this is used if navigation is needed
+import { useNavigate } from "react-router-dom";
 import TitleCard from "../../components/Cards/TitleCard";
 import Datepicker from "react-tailwindcss-datepicker";
 import CardOption from "../../components/Cards/CardOption";
 import { TRANSACTION_DATA } from "../../utils/dummyData";
 import SubTitleCard from "../../components/Cards/CardSubTitle";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../common/headerSlice";
 
 const TransactionPage = () => {
+  const dispatch = useDispatch();
   const [transactionData, setTransactionData] = useState(TRANSACTION_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -14,28 +17,45 @@ const TransactionPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+  
+  // Inisialisasi dengan format string YYYY-MM-DD
+  const today = new Date().toISOString().split("T")[0];
   const [dateValue, setDateValue] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: today,
+    endDate: today,
   });
 
+  // Update the transaction period and show a notification when date is changed
   const handleDatePickerValueChange = (newValue) => {
     setDateValue(newValue);
+    updateTransactionPeriod(newValue); // Trigger update after setting new date
+  };
+
+  // Dispatch notification when transaction period is updated
+  const updateTransactionPeriod = (newRange) => {
+    dispatch(
+      showNotification({
+        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
+        status: 1,
+      })
+    );
   };
 
   const handleSearch = () => {
     console.log("Search clicked");
+    // Implement search logic based on dateValue and searchTerm
   };
 
   const handleReset = () => {
     setDateValue({
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: today,
+      endDate: today,
     });
     setSearchTerm(""); // Reset search term as well
     console.log("Reset clicked");
   };
 
+  // Filter transactions based on search term
   const filteredTransaction = transactionData.filter(
     (transaction) =>
       transaction.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,19 +86,6 @@ const TransactionPage = () => {
     startIndex + itemsPerPage
   );
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "Partially Paid":
-        return "bg-blue-400";
-      case "Paid":
-        return "bg-green-400";
-      case "Sent":
-        return "bg-yellow-400";
-      default:
-        return ""; // Default case (optional)
-    }
-  };
-
   return (
     <>
       <CardOption topMargin="mt-2" title={"Select By :"}>
@@ -96,7 +103,7 @@ const TransactionPage = () => {
                 toggleClassName="invisible"
                 onChange={handleDatePickerValueChange}
                 showShortcuts={true}
-                primaryColor={"white"}
+                primaryColor={"blue"}
               />
             </div>
           </div>
@@ -165,8 +172,8 @@ const TransactionPage = () => {
           title={"Duration :"}
         >
           <div className="text-left text-md">
-            {dateValue.startDate.toLocaleDateString()} -{" "}
-            {dateValue.endDate.toLocaleDateString()}
+            {new Date(dateValue.startDate).toLocaleDateString()} -{" "}
+            {new Date(dateValue.endDate).toLocaleDateString()}
           </div>
         </SubTitleCard>
       </div>
@@ -256,7 +263,7 @@ const TransactionPage = () => {
               {paginatedTransaction.map((transaction, index) => (
                 <tr key={index} className="text-sm">
                   <td className="min-w-[150px]">
-                    {transaction.date}
+                    {new Date(transaction.date).toLocaleDateString()}
                   </td>
                   <td className="min-w-[150px]">
                     {transaction.account}
@@ -335,7 +342,7 @@ const DetailView = ({ proposal, onClose }) => {
           <strong>Category:</strong> {proposal.category}
         </p>
         <p>
-          <strong>Issue Date:</strong> {proposal.issueDate}
+          <strong>Issue Date:</strong> {new Date(proposal.issueDate).toLocaleDateString()}
         </p>
         <p>
           <strong>Status:</strong> {proposal.status}

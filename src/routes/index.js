@@ -1,5 +1,6 @@
 // All components mapping with path for internal routes
 
+import { elements } from 'chart.js'
 import { lazy } from 'react'
 
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
@@ -38,8 +39,14 @@ const AccountStatementPage = lazy(() => import('../pages/protected/AccountStatem
 const IncomeSumPage = lazy(() => import('../pages/protected/IncomeSummary'))
 const ExpenseSumPage = lazy(() => import('../pages/protected/ExpenseSummary'))
 const IncomeVSExpense = lazy(() => import('../pages/protected/IncomeVsExpense'))
+const VendorDetail = lazy(() => import('../pages/protected/VendorDetail'))
 
 const routes = [
+  {
+    path: '/vendorDetail/',  // Add dynamic ID parameter here
+    component: VendorDetail,
+
+  },
   {
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
@@ -148,6 +155,7 @@ const routes = [
     path: '/trialbalance',
     component: TrialBalance,
   },
+  
   {
     path: '/settings-profile',
     component: ProfileSettings,

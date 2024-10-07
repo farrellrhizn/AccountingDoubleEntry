@@ -1,6 +1,8 @@
+// src/features/invoice/components/EditInvoiceModal.js
+
 import React, { useState, useEffect } from 'react';
 
-const EditInvoiceModal = ({ showModal, onClose, invoice }) => {
+const EditInvoiceModal = ({ showModal, onClose, invoice, onUpdate }) => { // Pastikan 'onUpdate' diterima sebagai prop
     const [formData, setFormData] = useState({
         invoice: '',
         customer: '',
@@ -33,9 +35,13 @@ const EditInvoiceModal = ({ showModal, onClose, invoice }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you can add functionality to save the updated invoice data
-        console.log('Updated Invoice Data:', formData);
-        onClose(); // Close the modal after submitting
+
+        const updatedInvoice = {
+            ...invoice,
+            ...formData,
+        };
+
+        onUpdate(updatedInvoice); // Gunakan 'onUpdate' di sini
     };
 
     return (
@@ -43,6 +49,7 @@ const EditInvoiceModal = ({ showModal, onClose, invoice }) => {
             <div className="bg-white p-6 rounded shadow-lg w-96">
                 <h2 className="text-xl font-bold mb-4">Edit Invoice</h2>
                 <form onSubmit={handleSubmit}>
+                    {/* Form Fields */}
                     <div className="mb-4">
                         <label className="block mb-1" htmlFor="invoice">Invoice ID</label>
                         <input

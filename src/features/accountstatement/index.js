@@ -4,8 +4,14 @@ import TitleCard from "../../components/Cards/TitleCard";
 import CardOption from "../../components/Cards/CardOption";
 import { ACCOUNTSTATEMENT_DATA } from "../../utils/dummyData";
 import SubTitleCard from "../../components/Cards/CardSubTitle";
+import { useDispatch } from "react-redux"; // Import Redux dispatch
+import { showNotification } from "../common/headerSlice"; // Import notification action
 
 const AccountStatementPage = () => {
+  const dispatch = useDispatch(); // Initialize dispatch
+
+  // Inisialisasi dengan format string YYYY-MM-DD
+  const today = new Date().toISOString().split("T")[0];
   const [accstatementData, setAccstatementData] = useState(
     ACCOUNTSTATEMENT_DATA
   );
@@ -16,28 +22,41 @@ const AccountStatementPage = () => {
   const [selectedAccstatement, setSelectedAccstatement] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [dateValue, setDateValue] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: today,
+    endDate: today,
   });
 
-  // Logging to see if dateValue is being updated properly
+  // Logging untuk debugging
   useEffect(() => {
     console.log("dateValue:", dateValue);
   }, [dateValue]);
 
+  // Handle date picker value change
   const handleDatePickerValueChange = (newValue) => {
     console.log("New Datepicker Value:", newValue);
     setDateValue(newValue);
+    updateAccountStatementPeriod(newValue); // Trigger the notification
+  };
+
+  // Update account statement period and show notification
+  const updateAccountStatementPeriod = (newRange) => {
+    dispatch(
+      showNotification({
+        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
+        status: 1,
+      })
+    );
   };
 
   const handleSearch = () => {
     console.log("Search clicked");
+    // Implement search logic based on dateValue and searchTerm if necessary
   };
 
   const handleReset = () => {
     setDateValue({
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: today,
+      endDate: today,
     });
     setSearchTerm(""); // Reset search term as well
     console.log("Reset clicked");
@@ -60,14 +79,16 @@ const AccountStatementPage = () => {
       (accstatement.description &&
         accstatement.description
           .toLowerCase()
-          .includes(searchTerm.toLowerCase()))
+          .includes(searchTerm.toLowerCase())) &&
+      (new Date(accstatement.date) >= new Date(dateValue.startDate) &&
+        new Date(accstatement.date) <= new Date(dateValue.endDate))
   );
 
   const totalPages = Math.ceil(filteredAccstatement.length / itemsPerPage);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [itemsPerPage]);
+  }, [itemsPerPage, dateValue]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -87,15 +108,16 @@ const AccountStatementPage = () => {
     startIndex + itemsPerPage
   );
 
-  // Additional logging to track rendering issues
+  // Logging tambahan untuk melacak rendering
   console.log("Rendering AccountStatementPage...");
 
   return (
     <>
       <CardOption topMargin="mt-2" title={"Select By :"}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="w-full lg:w-auto mr-4 lg:mb-0">
-            <div className="mb-3">Date</div>
+          {/* Date Picker */}
+          <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
+            <div className="mb-2 text-sm font-medium">Date</div>
             <div className="flex items-center">
               <Datepicker
                 containerClassName="w-full"
@@ -106,12 +128,14 @@ const AccountStatementPage = () => {
                 toggleClassName="invisible"
                 onChange={handleDatePickerValueChange}
                 showShortcuts={true}
-                primaryColor={"white"}
+                primaryColor={"blue"} // Ubah warna sesuai kebutuhan
               />
             </div>
           </div>
+
+          {/* Account Selector */}
           <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-3">Account</div>
+            <div className="mb-2 text-sm font-medium">Account</div>
             <div className="flex items-center">
               <select className="select select-bordered w-full">
                 <option>Select Account</option>
@@ -125,8 +149,10 @@ const AccountStatementPage = () => {
               </select>
             </div>
           </div>
+
+          {/* Category Selector */}
           <div className="w-full lg:w-auto mr-4 mb-4 lg:mb-0">
-            <div className="mb-3">Category</div>
+            <div className="mb-2 text-sm font-medium">Category</div>
             <div className="flex items-center">
               <select className="select select-bordered w-full">
                 <option>Select Category</option>
@@ -135,6 +161,8 @@ const AccountStatementPage = () => {
               </select>
             </div>
           </div>
+
+          {/* Buttons */}
           <div className="md:col-span-3 w-72 flex justify-start gap-4">
             <button
               className="btn btn-primary flex-1 text-sm"
@@ -152,34 +180,35 @@ const AccountStatementPage = () => {
         </div>
       </CardOption>
 
+      {/* Report Section */}
       <div className="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        <SubTitleCard className="w-full" title={"Report :"} bottomMargin="mb-4">
-          <div className="flex items-center justify-left text-center text-md">
-            Transaction Summary
-          </div>
+        <SubTitleCard
+          className="w-full"
+          title={"Report :"}
+          bottomMargin="mb-4"
+        >
+          <div className="text-left text-md">Transaction Summary</div>
         </SubTitleCard>
-        <SubTitleCard className="w-full" title={"Type :"} bottomMargin="mb-4">
-          <div className="flex items-center justify-left text-center text-md">
-            Revenue
-          </div>
+        <SubTitleCard
+          className="w-full"
+          title={"Type :"}
+          bottomMargin="mb-4"
+        >
+          <div className="text-left text-md">Revenue</div>
         </SubTitleCard>
         <SubTitleCard
           className="w-full"
           title={"Duration :"}
           bottomMargin="mb-4"
         >
-          <div className="flex items-center justify-left text-center text-md">
-            {dateValue.startDate
-              ? dateValue.startDate.toLocaleDateString()
-              : "Start Date"}{" "}
-            -{" "}
-            {dateValue.endDate
-              ? dateValue.endDate.toLocaleDateString()
-              : "End Date"}
+          <div className="text-left text-md">
+            {new Date(dateValue.startDate).toLocaleDateString()} -{" "}
+            {new Date(dateValue.endDate).toLocaleDateString()}
           </div>
         </SubTitleCard>
       </div>
 
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-6">
         <SubTitleCard
           className="w-full"
@@ -210,15 +239,17 @@ const AccountStatementPage = () => {
         </SubTitleCard>
       </div>
 
+      {/* Manage Invoices Section */}
       <TitleCard topMargin="mt-6" title="Manage Invoices">
         <div className="flex justify-between items-center mb-4">
-          <div className="mr-4">
-            <label htmlFor="entriesPerPage" className="mr-2">
+          {/* Entries Per Page */}
+          <div className="flex items-center space-x-2">
+            <label htmlFor="entriesPerPage" className="text-sm font-medium">
               Entries per page:
             </label>
             <select
               id="entriesPerPage"
-              className="select select-bordered"
+              className="select select-bordered text-sm"
               value={itemsPerPage}
               onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
             >
@@ -228,39 +259,47 @@ const AccountStatementPage = () => {
               <option value={20}>20</option>
             </select>
           </div>
-          <div className="ml-auto">
+
+          {/* Search Input */}
+          <div className="w-full sm:w-auto">
             <input
               type="text"
               placeholder="Search..."
-              className="input input-bordered"
+              className="input input-bordered w-full sm:w-64 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="table w-full min-w-max">
             <thead>
               <tr>
-                <th className="min-w-[150px] px-4 py-2">DATE</th>
-                <th className="min-w-[150px] px-4 py-2">AMOUNT</th>
-                <th className="min-w-[200px] px-4 py-2">DESCRIPTION</th>
+                <th className="min-w-[150px] px-4 py-2 text-xs">DATE</th>
+                <th className="min-w-[150px] px-4 py-2 text-xs">AMOUNT</th>
+                <th className="min-w-[200px] px-4 py-2 text-xs">DESCRIPTION</th>
               </tr>
             </thead>
             <tbody>
               {paginatedAccstatement.map((accstatement, index) => (
-                <tr key={index}>
-                  <td className="min-w-[150px]">{accstatement.date}</td>
+                <tr key={index} className="text-sm">
+                  <td className="min-w-[150px]">
+                    {new Date(accstatement.date).toLocaleDateString()}
+                  </td>
                   <td className="min-w-[150px]">{accstatement.amount}</td>
-                  <td className="min-w-[150px]">{accstatement.description}</td>
+                  <td className="min-w-[200px] px-4 py-2">
+                    {accstatement.description}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="flex justify-between mt-4">
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
           <button
             onClick={handlePrevPage}
             className={`btn bg-primary text-white hover:bg-secondary ${
@@ -270,10 +309,10 @@ const AccountStatementPage = () => {
           >
             Previous
           </button>
-          <div>
+          <div className="text-sm">
             Showing {startIndex + 1} to{" "}
-            {Math.min(startIndex + itemsPerPage, filteredAccstatement.length)}{" "}
-            of {filteredAccstatement.length} entries
+            {Math.min(startIndex + itemsPerPage, filteredAccstatement.length)} of{" "}
+            {filteredAccstatement.length} entries
           </div>
           <button
             onClick={handleNextPage}
@@ -286,7 +325,44 @@ const AccountStatementPage = () => {
           </button>
         </div>
       </TitleCard>
+
+      {/* Detail View Modal */}
+      {showDetail && selectedAccstatement && (
+        <DetailView
+          accstatement={selectedAccstatement} // Pastikan prop yang benar
+          onClose={() => setShowDetail(false)}
+        />
+      )}
     </>
+  );
+};
+
+// Komponen DetailView (Pastikan disesuaikan dengan data accstatement)
+const DetailView = ({ accstatement, onClose }) => {
+  if (!accstatement) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full mx-4">
+        <h2 className="text-xl font-bold mb-4">Account Statement Details</h2>
+        <p>
+          <strong>Date:</strong>{" "}
+          {new Date(accstatement.date).toLocaleDateString()}
+        </p>
+        <p>
+          <strong>Amount:</strong> {accstatement.amount}
+        </p>
+        <p>
+          <strong>Description:</strong> {accstatement.description}
+        </p>
+        <button
+          onClick={onClose}
+          className="mt-4 btn bg-primary text-white hover:bg-secondary w-full"
+        >
+          Close
+        </button>
+      </div>
+    </div>
   );
 };
 

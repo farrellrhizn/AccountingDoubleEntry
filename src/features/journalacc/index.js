@@ -1,25 +1,22 @@
+// src/pages/JournalAcc.jsx
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
-import { openModal } from "../common/modalSlice";
-import { CONFIRMATION_MODAL_CLOSE_TYPES, MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import { JOURNAL_ACCOUNTS } from "../../utils/dummyData";
+import EditJournalModal from "./components/EditJournalModal";
+import DeleteJournalModal from "./components/DeleteJournalModal"; // Import DeleteJournalModal
+import { showNotification } from "../common/headerSlice";
+import { useNavigate } from "react-router-dom";
 
-const TopSideButtons = () => {
-  const dispatch = useDispatch();
-
-  const openAddNewLeadModal = () => {
-    dispatch(openModal({ title: "Add New Journal", bodyType: MODAL_BODY_TYPES.DEFAULT }));
-  };
-
+const TopSideButtons = ({ onOpenAddNewJournal }) => {
   return (
     <div className="inline-block float-right">
       <button
         className="btn px-4 btn-sm normal-case btn-primary justify-center"
-        onClick={openAddNewLeadModal}
+        onClick={onOpenAddNewJournal}
       >
         Add New
       </button>
@@ -28,31 +25,31 @@ const TopSideButtons = () => {
 };
 
 export default function JournalAcc() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  const [allJournals, setAllJournals] = useState(JOURNAL_ACCOUNTS);
   const [journals, setJournals] = useState(JOURNAL_ACCOUNTS);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentJournal, setCurrentJournal] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [journalToDelete, setJournalToDelete] = useState(null);
 
-  // Update totalPages whenever journals or entriesPerPage changes
   useEffect(() => {
-    setTotalPages(Math.ceil(journals.length / entriesPerPage));
-    // Ensure currentPage is within bounds
-    if (currentPage > Math.ceil(journals.length / entriesPerPage)) {
-      setCurrentPage(Math.ceil(journals.length / entriesPerPage) || 1);
+    const newTotalPages = Math.ceil(journals.length / entriesPerPage);
+    setTotalPages(newTotalPages);
+    if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages || 1);
     }
   }, [journals, entriesPerPage, currentPage]);
 
-  // Handle search term changes and filter journals
   useEffect(() => {
-    handleSearchTerm();
-    setCurrentPage(1); // Reset to first page on search
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
-
-  const handleSearchTerm = () => {
-    const filteredJournals = JOURNAL_ACCOUNTS.filter((journal) => {
+    const filteredJournals = allJournals.filter((journal) => {
       const searchText = searchTerm.toLowerCase();
       return (
         journal.journalId.toLowerCase().includes(searchText) ||
@@ -62,47 +59,48 @@ export default function JournalAcc() {
       );
     });
     setJournals(filteredJournals);
-  };
+    setCurrentPage(1); // Reset to first page on search
+  }, [searchTerm, allJournals]);
 
   const removeFilter = () => {
-    setJournals(JOURNAL_ACCOUNTS);
     setSearchTerm("");
+    setJournals(allJournals);
   };
 
-  const getDummyStatus = (index) => {
-    switch (index % 5) {
-      case 0:
-        return <div className="badge">Not Interested</div>;
-      case 1:
-        return <div className="badge badge-primary">In Progress</div>;
-      case 2:
-        return <div className="badge badge-secondary">Sold</div>;
-      case 3:
-        return <div className="badge badge-accent">Need Followup</div>;
-      default:
-        return <div className="badge badge-ghost">Open</div>;
+  const handleDetailClick = (journal) => {
+    navigate(`/app/journalacc/detailJournal`);
+  };
+
+  const handleDelete = () => {
+    if (journalToDelete) {
+      const updatedAllJournals = allJournals.filter(
+        (journal) => journal.journalId !== journalToDelete.journalId
+      );
+      setAllJournals(updatedAllJournals);
+      setIsDeleteModalOpen(false);
+      setJournalToDelete(null);
+      dispatch(
+        showNotification({
+          message: `Journal "${journalToDelete.journalId}" has been deleted.`,
+          status: 1, // Assuming status 1 is for success
+        })
+      );
     }
   };
 
-  const handleDelete = (index) => {
-    const updatedJournals = journals.filter((_, i) => i !== index);
-    setJournals(updatedJournals);
-  };
-
   const openEditModal = (index) => {
-    dispatch(openModal({ 
-      title: "Edit Journal", 
-      bodyType: MODAL_BODY_TYPES.JOURNAL_EDIT, 
-      extraObject: { index } 
-    }));
+    setCurrentJournal(journals[index]);
+    setIsEditModalOpen(true);
   };
 
-  const openJournalDetail = (index) => {
-    dispatch(openModal({ 
-      title: "Journal Detail", 
-      bodyType: MODAL_BODY_TYPES.JOURNAL_DETAIL, 
-      extraObject: { index } 
-    }));
+  const openAddNewJournal = () => {
+    setCurrentJournal(null); // Clear current journal for new entry
+    setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (journal) => {
+    setJournalToDelete(journal);
+    setIsDeleteModalOpen(true);
   };
 
   const handleEntriesChange = (event) => {
@@ -114,25 +112,66 @@ export default function JournalAcc() {
     setSearchTerm(event.target.value);
   };
 
-  // Pagination Logic
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   const startIndex = (currentPage - 1) * entriesPerPage;
   const paginatedJournals = journals.slice(startIndex, startIndex + entriesPerPage);
 
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentJournal(null);
+  };
+
+  const handleSaveModal = (updatedJournal) => {
+    if (currentJournal) {
+      const updatedAllJournals = allJournals.map((journal) =>
+        journal.journalId === currentJournal.journalId ? updatedJournal : journal
+      );
+      setAllJournals(updatedAllJournals);
+      
+      dispatch(
+        showNotification({
+          message: `Journal "${updatedJournal.journalId}" has been successfully edited!`,
+          status: 1, // Assuming status 1 is for success
+        })
+      );
+    } else {
+      const newAllJournals = [updatedJournal, ...allJournals];
+      setAllJournals(newAllJournals);
+      
+      dispatch(
+        showNotification({
+          message: `Journal "${updatedJournal.journalId}" has been successfully added!`,
+          status: 1, // Assuming status 1 is for success
+        })
+      );
+    }
+
+    handleCloseEditModal();
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setJournalToDelete(null);
+  };
+
   return (
     <>
-      <TitleCard title="Manage Journal" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
+      <TitleCard
+        title="Manage Journal"
+        topMargin="mt-2"
+        TopSideButtons={<TopSideButtons onOpenAddNewJournal={openAddNewJournal} />}
+      >
         <div>
           {/* Search and Entries Per Page */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
@@ -187,11 +226,11 @@ export default function JournalAcc() {
               <tbody>
                 {paginatedJournals.length > 0 ? (
                   paginatedJournals.map((journal, index) => (
-                    <tr key={startIndex + index}>
+                    <tr key={journal.journalId}>
                       <td>
                         <button
                           className="btn bg-transparent border-primary hover:bg-primary hover:text-white"
-                          onClick={() => openJournalDetail(startIndex + index)}
+                          onClick={() => handleDetailClick(journal)}
                         >
                           {journal.journalId}
                         </button>
@@ -203,14 +242,16 @@ export default function JournalAcc() {
                         <button
                           className="m-2 btn bg-transparent border-primary hover:bg-primary hover:text-white group"
                           onClick={() => openEditModal(startIndex + index)}
+                          aria-label={`Edit journal ${journal.journalId}`} // Added aria-label for accessibility
                         >
                           <PencilIcon className="h-5 w-5 text-primary group-hover:text-white" />
                         </button>
                         <button
-                          className="m-2 btn bg-transparent border-secondary hover:bg-secondary hover:text-white group"
-                          onClick={() => handleDelete(startIndex + index)}
+                          className="m-2 btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                          onClick={() => openDeleteModal(journal)}
+                          aria-label={`Delete journal ${journal.journalId}`} // Added aria-label for accessibility
                         >
-                          <TrashIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+                          <TrashIcon className="h-5 w-5 text-primary group-hover:text-white" />
                         </button>
                       </td>
                     </tr>
@@ -257,6 +298,26 @@ export default function JournalAcc() {
           </div>
         </div>
       </TitleCard>
+
+      {/* Edit Modal rendering */}
+      {isEditModalOpen && (
+        <EditJournalModal
+          title={currentJournal ? "Edit Journal" : "Add New Journal"}
+          journalData={currentJournal}
+          isEditMode={!!currentJournal}
+          onClose={handleCloseEditModal}
+          onSave={handleSaveModal}
+        />
+      )}
+
+      {/* Delete Modal rendering */}
+      {isDeleteModalOpen && (
+        <DeleteJournalModal
+          journalData={journalToDelete}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleDelete}
+        />
+      )}
     </>
   );
 }

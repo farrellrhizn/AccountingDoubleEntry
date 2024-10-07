@@ -1,3 +1,5 @@
+// src/features/creditnote/index.js
+
 import React, { useState, useEffect } from 'react';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import EyeIcon from '@heroicons/react/24/outline/EyeIcon';
@@ -8,8 +10,17 @@ import Datepicker from 'react-tailwindcss-datepicker';
 import CardOption from '../../components/Cards/CardOption';
 import { CREDIT_DATA } from '../../utils/dummyData';
 import EditCreditModal from './components/EditCreditModal';
+import DetailView from './components/DetailView';
+import DeleteConfirmModal from './components/DeleteConfirmModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
+import { useNavigate } from 'react-router-dom';
 
 const CreditPage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [creditData, setCreditData] = useState(CREDIT_DATA);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -17,6 +28,8 @@ const CreditPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedCredit, setSelectedCredit] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [creditToDelete, setCreditToDelete] = useState(null);
     const [dateValue, setDateValue] = useState({
         startDate: new Date(),
         endDate: new Date(),
@@ -44,9 +57,38 @@ const CreditPage = () => {
         setShowModal(true);
     };
 
+    const handleDetailIDClick = (credit) => {
+        navigate(`/app/credit/detailCredit`);
+    };
+
     const handleDetailClick = (credit) => {
         setSelectedCredit(credit);
         setShowDetail(true);
+    };
+
+    const handleDeleteClick = (credit) => {
+        setCreditToDelete(credit);
+        setShowDeleteConfirm(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (creditToDelete) {
+            const updatedCreditData = creditData.filter((item) => item !== creditToDelete);
+            setCreditData(updatedCreditData);
+            setShowDeleteConfirm(false);
+            setCreditToDelete(null);
+            // Mengirim notifikasi menggunakan toast
+            dispatch(
+                showNotification({
+                  message: `Credit ${creditToDelete.invoice} has been successfully deleted!`,
+                  status: 1, // Pastikan status sesuai dengan definisi Anda (misalnya, 1 untuk sukses)
+                })
+              );
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteConfirm(false);
     };
 
     const filteredCredit = creditData.filter((credit) =>
@@ -74,6 +116,38 @@ const CreditPage = () => {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedCredit = filteredCredit.slice(startIndex, startIndex + itemsPerPage);
+
+    // Fungsi untuk menangani pembaruan kredit
+    const handleUpdateCredit = (updatedCredit) => {
+        // Validasi sederhana
+        if (!updatedCredit.invoice || !updatedCredit.customer) {
+            dispatch(
+                showNotification({
+                  message: "Invoice and Customer cannot be empty!",
+                  status: 2, // Pastikan status sesuai dengan definisi Anda (misalnya, 2 untuk gagal)
+                })
+              );
+            return;
+        }
+
+        // Perbarui data kredit
+        setCreditData((prevData) =>
+            prevData.map((credit) =>
+                credit.invoice === updatedCredit.invoice ? updatedCredit : credit
+            )
+        );
+
+        // Tampilkan notifikasi sukses
+        dispatch(
+            showNotification({
+              message: `Credit ${updatedCredit.invoice} has been successfully edited!`,
+              status: 1, // Pastikan status sesuai dengan definisi Anda (misalnya, 1 untuk sukses)
+            })
+          );
+
+        // Tutup modal
+        setShowModal(false);
+    };
 
     return (
         <>
@@ -120,9 +194,10 @@ const CreditPage = () => {
                         </thead>
                         <tbody>
                             {paginatedCredit.map((credit, index) => (
-                                <tr key={index}>
+                                <tr key={credit.id || index}>
                                     <td className="min-w-[150px]">
-                                        <button className='btn bg-transparent border-primary hover:bg-primary hover:text-white group'>
+                                        <button className='btn bg-transparent border-primary hover:bg-primary hover:text-white group'
+                                        onClick={() => handleDetailIDClick(credit)}>
                                             {credit.invoice}
                                         </button>
                                     </td>
@@ -131,17 +206,29 @@ const CreditPage = () => {
                                     <td className="min-w-[150px]">{credit.amount}</td>
                                     <td className="min-w-[150px]">{credit.description}</td>
                                     <td className="min-w-[200px]">
-                                        <div className="grid grid-cols-5 gap-2">
-                                            <button onClick={() => handleDetailClick(credit)} className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                                        <div className="grid grid-cols-4 gap-2">
+                                            <button
+                                                onClick={() => handleDetailClick(credit)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                            >
                                                 <DocumentDuplicateIcon className="h-5 w-5" />
                                             </button>
-                                            <button onClick={() => handleDetailClick(credit)} className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                                            <button
+                                                onClick={() => handleDetailClick(credit)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                            >
                                                 <EyeIcon className="h-5 w-5" />
                                             </button>
-                                            <button onClick={() => handleEditClick(credit)} className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                                            <button
+                                                onClick={() => handleEditClick(credit)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                            >
                                                 <PencilIcon className="h-5 w-5" />
                                             </button>
-                                            <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                                            <button
+                                                onClick={() => handleDeleteClick(credit)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                            >
                                                 <TrashIcon className="h-5 w-5" />
                                             </button>
                                         </div>
@@ -153,7 +240,7 @@ const CreditPage = () => {
                 </div>
 
                 {/* Pagination dan Informasi */}
-        <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
                     {/* Informasi */}
                     <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCredit.length)} of {filteredCredit.length} entries
@@ -176,44 +263,34 @@ const CreditPage = () => {
                         </button>
                     </div>
                 </div>
-
             </TitleCard>
 
-            {showModal && (
-                <EditCreditModal
-                    showModal={showModal}
-                    onClose={() => setShowModal(false)}
-                    credit={selectedCredit} // Use selectedCredit here
+            {/* Modal Edit Credit */}
+            <EditCreditModal
+                showModal={showModal}
+                onClose={() => setShowModal(false)}
+                credit={selectedCredit}
+                onUpdate={handleUpdateCredit} // Pasang handler di sini
+            />
+
+            {/* Modal Detail View */}
+            {showDetail && selectedCredit && (
+                <DetailView
+                    credit={selectedCredit}
+                    onClose={() => setShowDetail(false)}
                 />
             )}
-            {showDetail && (
-                <DetailView
-                    credit={selectedCredit} // Use selectedCredit here
-                    onClose={() => setShowDetail(false)}
+
+            {/* Modal Delete Confirm */}
+            {showDeleteConfirm && creditToDelete && (
+                <DeleteConfirmModal
+                    onConfirm={handleConfirmDelete}
+                    onCancel={handleCancelDelete}
                 />
             )}
         </>
     );
-};
 
-const DetailView = ({ credit, onClose }) => {
-    if (!credit) return null;
-
-    return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Credit Details</h2>
-                <p><strong>Invoice ID:</strong> {credit.invoice}</p>
-                <p><strong>Customer:</strong> {credit.customer}</p>
-                <p><strong>Date:</strong> {credit.date}</p>
-                <p><strong>Amount:</strong> {credit.amount}</p>
-                <p><strong>Description:</strong> {credit.description}</p>
-                <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
-                    Close
-                </button>
-            </div>
-        </div>
-    );
 };
 
 export default CreditPage;

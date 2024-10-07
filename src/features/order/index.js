@@ -1,3 +1,5 @@
+// src/features/orders/OrderPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
@@ -5,10 +7,14 @@ import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import EyeIcon from '@heroicons/react/24/outline/EyeIcon';
 import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon';
 import EditOrderModal from './components/EditOrderModal';
+import DeleteConfirmModal from './components/DeleteConfirmModal'; // Import DeleteConfirmModal
 import TitleCard from '../../components/Cards/TitleCard';
 import { ORDER_DATA } from '../../utils/dummyData';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
 
 const OrderPage = () => {
+    const dispatch = useDispatch();
     const [orderData, setOrderData] = useState(ORDER_DATA);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -16,6 +22,10 @@ const OrderPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+
+    // State untuk modal delete
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [orderToDelete, setOrderToDelete] = useState(null);
 
     const handleEditClick = (order) => {
         setSelectedOrder(order);
@@ -25,6 +35,54 @@ const OrderPage = () => {
     const handleDetailClick = (order) => {
         setSelectedOrder(order);
         setShowDetail(true);
+    };
+
+    const handleDeleteClick = (order) => {
+        setOrderToDelete(order);
+        setShowDeleteModal(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (orderToDelete) {
+            // Menghapus order dari orderData
+            setOrderData((prevData) =>
+                prevData.filter((order) => order.order_id !== orderToDelete.order_id)
+            );
+
+            // Menampilkan notifikasi
+            dispatch(
+                showNotification({
+                    message: `Order "${orderToDelete.order_id}" has been successfully deleted.`,
+                    status: 1, // Asumsi status 1 adalah untuk sukses
+                })
+            );
+
+            // Menutup modal delete
+            setShowDeleteModal(false);
+            setOrderToDelete(null);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setShowDeleteModal(false);
+        setOrderToDelete(null);
+    };
+
+    // Handler untuk menyimpan perubahan dari EditOrderModal
+    const handleSaveOrder = (updatedOrder) => {
+        setOrderData((prevData) =>
+            prevData.map((order) =>
+                order.order_id === updatedOrder.order_id ? updatedOrder : order
+            )
+        );
+
+        // Menampilkan notifikasi
+        dispatch(
+            showNotification({
+                message: `Order "${updatedOrder.order_id}" has been successfully updated.`,
+                status: 1, // Asumsi status 1 adalah untuk sukses
+            })
+        );
     };
 
     const filteredOrders = orderData.filter(order =>
@@ -134,7 +192,9 @@ const OrderPage = () => {
                                         <td className="px-4 py-2 text-sm md:text-base">{order.name}</td>
                                         <td className="px-4 py-2 text-sm md:text-base">{order.plan_name}</td>
                                         <td className="px-4 py-2 text-sm md:text-base">
-                                            {typeof order.price === 'number' ? `$${order.price.toFixed(2)}` : '-'}
+                                            {typeof order.price === 'string' && order.price.startsWith('USD') 
+                                                ? `$${parseFloat(order.price.slice(3)).toLocaleString()}`
+                                                : order.price || '-'}
                                         </td>
                                         <td className="px-4 py-2 text-sm md:text-base">{order.payment_type}</td>
                                         <td className="px-4 py-2">
@@ -146,37 +206,20 @@ const OrderPage = () => {
                                         </td>
                                         <td className="px-4 py-2 text-sm md:text-base">{order.coupon || '-'}</td>
                                         <td className="px-4 py-2 text-center">
-                                            <div className="flex justify-center space-x-2">
-                                                <a href={order.invoice} target="_blank" rel="noopener noreferrer">
-                                                    <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
-                                                        <DocumentIcon className="h-5 w-5" />
-                                                    </button>
+                                            {order.invoice && order.invoice !== '-' ? (
+                                                <a href={order.invoice} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                                    View Invoice
                                                 </a>
-                                                <button
-                                                    onClick={() => handleDetailClick(order)}
-                                                    className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
-                                                >
-                                                    <EyeIcon className="h-5 w-5" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleEditClick(order)}
-                                                    className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md"
-                                                >
-                                                    <PencilIcon className="h-5 w-5" />
-                                                </button>
-                                                <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
-                                                    <TrashIcon className="h-5 w-5" />
-                                                </button>
-                                                <button className="btn bg-transparent border-primary p-2 hover:bg-primary hover:text-white rounded-md">
-                                                    <KeyIcon className="h-5 w-5" />
-                                                </button>
-                                            </div>
+                                            ) : (
+                                                '-'
+                                            )}
                                         </td>
+                                        
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="9" className="px-4 py-2 text-center text-gray-500">
+                                    <td colSpan="10" className="px-4 py-2 text-center text-gray-500">
                                         No orders found.
                                     </td>
                                 </tr>
@@ -217,6 +260,7 @@ const OrderPage = () => {
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     order={selectedOrder}
+                    onSave={handleSaveOrder} // Pass onSave handler
                 />
             )}
 
@@ -227,9 +271,16 @@ const OrderPage = () => {
                     onClose={() => setShowDetail(false)}
                 />
             )}
+
+            {/* Modal Delete Confirm */}
+            {showDeleteModal && (
+                <DeleteConfirmModal
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={handleDeleteCancel}
+                />
+            )}
         </>
-    );
-};
+    );};
 
 // Komponen DetailView yang Diperbaiki
 const DetailView = ({ order, onClose }) => {
@@ -243,7 +294,7 @@ const DetailView = ({ order, onClose }) => {
                 <p className="mb-2"><strong>Date:</strong> {order.date}</p>
                 <p className="mb-2"><strong>Name:</strong> {order.name}</p>
                 <p className="mb-2"><strong>Plan Name:</strong> {order.plan_name}</p>
-                <p className="mb-2"><strong>Price:</strong> {typeof order.price === 'number' ? `$${order.price.toFixed(2)}` : '-'}</p>
+                <p className="mb-2"><strong>Price:</strong> {typeof order.price === 'number' ? `$${order.price.toFixed(2)}` : order.price || '-'}</p>
                 <p className="mb-2"><strong>Payment Type:</strong> {order.payment_type}</p>
                 <p className="mb-2"><strong>Status:</strong> 
                     <span
@@ -254,7 +305,7 @@ const DetailView = ({ order, onClose }) => {
                 </p>
                 <p className="mb-2"><strong>Coupon:</strong> {order.coupon || '-'}</p>
                 <p className="mb-2"><strong>Invoice:</strong> 
-                    {order.invoice ? (
+                    {order.invoice && order.invoice !== '-' ? (
                         <a href={order.invoice} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                             View Invoice
                         </a>

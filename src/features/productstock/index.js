@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
-import EditModal from './components/EditProductModal';
+import EditProductModal from './components/EditProductModal';
 import TitleCard from '../../components/Cards/TitleCard';
 import { PRODUCT_STOCK } from '../../utils/dummyData';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
 
 const ProductStock = () => {
+    const dispatch = useDispatch();
     const [productData, setProductData] = useState(PRODUCT_STOCK);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+
+    // Fungsi untuk menyimpan perubahan produk yang telah diedit
+    const handleSave = (editedProduct) => {
+        const updatedProductData = productData.map((product) =>
+            product.sku === editedProduct.sku ? editedProduct : product
+        );
+        setProductData(updatedProductData);
+        dispatch(
+            showNotification({
+                message: `Product "${editedProduct.name}" has been successfully updated!`,
+                status: 1,
+            })
+        );
+        setShowModal(false);
+    };
 
     const handleEditClick = (product) => {
         setSelectedProduct(product);
@@ -46,7 +64,7 @@ const ProductStock = () => {
 
     return (
         <>
-            <TitleCard topMargin="mt-2" title="Manage Product Accounts">
+            <TitleCard topMargin="mt-2" title="Manage Product Stock">
                 {/* Kontrol Responsif untuk Entries dan Search */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
                     {/* Entries Per Page */}
@@ -138,10 +156,11 @@ const ProductStock = () => {
 
             {/* Modal Edit Product */}
             {showModal &&
-                <EditModal
+                <EditProductModal
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     product={selectedProduct}
+                    onSave={handleSave}  // Menyimpan hasil edit
                 />
             }
         </>
