@@ -245,7 +245,6 @@ module.exports = Object.freeze({
 
     CREDIT_DATA : [
       { invoice: '#INVO00001', customer: 'Aurora Oneil', date: 'Feb 18, 2019', amount: '$9,700.00', description: 'It is a document that is issued by the seller to indicate a full or partial return of funds.' },
-      { invoice: '#INVO00001', customer: 'Aurora Oneil', date: 'Feb 18, 2019', amount: '$9,700.00', description: 'It is a document that is issued by the seller to indicate a full or partial return of funds.' },
       { invoice: '#INVO00002', customer: 'Liam Johnson', date: 'Mar 10, 2019', amount: '$12,500.00', description: 'Payment for services rendered in the previous month.' },
       { invoice: '#INVO00003', customer: 'Emma Brown', date: 'Apr 15, 2019', amount: '$7,800.00', description: 'Refund for returned merchandise.' },
       { invoice: '#INVO00004', customer: 'Noah Davis', date: 'May 20, 2019', amount: '$15,300.00', description: 'Credit for overpayment on previous invoice.' },

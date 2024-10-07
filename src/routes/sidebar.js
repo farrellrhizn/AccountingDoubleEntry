@@ -30,12 +30,12 @@ const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
 
 const routes = [
-
   {
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses}/>, 
-    name: 'Dashboard',
+    name: 'Dashboard'
   },
+
 
   //   path: '/app/leads', // url
   //   icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
@@ -99,7 +99,7 @@ const routes = [
         name: 'Proposal',
       },
       {
-        path: '/app/journalacc',
+        path: '/app/',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Retainers',
       }
@@ -116,7 +116,7 @@ const routes = [
           name: 'Bank Account',
         },
         {
-          path: '/app/journalacc',
+          path: '/app/',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Transfer',
         }
@@ -133,7 +133,7 @@ const routes = [
           name: 'Invoice',
         },
         {
-          path: '/app/journalacc',
+          path: '/app/',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Revenue',
         },
@@ -197,27 +197,27 @@ const routes = [
     name: 'Report', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/transaction',
+        path: '/app/Transaction',
         icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
         name: 'Transaction',
       },
       {
-        path: '/app/accountstatement',
+        path: '/app/AccountStatement',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Account Statement',
       },
       {
-        path: '/app/incomesummary',
+        path: '/app/IncomeSummary',
         icon: <ClipBoardIcon className={submenuIconClasses}/>,
         name: 'Income Summary',
       },
       {
-        path: '/app/balance',
+        path: '/app/ExpenseSummary',
         icon: <ScaleIcon className={submenuIconClasses}/>,
         name: 'Expense Summary',
       },
       {
-        path: '/app/TrialBalance',
+        path: '/app/IncomeVsExpense',
         icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
         name: 'Income VS Expense',
       },

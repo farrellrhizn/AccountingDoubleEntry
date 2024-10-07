@@ -1,5 +1,6 @@
 // All components mapping with path for internal routes
 
+import { elements } from 'chart.js'
 import { lazy } from 'react'
 
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
@@ -11,7 +12,6 @@ const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
 const Calendar = lazy(() => import('../pages/protected/Calendar'))
 const Team = lazy(() => import('../pages/protected/Team'))
-const Transactions = lazy(() => import('../pages/protected/Transactions'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
@@ -27,18 +27,26 @@ const VendorAcc = lazy(() => import('../pages/protected/VendorAcc'))
 const Contract = lazy(() => import('../pages/protected/Contract'))
 const AssetsPage = lazy(() => import('../pages/protected/assetspage'))
 const OrderPage = lazy(() => import('../pages/protected/order'))
-const staffUser = lazy(() => import('../features/staffuser'))
+const staffUser = lazy(() => import('../pages/protected/StaffUser'))
 const ProposalPage = lazy(() => import('../pages/protected/Proposal'))
 const BankAcc = lazy(() => import('../pages/protected/BankAcc'))
 const InvoicePage = lazy(() => import('../pages/protected/Invoice'))
 const CreditNote = lazy(() => import('../pages/protected/CreditNote'))
 const RolePage = lazy(() => import('../pages/protected/Role'))
-const TransactionPage = lazy(() => import('../features/transaction'))
-const ContractDetail = lazy(() => import('../features/contract/contractDetail'))
-const AccountStatementPage = lazy(() => import('../features/accountstatement'))
-const IncomeSumPage = lazy(() => import('../features/incomesummary'))
+const TransactionPage = lazy(() => import('../pages/protected/Transaction'))
+const ContractDetail = lazy(() => import('../pages/protected/Contract'))
+const AccountStatementPage = lazy(() => import('../pages/protected/AccountStatement'))
+const IncomeSumPage = lazy(() => import('../pages/protected/IncomeSummary'))
+const ExpenseSumPage = lazy(() => import('../pages/protected/ExpenseSummary'))
+const IncomeVSExpense = lazy(() => import('../pages/protected/IncomeVsExpense'))
+const VendorDetail = lazy(() => import('../pages/protected/VendorDetail'))
 
 const routes = [
+  {
+    path: '/vendorDetail/',  // Add dynamic ID parameter here
+    component: VendorDetail,
+
+  },
   {
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
@@ -70,6 +78,14 @@ const routes = [
   {
     path: '/incomeSummary', // the url
     component: IncomeSumPage, // view rendered
+  },
+  {
+    path: '/ExpenseSummary', // the url
+    component: ExpenseSumPage, // view rendered
+  },
+  {
+    path: '/IncomeVsExpense', // the url
+    component: IncomeVSExpense, // view rendered
   },
   {
     path: '/CreditNote', // the url
@@ -139,10 +155,7 @@ const routes = [
     path: '/trialbalance',
     component: TrialBalance,
   },
-  {
-    path: '/transactions',
-    component: Transactions,
-  },
+  
   {
     path: '/settings-profile',
     component: ProfileSettings,

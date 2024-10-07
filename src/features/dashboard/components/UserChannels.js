@@ -2,21 +2,11 @@ import React, { useState } from 'react';
 import TitleCard from "../../../components/Cards/TitleCard";
 
 const userSourceData = [
-    {source : "Facebook Ads", count : "26,345", conversionPercent : 10.2},
-    {source : "Google Ads", count : "21,341", conversionPercent : 11.7},
-    {source : "Instagram Ads", count : "34,379", conversionPercent : 12.4},
-    {source : "Affiliates", count : "12,359", conversionPercent : 20.9},
-    {source : "Organic", count : "10,345", conversionPercent : 10.3},
-    {source : "Facebook Ads", count : "26,345", conversionPercent : 10.2},
-    {source : "Google Ads", count : "21,341", conversionPercent : 11.7},
-    {source : "Instagram Ads", count : "34,379", conversionPercent : 12.4},
-    {source : "Affiliates", count : "12,359", conversionPercent : 20.9},
-    {source : "Organic", count : "10,345", conversionPercent : 10.3},
-    {source : "Facebook Ads", count : "26,345", conversionPercent : 10.2},
-    {source : "Google Ads", count : "21,341", conversionPercent : 11.7},
-    {source : "Instagram Ads", count : "34,379", conversionPercent : 12.4},
-    {source : "Affiliates", count : "12,359", conversionPercent : 20.9},
-    {source : "Organic", count : "10,345", conversionPercent : 10.3},
+    {date : "Jan 28, 2023", customer : "Ida F Mullen", amountdue : "$100.00"},
+    {date : "Jan 15, 2023", customer : "Ida F Mullen", amountdue : "$100.00"},
+    {date : "Jan 15, 2023", customer : "Keire", amountdue : "$100.00"},
+    {date : "Feb 3, 2022", customer : "Protiong", amountdue : "$5.000,00"},
+    {date : "Feb 9, 2022", customer : "Protiong", amountdue : "$5.000,00"},
 ];
 
 function UserChannels() {
@@ -39,15 +29,15 @@ function UserChannels() {
     const selectedData = userSourceData.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <TitleCard title={"User Signup Source"}>
+        <TitleCard title={"Latest Income"}>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
                     <tr>
                         <th></th>
-                        <th className="normal-case">Source</th>
-                        <th className="normal-case">No of Users</th>
-                        <th className="normal-case">Conversion</th>
+                        <th className="normal-case">DATE</th>
+                        <th className="normal-case">CUSTOMER</th>
+                        <th className="normal-case">AMOUNT DUE</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,9 +46,9 @@ function UserChannels() {
                                 return (
                                     <tr key={startIndex + k}>
                                         <th>{startIndex + k + 1}</th>
-                                        <td>{u.source}</td>
-                                        <td>{u.count}</td>
-                                        <td>{`${u.conversionPercent}%`}</td>
+                                        <td>{u.date}</td>
+                                        <td>{u.customer}</td>
+                                        <td>{u.amountdue}</td>
                                     </tr>
                                 )
                             })
