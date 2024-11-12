@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
-import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
-import EyeIcon from "@heroicons/react/24/outline/EyeIcon";
-import KeyIcon from "@heroicons/react/24/outline/KeyIcon";
-import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
+import {
+  PencilIcon,
+  KeyIcon,
+  TrashIcon,
+  DocumentDuplicateIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
 import EditProposalModal from "./components/EditProposalModal";
 import DeletePropModal from "./components/DeletePropModal";
+import DuplicatePropModal from "./components/DuplicatePropModal";
 import TitleCard from "../../components/Cards/TitleCard";
 import Datepicker from "react-tailwindcss-datepicker";
 import { PROPOSAL_DATA } from "../../utils/dummyData";
 import CardOption from "../../components/Cards/CardOption";
-import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-
-// Import Redux hooks and action
 import { useDispatch } from "react-redux";
 import { showNotification } from "../common/headerSlice";
 
 const ProposalPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [proposalData, setProposalData] = useState(PROPOSAL_DATA);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -26,15 +28,14 @@ const ProposalPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
-
-  // State for delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [proposalToDelete, setProposalToDelete] = useState(null);
-
   const [dateValue, setDateValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [proposalToDuplicate, setProposalToDuplicate] = useState(null);
 
   const handleDatePickerValueChange = (newValue) => {
     setDateValue(newValue);
@@ -42,7 +43,7 @@ const ProposalPage = () => {
   };
 
   const updateProposalPeriod = (newRange) => {
-    setDateValue(newRange); // Update the date range in the state
+    setDateValue(newRange);
     dispatch(
       showNotification({
         message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
@@ -51,6 +52,34 @@ const ProposalPage = () => {
     );
   };
 
+  const handleDuplicateClick = (proposal) => {
+    setProposalToDuplicate(proposal);
+    setShowDuplicateModal(true);
+  };
+
+  const confirmDuplicate = () => {
+    if (proposalToDuplicate) {
+      const duplicatedProposal = {
+        ...proposalToDuplicate,
+        id: new Date().getTime(),
+        proposal: `${proposalToDuplicate.proposal} (Copy)`,
+      };
+      setProposalData((prevData) => [...prevData, duplicatedProposal]);
+      setShowDuplicateModal(false);
+      dispatch(
+        showNotification({
+          message: `Proposal "${proposalToDuplicate.proposal}" has been successfully duplicated!`,
+          status: 1,
+        })
+      );
+      setProposalToDuplicate(null);
+    }
+  };
+
+  const cancelDuplicate = () => {
+    setShowDuplicateModal(false);
+    setProposalToDuplicate(null);
+  };
 
   const handleSearch = () => {
     console.log("Search clicked");
@@ -86,7 +115,6 @@ const ProposalPage = () => {
           : item
       )
     );
-
     dispatch(
       showNotification({
         message: `Proposal "${updatedData.proposal}" has been successfully updated!`,
@@ -259,7 +287,7 @@ const ProposalPage = () => {
                 <th className="px-4 py-2">CATEGORY</th>
                 <th className="px-4 py-2">ISSUE DATE</th>
                 <th className="px-4 py-2">STATUS</th>
-                <th className="px-4 py-2">ACTION</th> {/* Ensure Action column is aligned right */}
+                <th className="px-4 py-2">ACTION</th>
               </tr>
             </thead>
             <tbody>
@@ -289,27 +317,21 @@ const ProposalPage = () => {
                       {proposal.status}
                     </span>
                   </td>
-                  <td className="text-sm text-right"> {/* Align the action items to the right */}
-                    <div className="flex flex-wrap gap-2"> {/* Adjust alignment */}
+                  <td className="text-sm text-right">
+                    <div className="flex flex-wrap gap-2">
                       <button
+                        onClick={() => handleDetailIDClick(proposal)}
                         className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
                         aria-label="Key Action"
                       >
-                        <KeyIcon className="h-5 w-5" />
+                        <EyeIcon  className="h-5 w-5" />
                       </button>
                       <button
-                        onClick={() => handleDetailClick(proposal)}
+                        onClick={() => handleDuplicateClick(proposal)}
                         className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
                         aria-label="Duplicate Proposal"
                       >
                         <DocumentDuplicateIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDetailClick(proposal)}
-                        className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
-                        aria-label="View Details"
-                      >
-                        <EyeIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleEditClick(proposal)}
@@ -380,6 +402,12 @@ const ProposalPage = () => {
       )}
       {showDeleteModal && (
         <DeletePropModal onConfirm={confirmDelete} onCancel={cancelDelete} />
+      )}
+      {showDuplicateModal && (
+        <DuplicatePropModal
+          onConfirm={confirmDuplicate}
+          onCancel={cancelDuplicate}
+        />
       )}
     </>
   );

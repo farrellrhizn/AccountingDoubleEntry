@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import TitleCard from '../../components/Cards/TitleCard';
 import EditRoleModal from './components/EditRoleModal'; // Pastikan path sudah benar
+import DeleteConfirmModal from './components/DeleteConfirmModal'; // Import modal konfirmasi penghapusan
 import { ROLE_DATA } from '../../utils/dummyData';
 import { Tooltip } from 'react-tooltip'; // Pastikan untuk menginstal react-tooltip
 import 'react-tooltip/dist/react-tooltip.css'; // Import CSS react-tooltip
+import { showNotification } from "../common/headerSlice";
 
 const RolePage = () => {
+    const dispatch = useDispatch(); // Inisialisasi dispatch
     const [roles, setRoles] = useState(ROLE_DATA);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -15,15 +19,20 @@ const RolePage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedRole, setSelectedRole] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+    
+    // State untuk modal konfirmasi penghapusan
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [roleToDelete, setRoleToDelete] = useState(null);
 
     const handleEditClick = (role) => {
         setSelectedRole(role);
         setShowModal(true);
     };
 
-    const handleDetailClick = (role) => {
-        setSelectedRole(role);
-        setShowDetail(true);
+    // Ubah handleDetailClick menjadi handleDeleteClick
+    const handleDeleteClick = (role) => {
+        setRoleToDelete(role);
+        setShowDeleteModal(true);
     };
 
     const filteredRoles = roles.filter(role =>
@@ -53,6 +62,44 @@ const RolePage = () => {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const selectedRoles = filteredRoles.slice(startIndex, startIndex + itemsPerPage);
+
+    // Fungsi untuk menghapus role setelah konfirmasi
+    const handleConfirmDelete = () => {
+        if (roleToDelete) {
+            setRoles(prevRoles => prevRoles.filter(role => role.id !== roleToDelete.id));
+            setShowDeleteModal(false);
+            setRoleToDelete(null);
+
+            // Dispatch notifikasi penghapusan berhasil
+            dispatch(
+                showNotification({
+                    message: `Role "${roleToDelete.role}" has been successfully deleted!`,
+                    status: 1, // 1 untuk sukses
+                })
+            );
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setRoleToDelete(null);
+    };
+
+    // Fungsi untuk mengupdate role setelah edit
+    const handleUpdateRole = (updatedRole) => {
+        setRoles(prevRoles => prevRoles.map(role => role.id === updatedRole.id ? updatedRole : role));
+
+        // Dispatch notifikasi pembaruan berhasil
+        dispatch(
+            showNotification({
+                message: `Role "${updatedRole.role}" has been successfully updated!`,
+                status: 1, // 1 untuk sukses
+            })
+        );
+
+        setShowModal(false);
+        setSelectedRole(null);
+    };
 
     return (
         <>
@@ -99,8 +146,8 @@ const RolePage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {selectedRoles.map((role, index) => (
-                                <tr key={index} className="text-sm">
+                            {selectedRoles.map((role) => (
+                                <tr key={role.id} className="text-sm">
                                     <td className="px-2 py-2 truncate" title={role.role}>
                                         {role.role}
                                     </td>
@@ -115,12 +162,12 @@ const RolePage = () => {
                                                 <>
                                                     <span
                                                         className="badge bg-purple-200 text-purple-800 text-xs cursor-pointer"
-                                                        data-tooltip-id={`permission-tooltip-${index}`}
+                                                        data-tooltip-id={`permission-tooltip-${role.id}`}
                                                         data-tooltip-content={role.permissions.slice(3).join(', ')}
                                                     >
                                                         +{role.permissions.length - 3}
                                                     </span>
-                                                    <Tooltip id={`permission-tooltip-${index}`} place="top" effect="solid" />
+                                                    <Tooltip id={`permission-tooltip-${role.id}`} place="top" effect="solid" />
                                                 </>
                                             )}
                                         </div>
@@ -135,7 +182,7 @@ const RolePage = () => {
                                                 <PencilIcon className="h-4 w-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDetailClick(role)}
+                                                onClick={() => handleDeleteClick(role)}
                                                 className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2"
                                                 aria-label="Delete Role"
                                             >
@@ -182,6 +229,7 @@ const RolePage = () => {
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     role={selectedRole}
+                    onUpdate={handleUpdateRole} // Tambahkan prop onUpdate
                 />
             }
 
@@ -192,32 +240,40 @@ const RolePage = () => {
                     onClose={() => setShowDetail(false)}
                 />
             )}
+
+            {/* Modal Konfirmasi Penghapusan */}
+            {showDeleteModal && roleToDelete && (
+                <DeleteConfirmModal
+                    onConfirm={handleConfirmDelete}
+                    onCancel={handleCancelDelete}
+                />
+            )}
         </>
     ); // Menutup pernyataan return
-    }; // Menutup fungsi RolePage
+}; // Menutup fungsi RolePage
 
-    // DetailView Component
-    const DetailView = ({ role, onClose }) => {
-        if (!role) return null;
+// DetailView Component
+const DetailView = ({ role, onClose }) => {
+    if (!role) return null;
 
-        return (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
-                    <h2 className="text-xl font-bold mb-4">Role Details</h2>
-                    <p className="text-sm"><strong>ID:</strong> {role.id}</p>
-                    <p className="text-sm"><strong>Role:</strong> {role.role}</p>
-                    <p className="text-sm"><strong>Permissions:</strong></p>
-                    <ul className="list-disc list-inside text-sm">
-                        {role.permissions.map((permission, idx) => (
-                            <li key={idx}>{permission}</li>
-                        ))}
-                    </ul>
-                    <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
-                        Close
-                    </button>
-                </div>
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
+                <h2 className="text-xl font-bold mb-4">Role Details</h2>
+                <p className="text-sm"><strong>ID:</strong> {role.id}</p>
+                <p className="text-sm"><strong>Role:</strong> {role.role}</p>
+                <p className="text-sm"><strong>Permissions:</strong></p>
+                <ul className="list-disc list-inside text-sm">
+                    {role.permissions.map((permission, idx) => (
+                        <li key={idx}>{permission}</li>
+                    ))}
+                </ul>
+                <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
+                    Close
+                </button>
             </div>
-        );
-    };
+        </div>
+    );
+};
 
-    export default RolePage;
+export default RolePage;

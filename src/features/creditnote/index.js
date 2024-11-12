@@ -208,18 +208,6 @@ const CreditPage = () => {
                                     <td className="min-w-[200px]">
                                         <div className="grid grid-cols-4 gap-2">
                                             <button
-                                                onClick={() => handleDetailClick(credit)}
-                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
-                                            >
-                                                <DocumentDuplicateIcon className="h-5 w-5" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDetailClick(credit)}
-                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
-                                            >
-                                                <EyeIcon className="h-5 w-5" />
-                                            </button>
-                                            <button
                                                 onClick={() => handleEditClick(credit)}
                                                 className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
                                             >
