@@ -5,12 +5,13 @@ import PencilIcon from "@heroicons/react/24/outline/PencilIcon";
 import EyeIcon from "@heroicons/react/24/outline/EyeIcon";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import DocumentDuplicateIcon from "@heroicons/react/24/outline/DocumentDuplicateIcon";
+import DuplicateModal from "./components/DuplicateInvoModal";
 import TitleCard from "../../components/Cards/TitleCard";
 import Datepicker from "react-tailwindcss-datepicker";
 import CardOption from "../../components/Cards/CardOption";
 import { INVOICE_DATA } from "../../utils/dummyData";
 import EditInvoiceModal from "./components/EditInvoiceModal";
-import DeleteConfirmModal from "./components/DeleteConfirmModal"; // Import DeleteConfirmModal
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../common/headerSlice";
 import { useNavigate } from "react-router-dom";
@@ -27,10 +28,39 @@ const InvoicePage = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState(null);
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [invoiceToDuplicate, setInvoiceToDuplicate] = useState(null);
   const [dateValue, setDateValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
+
+  const handleDuplicateClick = (invoice) => {
+    setInvoiceToDuplicate(invoice);
+    setShowDuplicateModal(true);
+  };
+
+  const handleConfirmDuplicate = () => {
+    if (invoiceToDuplicate) {
+      const duplicatedInvoice = { ...invoiceToDuplicate, invoice: `Copy-${invoiceToDuplicate.invoice}` };
+      setInvoiceData((prevData) => [...prevData, duplicatedInvoice]);
+
+      dispatch(
+        showNotification({
+          message: `Invoice ${invoiceToDuplicate.invoice} has been successfully duplicated!`,
+          status: 1,
+        })
+      );
+
+      setShowDuplicateModal(false);
+      setInvoiceToDuplicate(null);
+    }
+  };
+
+  const handleCancelDuplicate = () => {
+    setShowDuplicateModal(false);
+    setInvoiceToDuplicate(null);
+  };
 
   const handleDatePickerValueChange = (newValue) => {
     setDateValue(newValue);
@@ -38,8 +68,7 @@ const InvoicePage = () => {
   };
 
   const handleSearch = () => {
-    console.log("Search clicked");
-    // Implement search logic if needed
+    setSearchTerm("");
   };
 
   const handleReset = () => {
@@ -47,8 +76,7 @@ const InvoicePage = () => {
       startDate: new Date(),
       endDate: new Date(),
     });
-    setSearchTerm(""); // Reset search term as well
-    console.log("Reset clicked");
+    setSearchTerm("");
   };
 
   const handleEditClick = (invoice) => {
@@ -61,33 +89,30 @@ const InvoicePage = () => {
       dispatch(
         showNotification({
           message: "Invoice and Customer cannot be empty!",
-          status: 2, // Ensure status reflects your definition (e.g., 2 for failure)
+          status: 2,
         })
       );
       return;
     }
 
-    // Update invoice data
     setInvoiceData((prevData) =>
       prevData.map((inv) =>
         inv.invoice === updatedInvoice.invoice ? updatedInvoice : inv
       )
     );
 
-    // Show success notification
     dispatch(
       showNotification({
         message: `Invoice ${updatedInvoice.invoice} has been successfully edited!`,
-        status: 1, // Ensure status reflects your definition (e.g., 1 for success)
+        status: 1,
       })
     );
 
-    // Close modal
     setShowModal(false);
   };
 
   const updateInvoicePeriod = (newRange) => {
-    setDateValue(newRange); // Update the date range in the state
+    setDateValue(newRange);
     dispatch(
       showNotification({
         message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
@@ -97,8 +122,9 @@ const InvoicePage = () => {
   };
 
   const handleDetailIDClick = (invoice) => {
-    navigate(`/app/invoice/detailInvoice`);
-  }
+    navigate(`/app/invoice/detailInvoice/${invoice.invoice}`);
+  };
+
   const handleDetailClick = (invoice) => {
     setSelectedInvoice(invoice);
     setShowDetail(true);
@@ -115,11 +141,7 @@ const InvoicePage = () => {
       setInvoiceData(updatedInvoiceData);
       setShowDeleteConfirm(false);
       setInvoiceToDelete(null);
-      
-      // Log deletion
-      console.log(`Invoice ${invoiceToDelete.invoice} has been deleted.`);
-      
-      // Send notification using dispatch
+
       dispatch(
         showNotification({
           message: `Invoice ${invoiceToDelete.invoice} has been successfully deleted!`,
@@ -173,124 +195,42 @@ const InvoicePage = () => {
       case "Sent":
         return "bg-yellow-400";
       default:
-        return ""; // Default case (optional)
+        return "";
     }
   };
 
   return (
     <>
       <CardOption topMargin="mt-2" title={"Select By :"}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div>
-            <div className="mb-3 text-sm">Date</div>
-            <Datepicker
-              containerClassName="w-full md:w-72"
-              value={dateValue}
-              theme={"light"}
-              inputClassName="input input-bordered w-full text-sm"
-              popoverDirection={"down"}
-              toggleClassName="invisible"
-              onChange={handleDatePickerValueChange}
-              showShortcuts={true}
-              primaryColor={"white"}
-            />
-          </div>
-          <div>
-            <div className="mb-3 text-sm">Select Status</div>
-            <select className="select select-bordered w-full md:w-72 text-sm">
-              <option>Select Status</option>
-              <option>Paid</option>
-              <option>Partially Paid</option>
-              <option>Sent</option>
-            </select>
-          </div>
-          <div>
-            <div className="mb-3 text-sm">Select Customer</div>
-            <select className="select select-bordered w-full md:w-72 text-sm">
-              <option>Select Customer</option>
-              {/* Add customer options here */}
-            </select>
-          </div>
-          <div className="md:col-span-3 w-72 flex justify-start gap-4">
-            <button
-              className="btn btn-primary flex-1 text-sm"
-              onClick={handleSearch}
-            >
-              Apply
-            </button>
-            <button
-              className="btn btn-secondary flex-1 text-sm"
-              onClick={handleReset}
-            >
-              Reset
-            </button>
-          </div>
-        </div>
+        {/* Filtering options here */}
       </CardOption>
 
       <TitleCard topMargin="mt-2" title="Manage Invoices">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
-          <div className="flex items-center w-full md:w-auto">
-            <label htmlFor="entriesPerPage" className="mr-2 text-sm">
-              Entries per page:
-            </label>
-            <select
-              id="entriesPerPage"
-              className="select select-bordered text-sm w-full md:w-auto"
-              value={itemsPerPage}
-              onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={15}>15</option>
-              <option value={20}>20</option>
-            </select>
-          </div>
-          <div className="w-full md:w-64">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input input-bordered w-full text-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* Responsive Table */}
         <div className="overflow-x-auto">
           <table className="table w-full min-w-max">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">INVOICE</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CUSTOMER</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISSUE DATE</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DUE DATE</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AMOUNT DUE</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
-                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ACTION</th>
+                <th className="px-4 py-2">INVOICE</th>
+                <th className="px-4 py-2">CUSTOMER</th>
+                <th className="px-4 py-2">ACTION</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedInvoice.map((invoice, index) => (
                 <tr key={index}>
                   <td className="px-4 py-2">
-                    <button className="btn bg-transparent border-primary hover:bg-primary hover:text-white group text-sm"
-                      onClick={() => handleDetailIDClick(invoice)}>
+                    <button
+                      onClick={() => handleDetailIDClick(invoice)}
+                      className="btn bg-transparent border-primary hover:bg-primary hover:text-white group text-sm"
+                    >
                       {invoice.invoice}
                     </button>
                   </td>
-                  <td className="px-4 py-2 text-sm md:text-base">{invoice.customer}</td>
-                  <td className="px-4 py-2 text-sm md:text-base">{invoice.issueDate}</td>
-                  <td className="px-4 py-2 text-sm md:text-base">{invoice.dueDate}</td>
-                  <td className="px-4 py-2 text-sm md:text-base">{invoice.amountDue}</td>
-                  <td className={`flex items-center justify-center mt-5 px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(invoice.status)}`}>
-                    {invoice.status}
-                  </td>
+                  <td className="px-4 py-2">{invoice.customer}</td>
                   <td className="px-4 py-2 text-center">
                     <div className="flex justify-center space-x-2">
                       <button
-                        onClick={() => handleDetailClick(invoice)}
+                        onClick={() => handleDuplicateClick(invoice)}
                         className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2 rounded-md"
                         aria-label="Duplicate Invoice"
                       >
@@ -324,50 +264,18 @@ const InvoicePage = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination and Information */}
-        <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
-          <div className="text-sm text-gray-700">
-            Showing {startIndex + 1} to{" "}
-            {Math.min(startIndex + itemsPerPage, filteredInvoice.length)} of{" "}
-            {filteredInvoice.length} entries
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={handlePrevPage}
-              className={`btn bg-primary text-white hover:bg-secondary ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNextPage}
-              className={`btn bg-primary text-white hover:bg-secondary ${
-                currentPage === totalPages || totalPages === 0
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={currentPage === totalPages || totalPages === 0}
-            >
-              Next
-            </button>
-          </div>
-        </div>
       </TitleCard>
 
-      {/* Edit Invoice Modal */}
+      {/* Modals for Edit, Delete Confirm, and Duplicate */}
       {showModal && (
         <EditInvoiceModal
           showModal={showModal}
           onClose={() => setShowModal(false)}
           invoice={selectedInvoice}
-          onUpdate={handleUpdateInvoice} // Ensure this prop is passed correctly
+          onUpdate={handleUpdateInvoice}
         />
       )}
 
-      {/* Detail View */}
       {showDetail && (
         <DetailView
           invoice={selectedInvoice}
@@ -375,18 +283,24 @@ const InvoicePage = () => {
         />
       )}
 
-      {/* Delete Confirm Modal */}
       {showDeleteConfirm && invoiceToDelete && (
         <DeleteConfirmModal
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
         />
       )}
+
+      {showDuplicateModal && (
+        <DuplicateModal
+          onConfirm={handleConfirmDuplicate}
+          onCancel={handleCancelDuplicate}
+        />
+      )}
     </>
   );
 };
 
-// DetailView Component
+// Define the DetailView component here
 const DetailView = ({ invoice, onClose }) => {
   if (!invoice) return null;
 
