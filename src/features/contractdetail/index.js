@@ -105,7 +105,7 @@ const ContractDetail = () => {
             <p className="font-bold text-orange-600">Notes</p>
             <p className="text-3xl">3</p>
           </div>
-          
+          </div>
           <TitleCard title="Customer Info">
             <div className="flex justify-between mb-4">
               <ul className="list-disc pl-4">
@@ -130,7 +130,7 @@ const ContractDetail = () => {
               </ul>
             </div>
           </TitleCard>
-        </div>
+        
         {/* Description Section */}
         <div className="mt-8">
           <TitleCard title="Description">

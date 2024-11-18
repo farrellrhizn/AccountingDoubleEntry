@@ -32,7 +32,8 @@ const Contract = () => {
   const [contractToDuplicate, setContractToDuplicate] = useState(null);
 
   const handleContractClick = (contract) => {
-    navigate(`detailContract`);
+    console.log("Navigating to contract detail with ID:", contract.id); // Debugging
+    window.location.href = "./ContractDetail";
   };
 
   const handleEditClick = (contract) => {

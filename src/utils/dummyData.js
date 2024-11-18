@@ -173,6 +173,17 @@ module.exports = Object.freeze({
         { name: "Dennis Leonard", role: "Accountant", email: "jatebiqjxy@mailinator.com", image: "https://images.pexels.com/photos/375880/pexels-photo-375880.jpeg?auto=compress&cs=tinysrgb&w=600" }
       ],
 
+      STAFFUSERDATA_LOGS : [
+        { name: "John", role: "User", email: "john@example.com", lastLogin: "2023-04-25 14:13:45", country: "India", deviceType: "desktop", os: "Linux", ip: "00.00.00.000", image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "John", role: "User", email: "john.doe2@example.com", lastLogin: "2023-04-25 14:15:35", country: "India", deviceType: "desktop", os: "Linux", ip: "00.00.00.000", image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "Keire", role: "Customer", email: "keire@example.com", lastLogin: "2023-04-25 16:06:27", country: "India", deviceType: "desktop", os: "Linux", ip: "00.00.00.000", image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "Anthony B Renfroe", role: "Vendor", email: "anthony@example.com", lastLogin: "2023-04-25 16:06:43", country: "India", deviceType: "desktop", os: "Linux", ip: "00.00.00.000", image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "Anthony B Renfroe", role: "Vendor", email: "anthony.renfroe@example.com", lastLogin: "2023-04-26 12:51:50", country: "India", deviceType: "desktop", os: "Linux", ip: "00.00.00.000", image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "Keire", role: "Customer", email: "keire.second@example.com", lastLogin: "2024-11-17 21:44:34", country: "Romania", deviceType: "desktop", os: "Windows", ip: "185.252.220.149", image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { name: "Anthony B Renfroe", role: "Vendor", email: "anthony.b.renfroe@example.com", lastLogin: "2024-11-17 21:44:49", country: "Romania", deviceType: "desktop", os: "Windows", ip: "185.252.220.149", image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600" }
+    ],
+    
+    
       PROPOSAL_DATA : [
         { proposal: "#PROP00001", customer: "Keire", category: "Insurance", issueDate: "Nov 9, 2022", status: "Draft" },
         { proposal: "#PROP00002", customer: "Protiong", category: "Inventory", issueDate: "Nov 12, 2022", status: "Open" },

@@ -20,7 +20,12 @@ const TopSideButtons = ({ onAddUser }) => {
       >
         <UserPlusIcon className={iconClasses} />
       </button>
-      <button className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white">
+      <button
+        className="text-black bg-transparent border-primary btn hover:bg-primary hover:text-white"
+        onClick={() => {
+          window.location.href = "./StaffUserLogs"; // Update route di sini
+        }}
+      >
         {"User Log"}
       </button>
     </div>
