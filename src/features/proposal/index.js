@@ -99,7 +99,8 @@ const ProposalPage = () => {
   };
 
   const handleDetailIDClick = (proposal) => {
-    navigate(`/app/proposal/detailProposal`);
+    console.log("Navigating to proposal detail with ID:", proposal.id); // Debugging
+    window.location.href = "./ProposalDetail";
   };
 
   const handleDetailClick = (proposal) => {

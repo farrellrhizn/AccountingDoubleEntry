@@ -42,7 +42,10 @@ const InvoicePage = () => {
 
   const handleConfirmDuplicate = () => {
     if (invoiceToDuplicate) {
-      const duplicatedInvoice = { ...invoiceToDuplicate, invoice: `Copy-${invoiceToDuplicate.invoice}` };
+      const duplicatedInvoice = {
+        ...invoiceToDuplicate,
+        invoice: `Copy-${invoiceToDuplicate.invoice}`,
+      };
       setInvoiceData((prevData) => [...prevData, duplicatedInvoice]);
 
       dispatch(
@@ -122,7 +125,8 @@ const InvoicePage = () => {
   };
 
   const handleDetailIDClick = (invoice) => {
-    navigate(`/app/invoice/detailInvoice/${invoice.invoice}`);
+    console.log("Navigating to invoice detail with ID:", invoice.id); // Debugging
+    window.location.href = "./InvoiceDetail";
   };
 
   const handleDetailClick = (invoice) => {
@@ -137,7 +141,9 @@ const InvoicePage = () => {
 
   const handleConfirmDelete = () => {
     if (invoiceToDelete) {
-      const updatedInvoiceData = invoiceData.filter((item) => item !== invoiceToDelete);
+      const updatedInvoiceData = invoiceData.filter(
+        (item) => item !== invoiceToDelete
+      );
       setInvoiceData(updatedInvoiceData);
       setShowDeleteConfirm(false);
       setInvoiceToDelete(null);
@@ -158,7 +164,7 @@ const InvoicePage = () => {
 
   const filteredInvoice = invoiceData.filter(
     (invoice) =>
-      invoice.issueDate.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      invoice.invoice.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.customer.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -202,7 +208,53 @@ const InvoicePage = () => {
   return (
     <>
       <CardOption topMargin="mt-2" title={"Select By :"}>
-        {/* Filtering options here */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <div className="mb-3 text-sm">Date</div>
+            <Datepicker
+              containerClassName="w-full md:w-72"
+              value={dateValue}
+              theme={"light"}
+              inputClassName="input input-bordered w-full text-sm"
+              popoverDirection={"down"}
+              toggleClassName="invisible"
+              onChange={handleDatePickerValueChange}
+              showShortcuts={true}
+              primaryColor={"white"}
+            />
+          </div>
+          <div>
+            <div className="mb-3 text-sm">Select Customer</div>
+            <select className="select select-bordered w-full md:w-72 text-sm">
+              <option>Select Customer</option>
+            </select>
+          </div>
+          <div>
+            <div className="mb-3 text-sm">Select Status</div>
+            <select className="select select-bordered w-full md:w-72 text-sm">
+              <option>Select Status</option>
+              <option>Draft</option>
+              <option>Sent</option>
+              <option>Unpaid</option>
+              <option>Partially Paid</option>
+              <option>Paid</option>
+            </select>
+          </div>
+          <div className="md:col-span-3 flex w-72 justify-start gap-4">
+            <button
+              className="btn btn-primary flex-1 text-sm"
+              onClick={handleSearch}
+            >
+              Apply
+            </button>
+            <button
+              className="btn btn-secondary flex-1 text-sm"
+              onClick={handleReset}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
       </CardOption>
 
       <TitleCard topMargin="mt-2" title="Manage Invoices">
@@ -212,6 +264,10 @@ const InvoicePage = () => {
               <tr>
                 <th className="px-4 py-2">INVOICE</th>
                 <th className="px-4 py-2">CUSTOMER</th>
+                <th className="px-4 py-2">ISSUE DATE</th>
+                <th className="px-4 py-2">DUE DATE</th>
+                <th className="px-4 py-2">AMOUNT DUE</th>
+                <th className="px-4 py-2">STATUS</th>
                 <th className="px-4 py-2">ACTION</th>
               </tr>
             </thead>
@@ -227,6 +283,18 @@ const InvoicePage = () => {
                     </button>
                   </td>
                   <td className="px-4 py-2">{invoice.customer}</td>
+                  <td className="px-4 py-2">{invoice.issueDate}</td>
+                  <td className="px-4 py-2">{invoice.dueDate}</td>
+                  <td className="px-4 py-2">{invoice.amountDue}</td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`flex items-center justify-center px-3 py-1 text-xs font-semibold text-white rounded-full w-24 h-6 ${getStatusClass(
+                        invoice.status
+                      )}`}
+                    >
+                      {invoice.status}
+                    </span>
+                  </td>
                   <td className="px-4 py-2 text-center">
                     <div className="flex justify-center space-x-2">
                       <button
@@ -276,13 +344,6 @@ const InvoicePage = () => {
         />
       )}
 
-      {showDetail && (
-        <DetailView
-          invoice={selectedInvoice}
-          onClose={() => setShowDetail(false)}
-        />
-      )}
-
       {showDeleteConfirm && invoiceToDelete && (
         <DeleteConfirmModal
           onConfirm={handleConfirmDelete}
@@ -297,43 +358,6 @@ const InvoicePage = () => {
         />
       )}
     </>
-  );
-};
-
-// Define the DetailView component here
-const DetailView = ({ invoice, onClose }) => {
-  if (!invoice) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
-        <h2 className="text-xl font-bold mb-4">Invoice Details</h2>
-        <p className="text-sm">
-          <strong>Invoice ID:</strong> {invoice.invoice}
-        </p>
-        <p className="text-sm">
-          <strong>Customer:</strong> {invoice.customer}
-        </p>
-        <p className="text-sm">
-          <strong>Issue Date:</strong> {invoice.issueDate}
-        </p>
-        <p className="text-sm">
-          <strong>Due Date:</strong> {invoice.dueDate}
-        </p>
-        <p className="text-sm">
-          <strong>Amount Due:</strong> {invoice.amountDue}
-        </p>
-        <p className="text-sm">
-          <strong>Status:</strong> {invoice.status}
-        </p>
-        <button
-          onClick={onClose}
-          className="mt-4 btn bg-primary text-white hover:bg-secondary"
-        >
-          Close
-        </button>
-      </div>
-    </div>
   );
 };
 

@@ -34,18 +34,46 @@ const InvoicePage = lazy(() => import('../pages/protected/Invoice'))
 const CreditNote = lazy(() => import('../pages/protected/CreditNote'))
 const RolePage = lazy(() => import('../pages/protected/Role'))
 const TransactionPage = lazy(() => import('../pages/protected/Transaction'))
-const ContractDetail = lazy(() => import('../pages/protected/Contract'))
 const AccountStatementPage = lazy(() => import('../pages/protected/AccountStatement'))
 const IncomeSumPage = lazy(() => import('../pages/protected/IncomeSummary'))
 const ExpenseSumPage = lazy(() => import('../pages/protected/ExpenseSummary'))
 const IncomeVSExpense = lazy(() => import('../pages/protected/IncomeVsExpense'))
+const StaffUserLogs = lazy(() => import('../pages/protected/StaffUserLogs'))
 const VendorDetail = lazy(() => import('../pages/protected/VendorDetail'))
+const ProposalDetail = lazy(() => import('../pages/protected/ProposalDetail'))
+const InvoiceDetail = lazy(() => import('../pages/protected/InvoiceDetail'))
+const CreditDetail = lazy(() => import('../pages/protected/CreditDetail'))
+const JournalDetail = lazy(() => import('../pages/protected/JournalDetail'))
+const ContractDetail = lazy(() => import('../pages/protected/ContractDetail'))
 
 const routes = [
   {
-    path: '/vendorDetail/',  // Add dynamic ID parameter here
+    path: '/ContractDetail/',  // Add dynamic ID parameter here
+    component: ContractDetail,
+  },
+  {
+    path: '/JournalDetail/',  // Add dynamic ID parameter here
+    component: JournalDetail,
+  },
+  {
+    path: '/CreditDetail/',  // Add dynamic ID parameter here
+    component: CreditDetail,
+  },
+  {
+    path: '/InvoiceDetail/',  // Add dynamic ID parameter here
+    component: InvoiceDetail,
+  },
+  {
+    path: '/ProposalDetail/',  // Add dynamic ID parameter here
+    component: ProposalDetail,
+  },
+  {
+    path: '/VendorDetail/',  // Add dynamic ID parameter here
     component: VendorDetail,
-
+  },
+  {
+    path: '/StaffUserLogs',
+    component: StaffUserLogs,
   },
   {
     path: '/dashboard', // the url

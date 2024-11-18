@@ -68,7 +68,8 @@ export default function JournalAcc() {
   };
 
   const handleDetailClick = (journal) => {
-    navigate(`/app/journalacc/detailJournal`);
+    console.log("Navigating to journal detail with ID:", journal.id); // Debugging
+    window.location.href = "./JournalDetail";
   };
 
   const handleDelete = () => {

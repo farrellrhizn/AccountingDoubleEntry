@@ -58,7 +58,8 @@ const CreditPage = () => {
     };
 
     const handleDetailIDClick = (credit) => {
-        navigate(`/app/credit/detailCredit`);
+        console.log("Navigating to invoice detail with ID:", credit.invoice); // Debugging
+        window.location.href = "./CreditDetail";
     };
 
     const handleDetailClick = (credit) => {

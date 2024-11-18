@@ -32,7 +32,7 @@ const VendorAcc = () => {
 
     const handleDetailClick = (vendor) => {
         console.log("Navigating to vendor detail with ID:", vendor.id); // Debugging
-        navigate(`/app/vendoracc/vendorDetail/${vendor.id}`);
+        window.location.href = "./VendorDetail";
     };
     
 
