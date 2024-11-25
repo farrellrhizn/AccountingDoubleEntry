@@ -227,6 +227,13 @@ const InvoicePage = () => {
             <div className="mb-3 text-sm">Select Customer</div>
             <select className="select select-bordered w-full md:w-72 text-sm">
               <option>Select Customer</option>
+              <option>Keire</option>
+              <option>Protiong</option>
+              <option>Ida F. Mullen</option>
+              <option>Teresa R McRae</option>
+              <option>Joel O Dolan</option>
+              <option>Jasper Gardner</option>
+              <option>Kerleigh Mitchell</option>
             </select>
           </div>
           <div>
@@ -258,9 +265,38 @@ const InvoicePage = () => {
       </CardOption>
 
       <TitleCard topMargin="mt-2" title="Manage Invoices">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
+          <div className="flex items-center space-x-2">
+            <select
+              id="entriesPerPage"
+              className="select select-bordered w-24"
+              value={itemsPerPage}
+              onChange={(e) => setItemsPerPage(parseInt(e.target.value, 10))}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+              <option value={20}>20</option>
+            </select>
+            <label htmlFor="entriesPerPage" className="text-sm md:text-base">
+              Entries per page
+            </label>
+          </div>
+          <div className="w-full md:w-64">
+            <input
+              type="text"
+              placeholder="Search by Subject or Customer..."
+              className="input input-bordered w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search Contracts"
+            />
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="table w-full min-w-max">
-            <thead className="bg-gray-50">
+            <thead>
               <tr>
                 <th className="px-4 py-2">INVOICE</th>
                 <th className="px-4 py-2">CUSTOMER</th>
@@ -271,7 +307,7 @@ const InvoicePage = () => {
                 <th className="px-4 py-2">ACTION</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {paginatedInvoice.map((invoice, index) => (
                 <tr key={index}>
                   <td className="px-4 py-2">
@@ -332,6 +368,39 @@ const InvoicePage = () => {
             </tbody>
           </table>
         </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+  {/* Informasi Pagination */}
+  <div className="text-sm text-gray-700">
+    Showing {filteredInvoice.length > 0 ? startIndex + 1 : 0} to{" "}
+    {Math.min(startIndex + itemsPerPage, filteredInvoice.length)} of{" "}
+    {filteredInvoice.length} entries
+  </div>
+  {/* Kontrol Pagination */}
+  <div className="flex space-x-2">
+    <button
+      onClick={handlePrevPage}
+      className={`btn bg-primary text-white hover:bg-secondary ${
+        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+      }`}
+      disabled={currentPage === 1}
+    >
+      Previous
+    </button>
+    <button
+      onClick={handleNextPage}
+      className={`btn bg-primary text-white hover:bg-secondary ${
+        currentPage === totalPages || totalPages === 0
+          ? "opacity-50 cursor-not-allowed"
+          : ""
+      }`}
+      disabled={currentPage === totalPages || totalPages === 0}
+    >
+      Next
+    </button>
+  </div>
+</div>
+
       </TitleCard>
 
       {/* Modals for Edit, Delete Confirm, and Duplicate */}
