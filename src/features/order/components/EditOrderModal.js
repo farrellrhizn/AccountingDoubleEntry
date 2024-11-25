@@ -1,153 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog } from '@headlessui/react'; // Jika menggunakan Headless UI
-import { PencilIcon } from '@heroicons/react/24/outline';
+// src/features/orders/components/EditOrderModal.jsx
 
-const EditContractModal = ({ showModal, onClose, contract }) => {
-    const [formData, setFormData] = useState({
-        subject: '',
-        customer: '',
-        type: '',
-        value: '',
-        startDate: '',
-        endDate: '',
-        status: ''
-    });
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../common/headerSlice';
+
+// Reusable InputField Component
+const InputField = ({ label, name, value, onChange, type = 'text', disabled = false }) => (
+    <div>
+        <label className="block text-sm font-medium mb-1">{label}</label>
+        <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="input input-bordered w-full text-sm"
+            required
+            disabled={disabled}
+        />
+    </div>
+);
+
+// Reusable SelectField Component
+const SelectField = ({ label, name, value, onChange, options }) => (
+    <div>
+        <label className="block text-sm font-medium mb-1">{label}</label>
+        <select
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="select select-bordered w-full text-sm"
+            required
+        >
+            <option value="" disabled>
+                Select {label}
+            </option>
+            {options.map((option, index) => (
+                <option key={index} value={option}>
+                    {option}
+                </option>
+            ))}
+        </select>
+    </div>
+);
+
+const EditOrderModal = ({ showModal, onClose, order, onSave }) => {
+    const dispatch = useDispatch();
+    const initialFormData = order
+        ? {
+              order_id: order.order_id || '',
+              date: order.date || '',
+              name: order.name || '',
+              plan_name: order.plan_name || '',
+              price: order.price || '',
+              payment_type: order.payment_type || '',
+              status: order.status || '',
+              coupon: order.coupon || '',
+              invoice: order.invoice || ''
+          }
+        : {
+              order_id: '',
+              date: '',
+              name: '',
+              plan_name: '',
+              price: '',
+              payment_type: '',
+              status: '',
+              coupon: '',
+              invoice: ''
+          };
+
+    const [formData, setFormData] = useState(initialFormData);
 
     useEffect(() => {
-        if (contract) {
-            setFormData({
-                subject: contract.subject || '',
-                customer: contract.customer || '',
-                type: contract.type || '',
-                value: contract.value || '',
-                startDate: contract.startDate || '',
-                endDate: contract.endDate || '',
-                status: contract.status || ''
-            });
+        if (order) {
+            setFormData(initialFormData);
         }
-    }, [contract]);
+    }, [order]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData((prevState) => ({
+            ...prevState,
             [name]: value
-        });
+        }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Updated contract:', formData);
-        onClose(); // Close the modal after submission
+        // Validasi tambahan bisa ditambahkan di sini
+
+        // Panggil fungsi onSave yang diteruskan dari OrderPage
+        onSave(formData);
+
+        // Menutup modal
+        onClose();
     };
 
+    if (!showModal) return null;
+
     return (
-        <Dialog open={showModal} onClose={onClose}>
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <div className="fixed inset-0 flex items-center justify-center p-4">
-                <Dialog.Panel className="bg-white rounded shadow-lg w-1/2 max-w-md p-4 h-[90vh] max-h-[70vh] overflow-auto">
-                    <Dialog.Title className="text-xl font-bold mb-4">Edit Contract</Dialog.Title>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Subject</label>
-                            <input
-                                type="text"
-                                name="subject"
-                                value={formData.subject}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Customer</label>
-                            <input
-                                type="text"
-                                name="customer"
-                                value={formData.customer}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Type</label>
-                            <input
-                                type="text"
-                                name="type"
-                                value={formData.type}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Value</label>
-                            <input
-                                type="text"
-                                name="value"
-                                value={formData.value}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        {/* Add a div to wrap the scrollable part */}
-                        <div className="mt-4 space-y-4 max-h-[50vh] overflow-y-auto">
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    value={formData.startDate}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">End Date</label>
-                                <input
-                                    type="date"
-                                    name="endDate"
-                                    value={formData.endDate}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Status</label>
-                                <input
-                                    type="text"
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-end mt-4">
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="mr-2 btn bg-gray-300 text-black hover:bg-gray-400"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="btn bg-primary text-white hover:bg-secondary"
-                            >
-                                Save
-                            </button>
-                        </div>
-                    </form>
-                </Dialog.Panel>
+        <div className="modal modal-open">
+            <div className="modal-box relative">
+                <h2 className="text-lg font-semibold mb-3">Edit Order</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                        <InputField
+                            label="Order ID"
+                            name="order_id"
+                            value={formData.order_id}
+                            onChange={handleChange}
+                            type="text"
+                            disabled // Tidak boleh diubah
+                        />
+                        <InputField
+                            label="Date"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleChange}
+                            type="date"
+                        />
+                        <InputField
+                            label="Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                        <InputField
+                            label="Plan Name"
+                            name="plan_name"
+                            value={formData.plan_name}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                        <InputField
+                            label="Price"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                        <InputField
+                            label="Payment Type"
+                            name="payment_type"
+                            value={formData.payment_type}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                        <SelectField
+                            label="Status"
+                            name="status"
+                            value={formData.status}
+                            onChange={handleChange}
+                            options={['Success', 'Succeeded', 'Pending', 'Approved']}
+                        />
+                        <InputField
+                            label="Coupon"
+                            name="coupon"
+                            value={formData.coupon}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                        <InputField
+                            label="Invoice"
+                            name="invoice"
+                            value={formData.invoice}
+                            onChange={handleChange}
+                            type="text"
+                        />
+                    </div>
+                    <div className="modal-action">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="btn btn-ghost"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
             </div>
-        </Dialog>
+        </div>
     );
 };
 
-export default EditContractModal;
+export default EditOrderModal;

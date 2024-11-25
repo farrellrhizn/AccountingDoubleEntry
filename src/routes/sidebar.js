@@ -24,11 +24,10 @@ const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
 
 const routes = [
-
   {
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses}/>, 
-    name: 'Dashboard',
+    name: 'Dashboard'
   },
   {
     path: '/app/Staff', // url
@@ -68,12 +67,83 @@ const routes = [
         name: 'Proposal',
       },
       {
-        path: '/app/Retainers',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        path: '/app/',
+        icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Retainers',
       },
     ]
-  },
+    },
+    {
+      path: '', //no url needed as this has submenu
+      icon: <BuildingLibraryIcon className={`${iconClasses} inline` }/>, // icon component
+      name: 'Banking', // name that appear in Sidebar
+      submenu : [
+        {
+          path: '/app/BankAcc',
+          icon: <CreditCardIcon className={submenuIconClasses}/>,
+          name: 'Bank Account',
+        },
+        {
+          path: '/app/',
+          icon: <CreditCardIcon className={submenuIconClasses}/>,
+          name: 'Transfer',
+        }
+      ]
+      },
+    {
+      path: '', //no url needed as this has submenu
+      icon: <BanknotesIcon className={`${iconClasses} inline` }/>, // icon component
+      name: 'Income', // name that appear in Sidebar
+      submenu : [
+        {
+          path: '/app/InvoicePage',
+          icon: <CreditCardIcon className={submenuIconClasses}/>,
+          name: 'Invoice',
+        },
+        {
+          path: '/app/',
+          icon: <CreditCardIcon className={submenuIconClasses}/>,
+          name: 'Revenue',
+        },
+        {
+          path: '/app/CreditNote',
+          icon: <CreditCardIcon className={submenuIconClasses}/>,
+          name: 'Credit Note',
+        }
+      ]
+    },
+      {
+        path: '', //no url needed as this has submenu
+        icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
+        name: 'Double Entry', // name that appear in Sidebar
+        submenu : [
+          {
+            path: '/app/chartofacc',
+            icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
+            name: 'Chart of Accounts',
+          },
+          {
+            path: '/app/journalacc',
+            icon: <UsersIcon className={submenuIconClasses}/>,
+            name: 'Journal Accounts',
+          },
+          {
+            path: '/app/404',
+            icon: <ClipBoardIcon className={submenuIconClasses}/>,
+            name: 'Ledger Summary',
+          },
+          {
+            path: '/app/balance',
+            icon: <ScaleIcon className={submenuIconClasses}/>,
+            name: 'Balance Sheets',
+          },
+          {
+            path: '/app/TrialBalance',
+            icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
+            name: 'Trial Balance',
+          },
+        ]
+      },    
   {
     path: '/app/Banking', // url
     icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
@@ -189,7 +259,7 @@ const routes = [
     submenu : [
       {
         path: '/app/Transaction',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
         name: 'Transaction',
       },
       {
@@ -199,17 +269,17 @@ const routes = [
       },
       {
         path: '/app/IncomeSummary',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ClipBoardIcon className={submenuIconClasses}/>,
         name: 'Income Summary',
       },
       {
         path: '/app/ExpenseSummary',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ScaleIcon className={submenuIconClasses}/>,
         name: 'Expense Summary',
       },
       {
-        path: '/app/IncomeVSExpense',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        path: '/app/IncomeVsExpense',
+        icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
         name: 'Income VS Expense',
       },
       {

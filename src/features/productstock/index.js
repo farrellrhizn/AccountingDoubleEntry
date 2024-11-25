@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
-import EditModal from './components/EditProductModal';
+import EditProductModal from './components/EditProductModal';
 import TitleCard from '../../components/Cards/TitleCard';
 import { PRODUCT_STOCK } from '../../utils/dummyData';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../common/headerSlice';
 
 const ProductStock = () => {
+    const dispatch = useDispatch();
     const [productData, setProductData] = useState(PRODUCT_STOCK);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+
+    // Fungsi untuk menyimpan perubahan produk yang telah diedit
+    const handleSave = (editedProduct) => {
+        const updatedProductData = productData.map((product) =>
+            product.sku === editedProduct.sku ? editedProduct : product
+        );
+        setProductData(updatedProductData);
+        dispatch(
+            showNotification({
+                message: `Product "${editedProduct.name}" has been successfully updated!`,
+                status: 1,
+            })
+        );
+        setShowModal(false);
+    };
 
     const handleEditClick = (product) => {
         setSelectedProduct(product);
@@ -46,12 +64,17 @@ const ProductStock = () => {
 
     return (
         <>
-            <TitleCard topMargin="mt-2" title="Manage Product Accounts">
-                <div className="flex justify-between items-center mb-4">
-                    <div className="mr-4">
+            <TitleCard topMargin="mt-2" title="Manage Product Stock">
+                {/* Kontrol Responsif untuk Entries dan Search */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+                    {/* Entries Per Page */}
+                    <div className="flex items-center">
+                        <label htmlFor="entriesPerPage" className="mr-2 text-sm">
+                            Entries per page:
+                        </label>
                         <select
                             id="entriesPerPage"
-                            className="select select-bordered"
+                            className="select select-bordered text-sm w-full md:w-auto"
                             value={itemsPerPage}
                             onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                         >
@@ -60,29 +83,28 @@ const ProductStock = () => {
                             <option value={15}>15</option>
                             <option value={20}>20</option>
                         </select>
-                        <label htmlFor="entriesPerPage" className="ml-2">
-                            Entries per page:
-                        </label>
                     </div>
-                    <div className="ml-auto">
+                    {/* Search Bar */}
+                    <div className="w-full md:w-64">
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="input input-bordered"
+                            className="input input-bordered w-full text-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
+                {/* Tabel Responsif */}
                 <div className="overflow-x-auto">
-                    <table className="table w-full min-w-max">
+                    <table className="table w-full">
                         <thead>
                             <tr>
-                                <th className="w-35 px-4 py-2">NAME</th>
-                                <th className="w-35 px-4 py-2">SKU</th>
-                                <th className="w-25 px-4 py-2">CURRENT QUANTITY</th>
-                                <th className="w-10 px-4 py-2">ACTION</th>
+                                <th className="px-4 py-2">NAME</th>
+                                <th className="px-4 py-2">SKU</th>
+                                <th className="px-4 py-2">CURRENT QUANTITY</th>
+                                <th className="px-4 py-2">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,7 +114,10 @@ const ProductStock = () => {
                                     <td>{product.sku}</td>
                                     <td>{product.quantity}</td>
                                     <td>
-                                        <button onClick={() => handleEditClick(product)} className="btn bg-transparent border-primary hover:bg-primary hover:text-white group">
+                                        <button 
+                                            onClick={() => handleEditClick(product)} 
+                                            className="btn bg-transparent border-primary hover:bg-primary hover:text-white group p-2"
+                                        >
                                             <PencilIcon className="h-5 w-5" />
                                         </button>
                                     </td>
@@ -102,32 +127,40 @@ const ProductStock = () => {
                     </table>
                 </div>
 
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={handlePrevPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <div>
+                {/* Pagination dan Informasi */}
+                <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                    {/* Informasi */}
+                    <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredProduct.length)} of {filteredProduct.length} entries
                     </div>
-                    <button
-                        onClick={handleNextPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                    {/* Kontrol Pagination */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={handlePrevPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
+
             </TitleCard>
 
+            {/* Modal Edit Product */}
             {showModal &&
-                <EditModal
+                <EditProductModal
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     product={selectedProduct}
+                    onSave={handleSave}  // Menyimpan hasil edit
                 />
             }
         </>

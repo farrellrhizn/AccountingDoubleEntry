@@ -1,6 +1,6 @@
 // All components mapping with path for internal routes
 
-import { TrashIcon } from '@heroicons/react/24/outline'
+import { elements } from 'chart.js'
 import { lazy } from 'react'
 // import BudgetPlanners from '../features/BudgetPlanner'
 
@@ -43,9 +43,64 @@ const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
-
+const ChartOfAccounts = lazy(() => import('../pages/protected/chartofaccount'))
+const JournalAccount = lazy(() => import('../pages/protected/JournalAcc'))
+const Balance = lazy(() => import('../pages/protected/balance'))
+const TrialBalance = lazy(() => import('../pages/protected/TrialBalance'))
+const NewJournal = lazy(() => import('../pages/protected/newJournal'))
+const ProductStock = lazy(() => import('../pages/protected/ProductStock'))
+const VendorAcc = lazy(() => import('../pages/protected/VendorAcc'))
+const Contract = lazy(() => import('../pages/protected/Contract'))
+const AssetsPage = lazy(() => import('../pages/protected/assetspage'))
+const OrderPage = lazy(() => import('../pages/protected/order'))
+const staffUser = lazy(() => import('../pages/protected/StaffUser'))
+const ProposalPage = lazy(() => import('../pages/protected/Proposal'))
+const BankAcc = lazy(() => import('../pages/protected/BankAcc'))
+const InvoicePage = lazy(() => import('../pages/protected/Invoice'))
+const CreditNote = lazy(() => import('../pages/protected/CreditNote'))
+const RolePage = lazy(() => import('../pages/protected/Role'))
+const TransactionPage = lazy(() => import('../pages/protected/Transaction'))
+const AccountStatementPage = lazy(() => import('../pages/protected/AccountStatement'))
+const IncomeSumPage = lazy(() => import('../pages/protected/IncomeSummary'))
+const ExpenseSumPage = lazy(() => import('../pages/protected/ExpenseSummary'))
+const IncomeVSExpense = lazy(() => import('../pages/protected/IncomeVsExpense'))
+const StaffUserLogs = lazy(() => import('../pages/protected/StaffUserLogs'))
+const VendorDetail = lazy(() => import('../pages/protected/VendorDetail'))
+const ProposalDetail = lazy(() => import('../pages/protected/ProposalDetail'))
+const InvoiceDetail = lazy(() => import('../pages/protected/InvoiceDetail'))
+const CreditDetail = lazy(() => import('../pages/protected/CreditDetail'))
+const JournalDetail = lazy(() => import('../pages/protected/JournalDetail'))
+const ContractDetail = lazy(() => import('../pages/protected/ContractDetail'))
 
 const routes = [
+  {
+    path: '/ContractDetail/',  // Add dynamic ID parameter here
+    component: ContractDetail,
+  },
+  {
+    path: '/JournalDetail/',  // Add dynamic ID parameter here
+    component: JournalDetail,
+  },
+  {
+    path: '/CreditDetail/',  // Add dynamic ID parameter here
+    component: CreditDetail,
+  },
+  {
+    path: '/InvoiceDetail/',  // Add dynamic ID parameter here
+    component: InvoiceDetail,
+  },
+  {
+    path: '/ProposalDetail/',  // Add dynamic ID parameter here
+    component: ProposalDetail,
+  },
+  {
+    path: '/VendorDetail/',  // Add dynamic ID parameter here
+    component: VendorDetail,
+  },
+  {
+    path: '/StaffUserLogs',
+    component: StaffUserLogs,
+  },
   {
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
@@ -89,6 +144,17 @@ const routes = [
   {
     path: '/TaxSumarry', // the url
     component: TaxSumarry,
+
+    path: '/ExpenseSummary', // the url
+    component: ExpenseSumPage, // view rendered
+  },
+  {
+    path: '/IncomeVsExpense', // the url
+    component: IncomeVSExpense, // view rendered
+  },
+  {
+    path: '/CreditNote', // the url
+    component: CreditNote, // view rendered
   },
   {
     path: '/InvoiceSummary', // the url

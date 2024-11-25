@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import TitleCard from '../../components/Cards/TitleCard';
-import EditRoleModal from './components/EditRoleModal'; // Ensure you have the correct path
+import EditRoleModal from './components/EditRoleModal'; // Pastikan path sudah benar
+import DeleteConfirmModal from './components/DeleteConfirmModal'; // Import modal konfirmasi penghapusan
 import { ROLE_DATA } from '../../utils/dummyData';
+import { Tooltip } from 'react-tooltip'; // Pastikan untuk menginstal react-tooltip
+import 'react-tooltip/dist/react-tooltip.css'; // Import CSS react-tooltip
+import { showNotification } from "../common/headerSlice";
 
 const RolePage = () => {
+    const dispatch = useDispatch(); // Inisialisasi dispatch
     const [roles, setRoles] = useState(ROLE_DATA);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -13,15 +19,20 @@ const RolePage = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedRole, setSelectedRole] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+    
+    // State untuk modal konfirmasi penghapusan
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [roleToDelete, setRoleToDelete] = useState(null);
 
     const handleEditClick = (role) => {
         setSelectedRole(role);
         setShowModal(true);
     };
 
-    const handleDetailClick = (role) => {
-        setSelectedRole(role);
-        setShowDetail(true);
+    // Ubah handleDetailClick menjadi handleDeleteClick
+    const handleDeleteClick = (role) => {
+        setRoleToDelete(role);
+        setShowDeleteModal(true);
     };
 
     const filteredRoles = roles.filter(role =>
@@ -52,14 +63,57 @@ const RolePage = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const selectedRoles = filteredRoles.slice(startIndex, startIndex + itemsPerPage);
 
+    // Fungsi untuk menghapus role setelah konfirmasi
+    const handleConfirmDelete = () => {
+        if (roleToDelete) {
+            setRoles(prevRoles => prevRoles.filter(role => role.id !== roleToDelete.id));
+            setShowDeleteModal(false);
+            setRoleToDelete(null);
+
+            // Dispatch notifikasi penghapusan berhasil
+            dispatch(
+                showNotification({
+                    message: `Role "${roleToDelete.role}" has been successfully deleted!`,
+                    status: 1, // 1 untuk sukses
+                })
+            );
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setRoleToDelete(null);
+    };
+
+    // Fungsi untuk mengupdate role setelah edit
+    const handleUpdateRole = (updatedRole) => {
+        setRoles(prevRoles => prevRoles.map(role => role.id === updatedRole.id ? updatedRole : role));
+
+        // Dispatch notifikasi pembaruan berhasil
+        dispatch(
+            showNotification({
+                message: `Role "${updatedRole.role}" has been successfully updated!`,
+                status: 1, // 1 untuk sukses
+            })
+        );
+
+        setShowModal(false);
+        setSelectedRole(null);
+    };
+
     return (
         <>
             <TitleCard topMargin="mt-2" title="Manage Roles">
-                <div className="flex justify-between items-center mb-4">
-                    <div className="mr-4">
+                {/* Kontrol Responsif untuk Entries dan Search */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+                    {/* Entries Per Page */}
+                    <div className="flex items-center w-full md:w-auto">
+                        <label htmlFor="entriesPerPage" className="mr-2 text-sm">
+                            Entries per page:
+                        </label>
                         <select
                             id="entriesPerPage"
-                            className="select select-bordered"
+                            className="select select-bordered text-sm w-full md:w-auto"
                             value={itemsPerPage}
                             onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                         >
@@ -68,55 +122,71 @@ const RolePage = () => {
                             <option value={15}>15</option>
                             <option value={20}>20</option>
                         </select>
-                        <label htmlFor="entriesPerPage" className="ml-2">
-                            Entries per page:
-                        </label>
                     </div>
-                    <div className="ml-auto">
+                    {/* Search Bar */}
+                    <div className="w-full md:w-64">
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="input input-bordered"
+                            className="input input-bordered w-full text-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
+                {/* Tabel Responsif */}
                 <div className="overflow-x-auto">
-                    <table className="table w-full min-w-max">
+                    <table className="table w-full">
                         <thead>
                             <tr>
-                                <th className="w-24 px-4 py-2">ROLE</th>
-                                <th className="w-72 px-4 py-2">PERMISSIONS</th>
-                                <th className="w-32 px-4 py-2">ACTION</th>
+                                <th className="px-2 py-2 text-left">ROLE</th>
+                                <th className="px-2 py-2 text-left">PERMISSIONS</th>
+                                <th className="px-2 py-2 text-center">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {selectedRoles.map((role, index) => (
-                                <tr key={index}>
-                                    <td className="align-center">{role.role}</td>
-                                    <td className="align-top">
-                                        <div className="flex flex-wrap gap-2">
-                                            {role.permissions.map((permission, idx) => (
-                                                <span key={idx} className="badge bg-purple-200 text-purple-800">
+                            {selectedRoles.map((role) => (
+                                <tr key={role.id} className="text-sm">
+                                    <td className="px-2 py-2 truncate" title={role.role}>
+                                        {role.role}
+                                    </td>
+                                    <td className="px-2 py-2">
+                                        <div className="flex flex-wrap gap-1">
+                                            {role.permissions.slice(0, 3).map((permission, idx) => (
+                                                <span key={idx} className="badge bg-purple-200 text-purple-800 text-xs">
                                                     {permission}
                                                 </span>
                                             ))}
+                                            {role.permissions.length > 3 && (
+                                                <>
+                                                    <span
+                                                        className="badge bg-purple-200 text-purple-800 text-xs cursor-pointer"
+                                                        data-tooltip-id={`permission-tooltip-${role.id}`}
+                                                        data-tooltip-content={role.permissions.slice(3).join(', ')}
+                                                    >
+                                                        +{role.permissions.length - 3}
+                                                    </span>
+                                                    <Tooltip id={`permission-tooltip-${role.id}`} place="top" effect="solid" />
+                                                </>
+                                            )}
                                         </div>
                                     </td>
-                                    <td className="align-center">
-                                        <div className="flex space-x-2">
+                                    <td className="px-2 py-2 text-center">
+                                        <div className="flex justify-center space-x-2">
                                             <button
                                                 onClick={() => handleEditClick(role)}
-                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2"
+                                                aria-label="Edit Role"
                                             >
-                                                <PencilIcon className="h-5 w-5" />
+                                                <PencilIcon className="h-4 w-4" />
                                             </button>
                                             <button
-                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white group"
+                                                onClick={() => handleDeleteClick(role)}
+                                                className="btn bg-transparent border-primary hover:bg-primary hover:text-white p-2"
+                                                aria-label="Delete Role"
                                             >
-                                                <TrashIcon className="h-5 w-5" />
+                                                <TrashIcon className="h-4 w-4" />
                                             </button>
                                         </div>
                                     </td>
@@ -125,58 +195,79 @@ const RolePage = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={handlePrevPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <div>
+
+                {/* Pagination dan Informasi */}
+                <div className="flex flex-col md:flex-row justify-between items-center mt-4 space-y-4 md:space-y-0">
+                    {/* Informasi */}
+                    <div className="text-sm text-gray-700">
                         Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredRoles.length)} of {filteredRoles.length} entries
                     </div>
-                    <button
-                        onClick={handleNextPage}
-                        className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                    {/* Kontrol Pagination */}
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={handlePrevPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={handleNextPage}
+                            className={`btn bg-primary text-white hover:bg-secondary ${currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
+
             </TitleCard>
 
+            {/* Modal Edit Role */}
             {showModal &&
                 <EditRoleModal
                     showModal={showModal}
                     onClose={() => setShowModal(false)}
                     role={selectedRole}
+                    onUpdate={handleUpdateRole} // Tambahkan prop onUpdate
                 />
             }
 
+            {/* Detail View */}
             {showDetail && selectedRole && (
                 <DetailView
-                    vendor={selectedRole}
+                    role={selectedRole}
                     onClose={() => setShowDetail(false)}
                 />
             )}
-        </>
-    );
-};
 
-const DetailView = ({ vendor, onClose }) => {
-    if (!vendor) return null;
+            {/* Modal Konfirmasi Penghapusan */}
+            {showDeleteModal && roleToDelete && (
+                <DeleteConfirmModal
+                    onConfirm={handleConfirmDelete}
+                    onCancel={handleCancelDelete}
+                />
+            )}
+        </>
+    ); // Menutup pernyataan return
+}; // Menutup fungsi RolePage
+
+// DetailView Component
+const DetailView = ({ role, onClose }) => {
+    if (!role) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Vendor Details</h2>
-                <p><strong>ID:</strong> {vendor.id}</p>
-                <p><strong>Name:</strong> {vendor.name}</p>
-                <p><strong>Contact:</strong> {vendor.contact}</p>
-                <p><strong>Email:</strong> {vendor.email}</p>
-                <p><strong>Balance:</strong> {vendor.balance}</p>
-                <p><strong>Last Login At:</strong> {vendor.lastLoginAt}</p>
+            <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-md">
+                <h2 className="text-xl font-bold mb-4">Role Details</h2>
+                <p className="text-sm"><strong>ID:</strong> {role.id}</p>
+                <p className="text-sm"><strong>Role:</strong> {role.role}</p>
+                <p className="text-sm"><strong>Permissions:</strong></p>
+                <ul className="list-disc list-inside text-sm">
+                    {role.permissions.map((permission, idx) => (
+                        <li key={idx}>{permission}</li>
+                    ))}
+                </ul>
                 <button onClick={onClose} className="mt-4 btn bg-primary text-white hover:bg-secondary">
                     Close
                 </button>

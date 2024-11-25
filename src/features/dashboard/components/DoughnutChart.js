@@ -10,57 +10,56 @@ import { Doughnut } from 'react-chartjs-2';
 import TitleCard from '../../../components/Cards/TitleCard';
 import Subtitle from '../../../components/Typography/Subtitle';
 
-ChartJS.register(ArcElement, Tooltip, Legend,
-    Tooltip,
-    Filler,
-    Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Tooltip, Filler, Legend);
 
-function DoughnutChart(){
+function DoughnutChart() {
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, // Ensure the chart size doesn't stretch
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
 
-    const options = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-        },
-      };
-      
-      const labels = ['Electronics', 'Home Applicances', 'Beauty', 'Furniture', 'Watches', 'Apparel'];
-      
-      const data = {
-        labels,
-        datasets: [
-            {
-                label: '# of Orders',
-                data: [122, 219, 30, 51, 82, 13],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.8)',
-                  'rgba(54, 162, 235, 0.8)',
-                  'rgba(255, 206, 86, 0.8)',
-                  'rgba(75, 192, 192, 0.8)',
-                  'rgba(153, 102, 255, 0.8)',
-                  'rgba(255, 159, 64, 0.8)',
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1,
-              }
+  const labels = [
+    'Electronics',
+    'Home Appliances',
+    'Beauty',
+    'Furniture',
+    'Watches',
+    'Apparel',
+  ];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: '# of Income',
+        data: [219, 122, 82, 51, 30, 13],
+        backgroundColor: [
+          'rgba(74, 0, 255, 0.8)', // Color 1 with transparency 0.8
+          'rgba(74, 0, 255, 0.6)', // Color 2 with transparency 0.6
+          'rgba(74, 0, 255, 0.4)', // Color 3 with transparency 0.4
+          'rgba(74, 0, 255, 0.3)', // Color 4 with transparency 0.3
+          'rgba(74, 0, 255, 0.2)', // Color 5 with transparency 0.2
+          'rgba(74, 0, 255, 0.1)', // Color 6 with transparency 0.1
         ],
-      };
+      },
+    ],
+  };
 
-    return(
-        <TitleCard title={"Orders by Category"}>
-                <Doughnut options={options} data={data} />
-        </TitleCard>
-    )
+  return (
+    <TitleCard title={"Income by Category"} subtitle={<Subtitle>As of 24th June 2022</Subtitle>}>
+      <div className="w-full flex justify-center">
+        {/* Set the width and height of the chart container */}
+        <div className="relative" style={{ width: '350px', height: '350px' }}>
+          <Doughnut data={data} options={options} />
+        </div>
+      </div>
+    </TitleCard>
+  );
 }
 
-
-export default DoughnutChart
+export default DoughnutChart;

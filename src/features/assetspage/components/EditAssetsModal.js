@@ -1,4 +1,7 @@
+// EditAssetsModal.jsx
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../common/headerSlice';
 
 // Reusable InputField Component
 const InputField = ({ label, name, value, onChange, type = 'text' }) => (
@@ -17,7 +20,7 @@ const InputField = ({ label, name, value, onChange, type = 'text' }) => (
 // Address Section Component
 const AddressSection = ({ prefix, formData, onChange }) => (
     <>
-        <h3 className="text-md font-semibold mb-2">{prefix} Address</h3>
+        <h3 className="text-md font-semibold mb-2 capitalize">{prefix} Address</h3>
         <div className="grid grid-cols-2 gap-2 mb-3">
             {['Name', 'Phone', 'Address', 'City', 'State', 'Country', 'Zip Code'].map((field, index) => (
                 <InputField
@@ -32,27 +35,30 @@ const AddressSection = ({ prefix, formData, onChange }) => (
     </>
 );
 
-const EditVendorModal = ({ showModal, onClose, vendor }) => {
-    const initialFormData = vendor ? {
-        name: vendor.name || '',
-        contact: vendor.contact || '',
-        email: vendor.email || '',
-        taxNumber: vendor.taxNumber || '',
-        billingName: vendor.billingName || '',
-        billingPhone: vendor.billingPhone || '',
-        billingAddress: vendor.billingAddress || '',
-        billingCity: vendor.billingCity || '',
-        billingState: vendor.billingState || '',
-        billingCountry: vendor.billingCountry || '',
-        billingZipCode: vendor.billingZipCode || '',
-        shippingName: vendor.shippingName || '',
-        shippingPhone: vendor.shippingPhone || '',
-        shippingAddress: vendor.shippingAddress || '',
-        shippingCity: vendor.shippingCity || '',
-        shippingState: vendor.shippingState || '',
-        shippingCountry: vendor.shippingCountry || '',
-        shippingZipCode: vendor.shippingZipCode || ''
-    } : {};
+const EditAssetsModal = ({ showModal, onClose, vendor }) => {
+    const dispatch = useDispatch();
+    const initialFormData = vendor
+        ? {
+              name: vendor.name || '',
+              contact: vendor.contact || '',
+              email: vendor.email || '',
+              taxNumber: vendor.taxNumber || '',
+              billingName: vendor.billingName || '',
+              billingPhone: vendor.billingPhone || '',
+              billingAddress: vendor.billingAddress || '',
+              billingCity: vendor.billingCity || '',
+              billingState: vendor.billingState || '',
+              billingCountry: vendor.billingCountry || '',
+              billingZipCode: vendor.billingZipCode || '',
+              shippingName: vendor.shippingName || '',
+              shippingPhone: vendor.shippingPhone || '',
+              shippingAddress: vendor.shippingAddress || '',
+              shippingCity: vendor.shippingCity || '',
+              shippingState: vendor.shippingState || '',
+              shippingCountry: vendor.shippingCountry || '',
+              shippingZipCode: vendor.shippingZipCode || '',
+          }
+        : {};
 
     const [formData, setFormData] = useState(initialFormData);
 
@@ -73,7 +79,14 @@ const EditVendorModal = ({ showModal, onClose, vendor }) => {
     const handleUpdate = () => {
         // Handle the update logic here
         console.log('Updated Vendor Data:', formData);
+
         onClose();
+        dispatch(
+            showNotification({
+                message: `Asset name "${formData.name}" has been successfully updated.`,
+                status: 1, // Assuming status 1 is for success
+            })
+        );
     };
 
     const handleCopyBillingToShipping = () => {
@@ -85,15 +98,15 @@ const EditVendorModal = ({ showModal, onClose, vendor }) => {
             shippingCity: prevState.billingCity,
             shippingState: prevState.billingState,
             shippingCountry: prevState.billingCountry,
-            shippingZipCode: prevState.billingZipCode
+            shippingZipCode: prevState.billingZipCode,
         }));
     };
 
     if (!showModal) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center p-4">
-            <div className="bg-white p-4 rounded-lg w-[800px] max-h-[75vh] mt-12 overflow-auto">
+        <div className="modal modal-open">
+            <div className="modal-box">
                 <h2 className="text-lg font-semibold mb-3">Edit Vendor</h2>
                 <div className="grid grid-cols-2 gap-2 mb-3">
                     {['Name', 'Contact', 'Email', 'Tax Number'].map((field, index) => (
@@ -108,29 +121,27 @@ const EditVendorModal = ({ showModal, onClose, vendor }) => {
                     ))}
                 </div>
                 <AddressSection prefix="billing" formData={formData} onChange={handleInputChange} />
-                <AddressSection prefix="shipping" formData={formData} onChange={handleInputChange} />
-                <div className="flex justify-between mt-3">
-                    <button 
-                        onClick={handleCopyBillingToShipping} 
-                        className="btn btn-sm bg-green-500 text-white">
-                        Same as Billing
+                <div className="mb-3">
+                    <button
+                        type="button"
+                        onClick={handleCopyBillingToShipping}
+                        className="btn btn-sm btn-outline mb-2"
+                    >
+                        Copy Billing to Shipping
                     </button>
-                    <div className="flex">
-                        <button 
-                            onClick={onClose} 
-                            className="btn btn-sm bg-gray-300 text-black mr-2">
-                            Cancel
-                        </button>
-                        <button 
-                            onClick={handleUpdate} 
-                            className="btn btn-sm bg-blue-500 text-white">
-                            Update
-                        </button>
-                    </div>
+                </div>
+                <AddressSection prefix="shipping" formData={formData} onChange={handleInputChange} />
+                <div className="modal-action">
+                    <button onClick={handleUpdate} className="btn btn-sm bg-blue-500 text-white">
+                        Update
+                    </button>
+                    <button onClick={onClose} className="btn btn-sm btn-ghost">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-export default EditVendorModal;
+export default EditAssetsModal;
