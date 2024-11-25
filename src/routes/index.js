@@ -16,7 +16,6 @@ const Revenue = lazy(() => import('../pages/protected/Revenue'))
 const TaxSumarry= lazy(() => import('../pages/protected/TaxSumarry'))
 const InvoiceSummary= lazy(() => import('../pages/protected/InvoiceSummary'))
 const BillSummary= lazy(() => import('../pages/protected/BillSummary'))
-const ProductStock= lazy(() => import('../pages/protected/ProductStock'))
 const Taxes= lazy(() => import('../pages/protected/Taxes'))
 const Unit= lazy(() => import('../pages/protected/Unit'))
 const ContractType= lazy(() => import('../pages/protected/ContractType'))
@@ -37,18 +36,17 @@ const Team = lazy(() => import('../pages/protected/Team'))
 // const Transactions = lazy(() => import('../pages/protected/Transactions'))
 const LedgerSummary = lazy(() => import('../pages/protected/LedgerSummary'))
 const ManageChartofAccounts = lazy(() => import('../pages/protected/ManageChartofAccounts'))
-const TrialBalance = lazy(() => import('../pages/protected/TrialBalance'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
-const ChartOfAccounts = lazy(() => import('../pages/protected/chartofaccount'))
 const JournalAccount = lazy(() => import('../pages/protected/JournalAcc'))
 const Balance = lazy(() => import('../pages/protected/balance'))
 const TrialBalance = lazy(() => import('../pages/protected/TrialBalance'))
 const NewJournal = lazy(() => import('../pages/protected/newJournal'))
 const ProductStock = lazy(() => import('../pages/protected/ProductStock'))
+const ProductStockReport = lazy(() => import('../pages/protected/ProductStockReport'))
 const VendorAcc = lazy(() => import('../pages/protected/VendorAcc'))
 const Contract = lazy(() => import('../pages/protected/Contract'))
 const AssetsPage = lazy(() => import('../pages/protected/assetspage'))
@@ -73,6 +71,86 @@ const JournalDetail = lazy(() => import('../pages/protected/JournalDetail'))
 const ContractDetail = lazy(() => import('../pages/protected/ContractDetail'))
 
 const routes = [
+  {
+    path: '/ProductStockReport', // the url}
+    component: ProductStockReport, // view rendered
+  },
+  {
+    path: '/JournalAcc', // the url
+    component: JournalAccount, // view rendered
+  },
+  {
+    path: '/VendorAcc', // the url
+    component: VendorAcc, // view rendered
+  },
+  {
+    path: '/Contract', // the url
+    component: Contract, // view rendered
+  },
+  {
+    path: '/AssetPage', // the url
+    component: AssetsPage, // view rendered
+  },
+  {
+    path: '/OrderPage', // the url
+    component: OrderPage, // view rendered
+  },
+  {
+    path: '/StaffUser', // the url
+    component: staffUser, // view rendered
+  },
+  {
+    path: '/ProposalPage', // the url
+    component: ProposalPage, // view rendered
+  },
+  {
+    path: '/BankAcc', // the url
+    component: BankAcc, // view rendered
+  },
+  {
+    path: '/InvoicePage', // the url
+    component: InvoicePage, // view rendered
+  },
+  {
+    path: '/CreditNote', // the url
+    component: CreditNote, // view rendered
+  },
+  {
+    path: '/RolePage', // the url
+    component: RolePage, // view rendered
+  },
+  {
+    path: '/Balance', // the url
+    component: Balance, // view rendered
+  },
+  {
+    path: '/TrialBalance', // the url
+    component: TrialBalance, // view rendered
+  },
+  {
+    path: '/NewJournal', // the url
+    component: NewJournal, // view rendered
+  },
+  {
+    path: '/TransactionPage', // the url
+    component: TransactionPage, // view rendered
+  },
+  {
+    path: '/AccountStatementPage', // the url
+    component: AccountStatementPage, // view rendered
+  },
+  {
+    path: '/IncomeSummary', // the url
+    component: IncomeSumPage, // view rendered
+  },
+  {
+    path: '/ExpenseSummary', // the url
+    component: ExpenseSumPage, // view rendered
+  },
+  {
+    path: '/IncomeVsExpense', // the url
+    component: IncomeVSExpense, // view rendered
+  },
   {
     path: '/ContractDetail/',  // Add dynamic ID parameter here
     component: ContractDetail,
@@ -144,7 +222,8 @@ const routes = [
   {
     path: '/TaxSumarry', // the url
     component: TaxSumarry,
-
+  },
+  {
     path: '/ExpenseSummary', // the url
     component: ExpenseSumPage, // view rendered
   },

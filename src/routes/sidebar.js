@@ -19,6 +19,14 @@ import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
 import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
+import BuildingLibraryIcon from '@heroicons/react/24/outline/BuildingLibraryIcon'
+import CreditCardIcon from '@heroicons/react/24/outline/CreditCardIcon'
+import BanknotesIcon from '@heroicons/react/24/outline/BanknotesIcon'
+import BookOpenIcon from '@heroicons/react/24/outline/BookOpenIcon'
+import ChartBarSquareIcon from '@heroicons/react/24/outline/ChartBarSquareIcon'
+import ClipBoardIcon from '@heroicons/react/24/outline/ClipboardIcon'
+import ScaleIcon from '@heroicons/react/24/outline/ScaleIcon'
+import DocumentChartBarIcon from '@heroicons/react/24/outline/DocumentChartBarIcon'
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -35,12 +43,12 @@ const routes = [
     name: 'Staff', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/User',
+        path: '/app/StaffUser',
         icon: <UserIcon className={submenuIconClasses}/>,
         name: 'User',
       },
       {
-        path: '/app/Role',
+        path: '/app/RolePage',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Role',
       },
@@ -52,9 +60,19 @@ const routes = [
     name: 'Product & Service', // name that appear in Sidebar
   },
   {
+    path: '/app/ProductStock', // url
+    icon: <TableCellsIcon className={iconClasses}/>, // icon component
+    name: 'Product Stock', // name that appear in Sidebar
+  },
+  {
     path: '/app/Customers', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
     name: 'Customers', // name that appear in Sidebar
+  },
+  {
+    path: '/app/VendorAcc', // url
+    icon: <WalletIcon className={iconClasses}/>, // icon component
+    name: 'Vendor', // name that appear in Sidebar}
   },
   {
     path: '/app/Presale', // url
@@ -62,12 +80,12 @@ const routes = [
     name: 'Presale', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/Proposal',
+        path: '/app/ProposalPage',
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Proposal',
       },
       {
-        path: '/app/',
+        path: '/app/Retainers',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Retainers',
       },
@@ -84,7 +102,7 @@ const routes = [
           name: 'Bank Account',
         },
         {
-          path: '/app/',
+          path: '/app/Transfer',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Transfer',
         }
@@ -101,7 +119,7 @@ const routes = [
           name: 'Invoice',
         },
         {
-          path: '/app/',
+          path: '/app/Revenue',
           icon: <CreditCardIcon className={submenuIconClasses}/>,
           name: 'Revenue',
         },
@@ -112,13 +130,35 @@ const routes = [
         }
       ]
     },
+    {
+      path: '/app/Expense', // url
+      icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+      name: 'Expense', // name that appear in Sidebar
+      submenu : [
+        {
+          path: '/app/Bill',
+          icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+          name: 'Bill',
+        },
+        {
+          path: '/app/Payment',
+          icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+          name: 'Payment',
+        },
+        {
+          path: '/app/DebitNote',
+          icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+          name: 'Debit Note',
+        },
+      ]
+    },
       {
         path: '', //no url needed as this has submenu
         icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
         name: 'Double Entry', // name that appear in Sidebar
         submenu : [
           {
-            path: '/app/chartofacc',
+            path: '/app/ManageChartOfAccounts',
             icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
             name: 'Chart of Accounts',
           },
@@ -145,102 +185,14 @@ const routes = [
         ]
       },    
   {
-    path: '/app/Banking', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Banking', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/Account',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Account',
-      },
-      {
-        path: '/app/Transfer',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Transfer',
-      },
-    ]
-  },
-  {
-    path: '/app/Income', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Income', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/Invoice',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Invoice',
-      },
-      {
-        path: '/app/Revenue',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Revenue',
-      },
-      {
-        path: '/app/CreditNote',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Credit Note',
-      },
-    ]
-  },
-  {
-    path: '/app/Expense', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Expense', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/Bill',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Bill',
-      },
-      {
-        path: '/app/Payment',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Payment',
-      },
-      {
-        path: '/app/DebitNote',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Debit Note',
-      },
-    ]
-  },
-  {
-    path: '/app/DoubleEntry', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Double Entry', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/ManageChartOfAccounts',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Chart of Accounts',
-      },
-      {
-        path: '/app/transactions',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Journal Account',
-      },
-      {
-        path: '/app/LedgerSummary',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Ledger Summary',
-      },
-      {
-        path: '/app/transactions',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Balance Sheet',
-      },
-      {
-        path: '/app/TrialBalance',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Trial Balance',
-      },
-    ]
-  },
-  {
     path: '/app/BudgetPlanners', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
     name: 'Budget Planner', // name that appear in Sidebar
+  },
+  {
+    path: '/app/Contract', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Contract', // name that appear in Sidebar
   },
   {
     path: '/app/Goals', // url
@@ -248,24 +200,29 @@ const routes = [
     name: 'Goals', // name that appear in Sidebar
   },
   {
-    path: '/app/NotificationTemplate', // url
+    path: '/app/AssetPage', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-    name: 'Notification Template', // name that appear in Sidebar
+    name: 'Assets', // name that appear in Sidebar
   },
   {
-    path: '/app/Report', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    path: '/app/OrderPage', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Order', // name that appear in Sidebar
+  },
+  {
+    path: '', //no url needed as this has submenu
+    icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Report', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/Transaction',
+        path: '/app/TransactionPage',
         icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
         name: 'Transaction',
       },
       {
-        path: '/app/AccountStatement',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Account Statement',
+        path: '/app/AccountStatementPage',
+        icon: <UsersIcon className={submenuIconClasses}/>,
+        name: 'AccountStatement',
       },
       {
         path: '/app/IncomeSummary',
@@ -284,68 +241,31 @@ const routes = [
       },
       {
         path: '/app/TaxSumarry',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ChartBarSquareIcon className={submenuIconClasses}/>,
         name: 'Tax Summary',
       },
       {
         path: '/app/CashFlow',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Cash Flow',
       },
       {
         path: '/app/InvoiceSummary',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ClipBoardIcon className={submenuIconClasses}/>,
         name: 'Invoice Summary',
       },
       {
         path: '/app/BillSummary',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        icon: <ScaleIcon className={submenuIconClasses}/>,
         name: 'Bill Summary',
       },
       {
-        path: '/app/ProductStock',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        path: '/app/ProductStockReport',
+        icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
         name: 'Product Stock',
       },
     ]
-  },
-  {
-    path: '/app/Constant', // url
-    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Constant', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/Taxes',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Taxes',
-      },
-      {
-        path: '/app/Category',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Catagory',
-      },
-      {
-        path: '/app/Unit',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Unit',
-      },
-      {
-        path: '/app/CustomField',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Custom Field',
-      },
-      {
-        path: '/app/ContractType',
-        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
-        name: 'Contract Type',
-      },
-    ]
-  },
-  {
-    path: '/app/calendar', // url
-    icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
-    name: 'Calendar', // name that appear in Sidebar
-  },
+  }
 
   // {
   //   path: '', //no url needed as this has submenu
@@ -424,7 +344,7 @@ const routes = [
   //   ]
   // },
   
-]
+];
 
 export default routes
 
