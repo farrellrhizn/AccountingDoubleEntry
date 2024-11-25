@@ -2,9 +2,31 @@
 
 import { elements } from 'chart.js'
 import { lazy } from 'react'
+// import BudgetPlanners from '../features/BudgetPlanner'
+
 
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
-const Welcome = lazy(() => import('../pages/protected/Welcome'))
+const ProductService = lazy(() => import('../pages/protected/ProductService'))
+const Customers = lazy(() => import('../pages/protected/Customers'))
+const BudgetPlanner = lazy(() => import('../pages/protected/BudgetPlanners'))
+const Goals = lazy(() => import('../pages/protected/Goals'))
+const Retainers = lazy(() => import('../pages/protected/Retainers'))
+const Transfer = lazy(() => import('../pages/protected/Transfer'))
+const Revenue = lazy(() => import('../pages/protected/Revenue'))
+const TaxSumarry= lazy(() => import('../pages/protected/TaxSumarry'))
+const InvoiceSummary= lazy(() => import('../pages/protected/InvoiceSummary'))
+const BillSummary= lazy(() => import('../pages/protected/BillSummary'))
+const ProductStock= lazy(() => import('../pages/protected/ProductStock'))
+const Taxes= lazy(() => import('../pages/protected/Taxes'))
+const Unit= lazy(() => import('../pages/protected/Unit'))
+const ContractType= lazy(() => import('../pages/protected/ContractType'))
+const Category= lazy(() => import('../pages/protected/Category'))
+const CustomField= lazy(() => import('../pages/protected/CustomField'))
+const CashFlow= lazy(() => import('../pages/protected/CashFlow'))
+const Bill = lazy(() => import('../pages/protected/Bill'))
+const DebitNote = lazy(() => import('../pages/protected/DebitNote'))
+const NotificationTemplate = lazy(() => import('../pages/protected/NotificationTemplate'))
+const Welcome = lazy(() => import('../pages/protected/Dashboard'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
@@ -12,6 +34,10 @@ const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
 const Calendar = lazy(() => import('../pages/protected/Calendar'))
 const Team = lazy(() => import('../pages/protected/Team'))
+// const Transactions = lazy(() => import('../pages/protected/Transactions'))
+const LedgerSummary = lazy(() => import('../pages/protected/LedgerSummary'))
+const ManageChartofAccounts = lazy(() => import('../pages/protected/ManageChartofAccounts'))
+const TrialBalance = lazy(() => import('../pages/protected/TrialBalance'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const GettingStarted = lazy(() => import('../pages/GettingStarted'))
@@ -80,34 +106,45 @@ const routes = [
     component: Dashboard, // view rendered
   },
   {
-    path: '/ProductStock', // the url
-    component: ProductStock, // view rendered
+    path: '/ProductService', // the url
+    component: ProductService,
   },
   {
-    path: '/contractDetail', // the url
-    component: ContractDetail, // view rendered
+    path: '/Customers', // the url
+    component: Customers,
   },
   {
-    path: '/BankAcc', // the url
-    component: BankAcc, // view rendered
+    path: '/BudgetPlanners', // the url
+    component: BudgetPlanner,
   },
   {
-    path: '/InvoicePage', // the url
-    component: InvoicePage, // view rendered
+    path: '/Goals', // the url
+    component: Goals,
   },
   {
-    path: '/Transaction', // the url
-    component: TransactionPage, // view rendered
+    path: '/NotificationTemplate', // the url
+    component: NotificationTemplate,
   },
   {
-    path: '/AccountStatement', // the url
-    component: AccountStatementPage, // view rendered
+    path: '/Retainers', // the url
+    component: Retainers,
   },
   {
-    path: '/incomeSummary', // the url
-    component: IncomeSumPage, // view rendered
+    path: '/Transfer', // the url
+    component: Transfer,
   },
   {
+    path: '/Revenue', // the url
+    component: Revenue,
+  },
+  {
+    path: '/CashFlow', // the url
+    component: CashFlow,
+  },
+  {
+    path: '/TaxSumarry', // the url
+    component: TaxSumarry,
+
     path: '/ExpenseSummary', // the url
     component: ExpenseSumPage, // view rendered
   },
@@ -120,36 +157,44 @@ const routes = [
     component: CreditNote, // view rendered
   },
   {
-    path: '/VendorAcc', // the url
-    component: VendorAcc, // view rendered
+    path: '/InvoiceSummary', // the url
+    component: InvoiceSummary,
   },
   {
-    path: '/Proposal', // the url
-    component: ProposalPage, // view rendered
+    path: '/BillSummary', // the url
+    component: BillSummary,
   },
   {
-    path: '/Contract', // the url
-    component: Contract, // view rendered
+    path: '/ProductStock', // the url
+    component: ProductStock,
   },
   {
-    path: '/AssetsPage', // the url
-    component: AssetsPage, // view rendered
+    path: '/Taxes', // the url
+    component: Taxes,
   },
   {
-    path: '/OrderPage', // the url
-    component: OrderPage, // view rendered
+    path: '/Category', // the url
+    component: Category,
   },
   {
-    path: '/staffUser', // the url
-    component: staffUser, // view rendered
+    path: '/CustomField', // the url
+    component: CustomField,
   },
   {
-    path: '/role', // the url
-    component: RolePage, // view rendered
+    path: '/Unit', // the url
+    component: Unit,
   },
   {
-    path: '/NewJournal', // the url
-    component: NewJournal, // view rendered
+    path: '/Bill', // the url
+    component: Bill,
+  },
+  {
+    path: '/ContractType', // the url
+    component: ContractType,
+  },
+  {
+    path: '/DebitNote', // the url
+    component: DebitNote,
   },
   {
     path: '/welcome', // the url
@@ -168,22 +213,17 @@ const routes = [
     component: Calendar,
   },
   {
-    path: '/chartofacc',
-    component: ChartOfAccounts,
+    path: '/ManageChartOfAccounts',
+    component: ManageChartofAccounts,
   },
   {
-    path: '/journalacc',
-    component: JournalAccount,
+    path: '/LedgerSummary',
+    component: LedgerSummary,
   },
   {
-    path: '/balance',
-    component: Balance,
-  },
-  {
-    path: '/trialbalance',
+    path: '/TrialBalance',
     component: TrialBalance,
   },
-  
   {
     path: '/settings-profile',
     component: ProfileSettings,

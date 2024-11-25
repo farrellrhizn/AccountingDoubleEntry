@@ -1,6 +1,7 @@
 /** Icons are imported separatly to reduce build time */
-import BellIcon from '@heroicons/react/24/outline/BellIcon'
+// import BellIcon from '@heroicons/react/24/outline/BellIcon'
 import DocumentTextIcon from '@heroicons/react/24/outline/DocumentTextIcon'
+import { CubeIcon } from '@heroicons/react/24/outline';
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
 import TableCellsIcon from '@heroicons/react/24/outline/TableCellsIcon'
 import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
@@ -18,13 +19,6 @@ import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
 import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
-import ScaleIcon from '@heroicons/react/24/outline/ScaleIcon'
-import ChartBarSquareIcon from '@heroicons/react/24/outline/ChartBarSquareIcon' 
-import ClipBoardIcon from '@heroicons/react/24/outline/ClipboardIcon'
-import BookOpenIcon from '@heroicons/react/24/outline/BookOpenIcon'
-import DocumentChartBarIcon from '@heroicons/react/24/outline/DocumentChartBarIcon'
-import BuildingLibraryIcon from '@heroicons/react/24/outline/BuildingLibraryIcon'
-import { BanknotesIcon, CreditCardIcon } from '@heroicons/react/24/outline'
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -35,39 +29,13 @@ const routes = [
     icon: <Squares2X2Icon className={iconClasses}/>, 
     name: 'Dashboard'
   },
-
-
-  //   path: '/app/leads', // url
-  //   icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-  //   name: 'Leads', // name that appear in Sidebar
-  // },
-  // {
-  //   path: '/app/transactions', // url
-  //   icon: <CurrencyDollarIcon className={iconClasses}/>, // icon component
-  //   name: 'Transactions', // name that appear in Sidebar
-  // },
-  // {
-  //   path: '/app/charts', // url
-  //   icon: <ChartBarIcon className={iconClasses}/>, // icon component
-  //   name: 'Analytics', // name that appear in Sidebar
-  // },
-  // {
-  //   path: '/app/integration', // url
-  //   icon: <BoltIcon className={iconClasses}/>, // icon component
-  //   name: 'Integration', // name that appear in Sidebar
-  // },
-  // {
-  //   path: '/app/calendar', // url
-  //   icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
-  //   name: 'Calendar', // name that appear in Sidebar
-  // },
   {
-    path: '', //no url needed as this has submenu
-    icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
+    path: '/app/Staff', // url
+    icon: <UserIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Staff', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/StaffUser',
+        path: '/app/User',
         icon: <UserIcon className={submenuIconClasses}/>,
         name: 'User',
       },
@@ -75,34 +43,34 @@ const routes = [
         path: '/app/Role',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Role',
-      }
+      },
     ]
-    },
-  {
-    path: '/app/ProductStock', // url
-    icon: <TableCellsIcon className={iconClasses}/>, // icon component
-    name: 'Product Stock', // name that appear in Sidebar
   },
   {
-    path: '/app/VendorAcc', // url
-    icon: <WalletIcon className={iconClasses}/>, // icon component
-    name: 'Vendor', // name that appear in Sidebar
+    path: '/app/ProductService', // url
+    icon: <CubeIcon className={iconClasses}/>, // icon component
+    name: 'Product & Service', // name that appear in Sidebar
   },
   {
-    path: '', //no url needed as this has submenu
-    icon: <UsersIcon className={`${iconClasses} inline` }/>, // icon component
+    path: '/app/Customers', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Customers', // name that appear in Sidebar
+  },
+  {
+    path: '/app/Presale', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Presale', // name that appear in Sidebar
     submenu : [
       {
         path: '/app/Proposal',
-        icon: <BookOpenIcon className={submenuIconClasses}/>,
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Proposal',
       },
       {
         path: '/app/',
         icon: <UsersIcon className={submenuIconClasses}/>,
         name: 'Retainers',
-      }
+      },
     ]
     },
     {
@@ -143,7 +111,7 @@ const routes = [
           name: 'Credit Note',
         }
       ]
-      },
+    },
       {
         path: '', //no url needed as this has submenu
         icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
@@ -177,23 +145,116 @@ const routes = [
         ]
       },    
   {
-    path: '/app/Contract', // url
-    icon: <CodeBracketSquareIcon className={iconClasses}/>, // icon component
-    name: 'Contract', // name that appear in Sidebar
+    path: '/app/Banking', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Banking', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Account',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Account',
+      },
+      {
+        path: '/app/Transfer',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Transfer',
+      },
+    ]
   },
   {
-    path: '/app/AssetsPage', // url
-    icon: <WalletIcon className={iconClasses}/>, // icon component
-    name: 'Assets Page', // name that appear in Sidebar
+    path: '/app/Income', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Income', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Invoice',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Invoice',
+      },
+      {
+        path: '/app/Revenue',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Revenue',
+      },
+      {
+        path: '/app/CreditNote',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Credit Note',
+      },
+    ]
   },
   {
-    path: '/app/OrderPage', // url
+    path: '/app/Expense', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Expense', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Bill',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Bill',
+      },
+      {
+        path: '/app/Payment',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Payment',
+      },
+      {
+        path: '/app/DebitNote',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Debit Note',
+      },
+    ]
+  },
+  {
+    path: '/app/DoubleEntry', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Double Entry', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/ManageChartOfAccounts',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Chart of Accounts',
+      },
+      {
+        path: '/app/transactions',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Journal Account',
+      },
+      {
+        path: '/app/LedgerSummary',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Ledger Summary',
+      },
+      {
+        path: '/app/transactions',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Balance Sheet',
+      },
+      {
+        path: '/app/TrialBalance',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Trial Balance',
+      },
+    ]
+  },
+  {
+    path: '/app/BudgetPlanners', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-    name: 'Order Page', // name that appear in Sidebar
+    name: 'Budget Planner', // name that appear in Sidebar
   },
   {
-    path: '', //no url needed as this has submenu
-    icon: <BookOpenIcon className={`${iconClasses} inline` }/>, // icon component
+    path: '/app/Goals', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Goals', // name that appear in Sidebar
+  },
+  {
+    path: '/app/NotificationTemplate', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Notification Template', // name that appear in Sidebar
+  },
+  {
+    path: '/app/Report', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Report', // name that appear in Sidebar
     submenu : [
       {
@@ -203,7 +264,7 @@ const routes = [
       },
       {
         path: '/app/AccountStatement',
-        icon: <UsersIcon className={submenuIconClasses}/>,
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Account Statement',
       },
       {
@@ -221,9 +282,71 @@ const routes = [
         icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
         name: 'Income VS Expense',
       },
+      {
+        path: '/app/TaxSumarry',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Tax Summary',
+      },
+      {
+        path: '/app/CashFlow',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Cash Flow',
+      },
+      {
+        path: '/app/InvoiceSummary',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Invoice Summary',
+      },
+      {
+        path: '/app/BillSummary',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Bill Summary',
+      },
+      {
+        path: '/app/ProductStock',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Product Stock',
+      },
     ]
   },
-  
+  {
+    path: '/app/Constant', // url
+    icon: <CurrencyDollarIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Constant', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/Taxes',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Taxes',
+      },
+      {
+        path: '/app/Category',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Catagory',
+      },
+      {
+        path: '/app/Unit',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Unit',
+      },
+      {
+        path: '/app/CustomField',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Custom Field',
+      },
+      {
+        path: '/app/ContractType',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Contract Type',
+      },
+    ]
+  },
+  {
+    path: '/app/calendar', // url
+    icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
+    name: 'Calendar', // name that appear in Sidebar
+  },
+
   // {
   //   path: '', //no url needed as this has submenu
   //   icon: <DocumentDuplicateIcon className={`${iconClasses} inline` }/>, // icon component
@@ -256,28 +379,28 @@ const routes = [
   //     },
   //   ]
   // },
-  {
-    path: '', //no url needed as this has submenu
-    icon: <Cog6ToothIcon className={`${iconClasses} inline` }/>, // icon component
-    name: 'Settings', // name that appear in Sidebar
-    submenu : [
-      {
-        path: '/app/settings-profile', //url
-        icon: <UserIcon className={submenuIconClasses}/>, // icon component
-        name: 'Profile', // name that appear in Sidebar
-      },
-      {
-        path: '/app/settings-billing',
-        icon: <WalletIcon className={submenuIconClasses}/>,
-        name: 'Billing',
-      },
-      {
-        path: '/app/settings-team', // url
-        icon: <UsersIcon className={submenuIconClasses}/>, // icon component
-        name: 'Team Members', // name that appear in Sidebar
-      },
-    ]
-  },
+  // {
+  //   path: '', //no url needed as this has submenu
+  //   icon: <Cog6ToothIcon className={`${iconClasses} inline` }/>, // icon component
+  //   name: 'Settings', // name that appear in Sidebar
+  //   submenu : [
+  //     {
+  //       path: '/app/settings-profile', //url
+  //       icon: <UserIcon className={submenuIconClasses}/>, // icon component
+  //       name: 'Profile', // name that appear in Sidebar
+  //     },
+  //     {
+  //       path: '/app/settings-billing',
+  //       icon: <WalletIcon className={submenuIconClasses}/>,
+  //       name: 'Billing',
+  //     },
+  //     {
+  //       path: '/app/settings-team', // url
+  //       icon: <UsersIcon className={submenuIconClasses}/>, // icon component
+  //       name: 'Team Members', // name that appear in Sidebar
+  //     },
+  //   ]
+  // },
   // {
   //   path: '', //no url needed as this has submenu
   //   icon: <DocumentTextIcon className={`${iconClasses} inline` }/>, // icon component

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import TitleCard from "../../../components/Cards/TitleCard";
+import TitleCard from "../../../components/Cards/TitleCard"
 
 const userSourceData = [
     {date : "Jan 28, 2023", customer : "Ida F Mullen", amountdue : "$100.00"},
@@ -56,25 +55,8 @@ function UserChannels() {
                     </tbody>
                 </table>
             </div>
-            <div className="flex justify-between mt-4">
-                <button 
-                    className="btn btn-md bg-primary text-white hover:bg-secondary" 
-                    onClick={handlePrevPage} 
-                    disabled={currentPage === 0}
-                >
-                    Previous
-                </button>
-                <button 
-                    className="btn btn-md bg-primary text-white hover:bg-secondary" 
-                    onClick={handleNextPage} 
-                    disabled={(currentPage + 1) * itemsPerPage >= userSourceData.length}
-                >
-                    Next
-                </button>
-            </div>
         </TitleCard>
-    );
+    )
 }
 
-export default UserChannels;
-    
+export default UserChannels

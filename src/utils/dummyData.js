@@ -1,84 +1,145 @@
-const moment  = require("moment");
+const moment = require("moment");
 
-module.exports = Object.freeze({
-    CALENDAR_INITIAL_EVENTS : [
-        {title : "Product call", theme : "GREEN", startTime : moment().add(-12, 'd').startOf('day'), endTime : moment().add(-12, 'd').endOf('day')},
-        {title : "Meeting with tech team", theme : "PINK", startTime : moment().add(-8, 'd').startOf('day'), endTime : moment().add(-8, 'd').endOf('day')},
-        {title : "Meeting with Cristina", theme : "PURPLE", startTime : moment().add(-2, 'd').startOf('day'), endTime : moment().add(-2, 'd').endOf('day')},
-        {title : "Meeting with Alex", theme : "BLUE", startTime : moment().startOf('day'), endTime : moment().endOf('day')}, 
-        {title : "Product Call", theme : "GREEN", startTime : moment().startOf('day'), endTime : moment().endOf('day')},
-        {title : "Client Meeting", theme : "PURPLE", startTime : moment().startOf('day'), endTime : moment().endOf('day')},
-        {title : "Client Meeting", theme : "ORANGE", startTime : moment().add(3, 'd').startOf('day'), endTime : moment().add(3, 'd').endOf('day')},
-        {title : "Product meeting", theme : "PINK", startTime : moment().add(5, 'd').startOf('day'), endTime : moment().add(5, 'd').endOf('day')},
-        {title : "Sales Meeting", theme : "GREEN", startTime : moment().add(8, 'd').startOf('day'), endTime : moment().add(8, 'd').endOf('day')},
-        {title : "Product Meeting", theme : "ORANGE", startTime : moment().add(8, 'd').startOf('day'), endTime : moment().add(8, 'd').endOf('day')},
-        {title : "Marketing Meeting", theme : "PINK", startTime : moment().add(8, 'd').startOf('day'), endTime : moment().add(8, 'd').endOf('day')},
-        {title : "Client Meeting", theme : "GREEN", startTime : moment().add(8, 'd').startOf('day'), endTime : moment().add(8, 'd').endOf('day')},
-        {title : "Sales meeting", theme : "BLUE", startTime : moment().add(12, 'd').startOf('day'), endTime : moment().add(12, 'd').endOf('day')},
-        {title : "Client meeting", theme : "PURPLE", startTime : moment().add(16, 'd').startOf('day'), endTime : moment().add(16, 'd').endOf('day')},
-    ],
+const CALENDAR_INITIAL_EVENTS = [
+    { title: "Product call", theme: "GREEN", startTime: moment().add(-12, 'd').startOf('day'), endTime: moment().add(-12, 'd').endOf('day') },
+    { title: "Meeting with tech team", theme: "PINK", startTime: moment().add(-8, 'd').startOf('day'), endTime: moment().add(-8, 'd').endOf('day') },
+    { title: "Meeting with Cristina", theme: "PURPLE", startTime: moment().add(-2, 'd').startOf('day'), endTime: moment().add(-2, 'd').endOf('day') },
+    { title: "Meeting with Alex", theme: "BLUE", startTime: moment().startOf('day'), endTime: moment().endOf('day') }, 
+    { title: "Product Call", theme: "GREEN", startTime: moment().startOf('day'), endTime: moment().endOf('day') },
+    { title: "Client Meeting", theme: "PURPLE", startTime: moment().startOf('day'), endTime: moment().endOf('day') },
+    { title: "Client Meeting", theme: "ORANGE", startTime: moment().add(3, 'd').startOf('day'), endTime: moment().add(3, 'd').endOf('day') },
+    { title: "Product meeting", theme: "PINK", startTime: moment().add(5, 'd').startOf('day'), endTime: moment().add(5, 'd').endOf('day') },
+    { title: "Sales Meeting", theme: "GREEN", startTime: moment().add(8, 'd').startOf('day'), endTime: moment().add(8, 'd').endOf('day') },
+    { title: "Product Meeting", theme: "ORANGE", startTime: moment().add(8, 'd').startOf('day'), endTime: moment().add(8, 'd').endOf('day') },
+    { title: "Marketing Meeting", theme: "PINK", startTime: moment().add(8, 'd').startOf('day'), endTime: moment().add(8, 'd').endOf('day') },
+    { title: "Client Meeting", theme: "GREEN", startTime: moment().add(8, 'd').startOf('day'), endTime: moment().add(8, 'd').endOf('day') },
+    { title: "Sales meeting", theme: "BLUE", startTime: moment().add(12, 'd').startOf('day'), endTime: moment().add(12, 'd').endOf('day') },
+    { title: "Client meeting", theme: "PURPLE", startTime: moment().add(16, 'd').startOf('day'), endTime: moment().add(16, 'd').endOf('day') },
+];
 
-    RECENT_TRANSACTIONS : [
-        {name : "Alex", avatar : "https://reqres.in/img/faces/1-image.jpg", email : "alex@dashwind.com", location : "Paris", amount : 100, date : moment().endOf('day')},
-        {name : "Ereena", avatar : "https://reqres.in/img/faces/2-image.jpg", email : "ereena@dashwind.com", location : "London", amount : 190, date : moment().add(-1, 'd').endOf('day')},
-        {name : "John", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "jhon@dashwind.com", location : "Canada", amount : 112, date : moment().add(-1, 'd').endOf('day')},
-        {name : "Matrix", avatar : "https://reqres.in/img/faces/4-image.jpg", email : "matrix@dashwind.com", location : "Peru", amount : 111, date : moment().add(-1, 'd').endOf('day')},
-        {name : "Virat", avatar : "https://reqres.in/img/faces/5-image.jpg", email : "virat@dashwind.com", location : "London", amount : 190, date : moment().add(-2, 'd').endOf('day')},
-        {name : "Miya", avatar : "https://reqres.in/img/faces/6-image.jpg", email : "miya@dashwind.com", location : "Paris", amount : 230, date : moment().add(-2, 'd').endOf('day')},
-        {name : "Virat", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "virat@dashwind.com", location : "Canada", amount : 331, date : moment().add(-2, 'd').endOf('day')},
-        {name : "Matrix", avatar : "https://reqres.in/img/faces/1-image.jpg", email : "matrix@dashwind.com", location : "London", amount : 581, date : moment().add(-2, 'd').endOf('day')},
-        {name : "Ereena", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "ereena@dashwind.com", location : "Tokyo", amount : 151, date : moment().add(-2, 'd').endOf('day')},
-        {name : "John", avatar : "https://reqres.in/img/faces/2-image.jpg", email : "jhon@dashwind.com", location : "Paris", amount : 91, date : moment().add(-2, 'd').endOf('day')},
-        {name : "Virat", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "virat@dashwind.com", location : "Canada", amount : 161, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Matrix", avatar : "https://reqres.in/img/faces/4-image.jpg", email : "matrix@dashwind.com", location : "US", amount : 121, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Ereena", avatar : "https://reqres.in/img/faces/6-image.jpg", email : "jhon@dashwind.com", location : "Tokyo", amount : 713, date : moment().add(-3, 'd').endOf('day')},
-        {name : "John", avatar : "https://reqres.in/img/faces/2-image.jpg", email : "ereena@dashwind.com", location : "London", amount : 217, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Virat", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "virat@dashwind.com", location : "Paris", amount : 117, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Miya", avatar : "https://reqres.in/img/faces/7-image.jpg", email : "jhon@dashwind.com", location : "Canada", amount : 612, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Matrix", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "matrix@dashwind.com", location : "London", amount : 631, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Virat", avatar : "https://reqres.in/img/faces/2-image.jpg", email : "ereena@dashwind.com", location : "Tokyo", amount : 151, date : moment().add(-3, 'd').endOf('day')},
-        {name : "Ereena", avatar : "https://reqres.in/img/faces/3-image.jpg", email : "virat@dashwind.com", location : "Paris", amount : 617, date : moment().add(-3, 'd').endOf('day')},
+const RECENT_TRANSACTIONS = [
+    { id: 1, name: "Cash", type: "Asset", parentAccountName: "Current Assets", balance: 1000, status: "Active", date: moment().endOf('day') },
+    { id: 2, name: "Accounts Receivable", type: "Asset", parentAccountName: "Current Assets", balance: 1500, status: "Active", date: moment().add(-1, 'd').endOf('day') },
+    { id: 3, name: "Inventory", type: "Asset", parentAccountName: "Current Assets", balance: 2000, status: "Inactive", date: moment().add(-2, 'd').endOf('day') },
+    { id: 4, name: "Accounts Payable", type: "Liability", parentAccountName: "Current Liabilities", balance: 500, status: "Active", date: moment().add(-3, 'd').endOf('day') },
+    { id: 5, name: "Sales Revenue", type: "Income", parentAccountName: "Revenue", balance: 3000, status: "Active", date: moment().add(-4, 'd').endOf('day') },
+    { id: 6, name: "Service Revenue", type: "Income", parentAccountName: "Revenue", balance: 2500, status: "Inactive", date: moment().add(-5, 'd').endOf('day') },
+    { id: 7, name: "Retained Earnings", type: "Equity", parentAccountName: "Equity", balance: 10000, status: "Active", date: moment().add(-6, 'd').endOf('day') },
+    { id: 8, name: "Salaries Expense", type: "Expense", parentAccountName: "Operating Expenses", balance: 1200, status: "Active", date: moment().add(-7, 'd').endOf('day') },
+    { id: 9, name: "Rent Expense", type: "Expense", parentAccountName: "Operating Expenses", balance: 800, status: "Inactive", date: moment().add(-8, 'd').endOf('day') },
+    { id: 10, name: "Utilities Expense", type: "Expense", parentAccountName: "Operating Expenses", balance: 600, status: "Active", date: moment().add(-9, 'd').endOf('day') }
+];
 
-    ],
+const DUMMY_LEDGER_DATA = [
+    {
+        id: 1,
+        accountName: "Cash",
+        name: "John Doe",
+        transactionType: "Deposit",
+        transactionDate: "2024-01-01",
+        debit: 1000,
+        credit: 0,
+        balance: 1000,
+    },
+    {
+        id: 2,
+        accountName: "Cash",
+        name: "Jane Doe",
+        transactionType: "Withdrawal",
+        transactionDate: "2024-01-02",
+        debit: 0,
+        credit: 500,
+        balance: 500,
+    },
+];
 
-    JOURNAL_ACCOUNTS : [
-        {journalId: "#JUR00001", date: moment("2021-01-21"), amount: 200.00, description: "What this means is that for every recorded transaction"},
-        {journalId: "#JUR00002", date: moment("2021-01-20"), amount: 150.00, description: "What this means is that for every recorded transaction"},
-        {journalId: "#JUR00003", date: moment("2021-01-21"), amount: 500.00, description: "What this means is that for every recorded transaction"},
-        {journalId: "#JUR00004", date: moment("2021-01-19"), amount: 250.00, description: "What this means is that for every recorded transaction"},
-        {journalId: "#JUR00005", date: moment("2021-01-22"), amount: 100.00, description: "What this means is that for every recorded transaction"},
-    ],
+const TRIAL_BALANCE_DATA = [
+    { account: 'Petty Cash', code: '1065', debit: '$20.00', credit: '$110.00' },
+    { account: 'Inventory', code: '1510', debit: '$50.00', credit: '$0.00' },
+    { account: 'Accum.depreciation-Motor Vehicle', code: '1845', debit: '$0.00', credit: '$0.00' },
+    { account: 'Sales Income', code: '4010', debit: '$0.00', credit: '$110.00' },
+    { account: 'Cost of Sales- On Services', code: '5005', debit: '$220.25', credit: '$0.00' },
+    { account: 'Rent Paid', code: '5760', debit: '$200.00', credit: '$0.00' },
+];
 
-    BALANCE_SHEET : [
-        {account: "Assets", accountCode: null, total: null, 
-            children: [
-                {account: "Current Asset", accountCode: null, total: null, 
-                    children: [
-                        {account: "Petty Cash", accountCode: 1065, total: 90.00}]},
-                {account: "Total Current Asset", accountCode: null, total: 90.00 },
-                {account: "Inventory Asset", accountCode: null, total: null, 
-                    children: [
-                        {account: "Inventory", accountCode: 1510, total: -50.00}]},
-                {account: "Total Inventory Asset", accountCode: null, total: -50.00}]},
-        {account: "Total for Assets", accountCode: null, total: 40.00
-        }
-    ],
+const dummyProductData = [
+    {
+      name: "Bicycle parts",
+      code: "BC001CLE",
+      salesPrice: "$150.00",
+      purchasePrice: "$100.00",
+      tax: "CGST, SGST",
+      incomeAccount: "Business profits",
+      unit: "Inch",
+      openingStock: "19",
+      type: "Product",
+      createdAt: moment().subtract(5, 'days').endOf('day'),
+      updatedAt: moment().subtract(3, 'days').endOf('day'),
+    },
+    {
+      name: "Car engine",
+      code: "CE002AB",
+      salesPrice: "$5000.00",
+      purchasePrice: "$3500.00",
+      tax: "CGST, SGST",
+      incomeAccount: "Automobile profits",
+      unit: "Piece",
+      openingStock: "5",
+      type: "Product",
+      createdAt: moment().subtract(10, 'days').endOf('day'),
+      updatedAt: moment().subtract(2, 'days').endOf('day'),
+    },
+    // Tambahkan data dummy lainnya di sini
+  ];
 
-    DASHBOARD_ACC_BALANCE : [
-        {bank:'-', holdername:'Cash', balance: '$110,899.35'},
-        {bank:'ROUNDBANK', holdername:'Benjamin Adams', balance: '$113,843.32'},
-        {bank:'COBIZ BANK', holdername:'Chisom Latifat', balance: '$1,899.00'},
-        {bank:'US BANK, NA', holdername:'Earl Hane MD', balance: '$100,000.00'},
-        {bank:'Caldwell BANK', holdername:'Pearl Reed', balance: '$5,000.00'},
-        {bank:'Charity BANK', holdername:'Deborah Hawkins', balance: '$1,899.00'},
-        {bank:'US BANK, NA', holdername:'Earl Hane MD', balance: '$100,000.00'},
-        {bank:'COBIZ BANK', holdername:'Chisom Latifat', balance: '$1,899.00'},
-        {bank:'ROUNDBANK', holdername:'Benjamin Adams', balance: '$113,843.32'},
-        {bank:'Charity BANK', holdername:'Deborah Hawkins', balance: '$1,899.00'},
-        {bank:'-', holdername:'Cash', balance: '$110,899.35'},
-        {bank:'Caldwell BANK', holdername:'Pearl Reed', balance: '$5,000.00'},
-    ],
+    // Dummy customer data
+  const dummyCustomerData = [
+    {
+      name: "John Smith",
+      email: "john.smith@example.com",
+      phone: "+1234567890",
+      address: "123 Main St, Cityville",
+      companyName: "Smith Corp",
+      createdAt: moment().subtract(15, 'days').endOf('day'),
+      updatedAt: moment().subtract(2, 'days').endOf('day'),
+    },
+    {
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      phone: "+0987654321",
+      address: "456 Elm St, Townsville",
+      companyName: "Doe Enterprises",
+      createdAt: moment().subtract(20, 'days').endOf('day'),
+      updatedAt: moment().subtract(5, 'days').endOf('day'),
+    },
+  ];
+
+  // Create new customer
+  const createCustomer = (customer) => {
+    customer.createdAt = moment().endOf('day');
+    customer.updatedAt = moment().endOf('day');
+    dummyCustomerData.push(customer);
+  };
+
+  // Update customer
+  const updateCustomer = (index, updatedCustomer) => {
+    dummyCustomerData[index] = { ...dummyCustomerData[index], ...updatedCustomer, updatedAt: moment().endOf('day') };
+  };
     
+  const createProduct = (product) => {
+    product.createdAt = moment().endOf('day');
+    product.updatedAt = moment().endOf('day');
+    return product;
+  };
+  
+  const uploadProducts = (products) => {
+    return products.map(product => ({
+      ...product,
+      createdAt: moment().endOf('day'),
+      updatedAt: moment().endOf('day'),
+    }));
+  };
+
     PRODUCT_STOCK : [
         { name: "Bicycle parts", sku: "BC001CLE", quantity: 19 },
         { name: "Teagan Forbes", sku: "BC008ACC", quantity: 12 },
@@ -326,4 +387,15 @@ module.exports = Object.freeze({
         { date: "Jul 8, 2020", amount: "$1,000.00", description: "Ea amet voluptas ma" }
       ]
 
+module.exports = Object.freeze({
+    CALENDAR_INITIAL_EVENTS,
+    RECENT_TRANSACTIONS,
+    DUMMY_LEDGER_DATA,
+    TRIAL_BALANCE_DATA,
+    dummyProductData,
+    dummyCustomerData,
+    createCustomer,
+    updateCustomer,
+    createProduct,
+    uploadProducts,
 });

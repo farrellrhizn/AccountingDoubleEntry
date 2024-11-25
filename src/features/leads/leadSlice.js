@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+
+
 export const getLeadsContent = createAsyncThunk('/leads/content', async () => {
 	const response = await axios.get('/api/users?page=2', {})
 	return response.data;

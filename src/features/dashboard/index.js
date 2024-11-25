@@ -1,3 +1,4 @@
+
 import DashboardStats from "./components/DashboardStats";
 import AmountStats from "./components/AmountStats";
 import PageStats from "./components/PageStats";
@@ -146,6 +147,7 @@ function Dashboard() {
       </div>
     </>
   );
+
 }
 
-export default Dashboard;
+export default Dashboard
