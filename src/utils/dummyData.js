@@ -92,12 +92,12 @@ const DUMMY_LEDGER_DATA = [
 ];
 
 const TRIAL_BALANCE_DATA = [
-    { account: 'Petty Cash', code: '1065', debit: '$20.00', credit: '$110.00' },
-    { account: 'Inventory', code: '1510', debit: '$50.00', credit: '$0.00' },
-    { account: 'Accum.depreciation-Motor Vehicle', code: '1845', debit: '$0.00', credit: '$0.00' },
-    { account: 'Sales Income', code: '4010', debit: '$0.00', credit: '$110.00' },
-    { account: 'Cost of Sales- On Services', code: '5005', debit: '$220.25', credit: '$0.00' },
-    { account: 'Rent Paid', code: '5760', debit: '$200.00', credit: '$0.00' },
+  { account: 'Petty Cash', code: '1065', debit: '$20.00', credit: '$110.00' },
+  { account: 'Inventory', code: '1510', debit: '$50.00', credit: '$0.00' },
+  { account: 'Accum.depreciation-Motor Vehicle', code: '1845', debit: '$0.00', credit: '$0.00' },
+  { account: 'Sales Income', code: '4010', debit: '$0.00', credit: '$110.00' },
+  { account: 'Cost of Sales- On Services', code: '5005', debit: '$220.25', credit: '$0.00' },
+  { account: 'Rent Paid', code: '5760', debit: '$200.00', credit: '$0.00' },
 ];
 
 const dummyProductData = [
@@ -157,7 +157,9 @@ const dummyProductData = [
     customer.createdAt = moment().endOf('day');
     customer.updatedAt = moment().endOf('day');
     dummyCustomerData.push(customer);
+    return customer; // Return the newly created customer object
   };
+  
 
   // Update customer
   const updateCustomer = (index, updatedCustomer) => {
