@@ -43,7 +43,7 @@ const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
 const JournalAccount = lazy(() => import('../pages/protected/JournalAcc'))
 const Balance = lazy(() => import('../pages/protected/balance'))
-const TrialBalance = lazy(() => import('../pages/protected/TrialBalance'))
+const Tralbalan = lazy(() => import('../pages/protected/tralbalan'))
 const NewJournal = lazy(() => import('../pages/protected/newJournal'))
 const ProductStock = lazy(() => import('../pages/protected/ProductStock'))
 const ProductStockReport = lazy(() => import('../pages/protected/ProductStockReport'))
@@ -69,6 +69,7 @@ const InvoiceDetail = lazy(() => import('../pages/protected/InvoiceDetail'))
 const CreditDetail = lazy(() => import('../pages/protected/CreditDetail'))
 const JournalDetail = lazy(() => import('../pages/protected/JournalDetail'))
 const ContractDetail = lazy(() => import('../pages/protected/ContractDetail'))
+const Payment = lazy(() => import('../pages/protected/Payment'))
 
 const routes = [
   {
@@ -122,10 +123,6 @@ const routes = [
   {
     path: '/Balance', // the url
     component: Balance, // view rendered
-  },
-  {
-    path: '/TrialBalance', // the url
-    component: TrialBalance, // view rendered
   },
   {
     path: '/NewJournal', // the url
@@ -300,8 +297,8 @@ const routes = [
     component: LedgerSummary,
   },
   {
-    path: '/TrialBalance',
-    component: TrialBalance,
+    path: '/tralbalan',
+    component: Tralbalan,
   },
   {
     path: '/settings-profile',
@@ -338,6 +335,10 @@ const routes = [
   {
     path: '/blank',
     component: Blank,
+  },
+  {
+    path: '/Payment',
+    component: Payment,
   },
 ]
 

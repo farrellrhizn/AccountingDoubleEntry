@@ -28,6 +28,7 @@ import ClipBoardIcon from '@heroicons/react/24/outline/ClipboardIcon'
 import ScaleIcon from '@heroicons/react/24/outline/ScaleIcon'
 import DocumentChartBarIcon from '@heroicons/react/24/outline/DocumentChartBarIcon'
 
+
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
 
@@ -168,7 +169,7 @@ const routes = [
             name: 'Journal Accounts',
           },
           {
-            path: '/app/404',
+            path: '/app/LedgerSummary',
             icon: <ClipBoardIcon className={submenuIconClasses}/>,
             name: 'Ledger Summary',
           },
@@ -178,8 +179,8 @@ const routes = [
             name: 'Balance Sheets',
           },
           {
-            path: '/app/TrialBalance',
-            icon: <DocumentChartBarIcon className={submenuIconClasses}/>,
+            path: '/app/Tralbalan',
+            icon: <DocumentChartBarIcon className={submenuIconClasses} />,
             name: 'Trial Balance',
           },
         ]
@@ -208,6 +209,11 @@ const routes = [
     path: '/app/OrderPage', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
     name: 'Order', // name that appear in Sidebar
+  },
+  {
+    path: '/app/NotificationTemplate', // url
+    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    name: 'Notification Template', // name that appear in Sidebar
   },
   {
     path: '', //no url needed as this has submenu
