@@ -12,7 +12,6 @@ function ManageRetainers() {
 
     const tableData = [
         { id: 1, retainer: '#RET00001', customer: 'Keire', category: 'Insurance', issueDate: 'Aug 17, 2022', status: 'Partially Paid' },
-        // Add more rows here
     ];
 
     const handleExport = () => {

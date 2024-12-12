@@ -1,118 +1,77 @@
-import React, { useState } from "react";
-import { createCustomer } from "../../utils/dummyData";
+import React, { useState } from 'react';
 
-const CreateCustomerModal = ({ setCreateModalOpen, customers, setCustomers }) => {
-  const [customerData, setCustomerData] = useState({
-    name: "",
-    contact: "",
-    email: "",
-    balance: "",
-    lastLogin: "",
-  });
+const CreateCustomerModal = ({ isOpen, onClose }) => {
+    // State untuk form
+    const [name, setName] = useState('');
+    const [code, setCode] = useState('');
+    const [accountType, setAccountType] = useState('');
+    const [isEnabled, setIsEnabled] = useState(false);
+    const [description, setDescription] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerData({ ...customerData, [name]: value });
-  };
+    if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newCustomer = createCustomer(customerData);
-    setCustomers([...customers, newCustomer]);
-    setCreateModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setCreateModalOpen(false);
-  };
-
-  return (
-    <div className="fixed z-10 inset-0 overflow-y-auto">
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-auto">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+                <h2 className="text-xl font-semibold mb-4">Create Customer</h2>
+                <div className="mb-4">
+                    <label className="block mb-1">Name</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1">Code</label>
+                    <input
+                        type="text"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1">Customer Type</label>
+                    <select
+                        value={accountType}
+                        onChange={(e) => setAccountType(e.target.value)}
+                        className="input input-bordered w-full"
+                    >
+                        <option value="">Select</option>
+                        <option value="Type1">Type1</option>
+                        <option value="Type2">Type2</option>
+                    </select>
+                </div>
+                <div className="mb-4 flex items-center">
+                    <input
+                        type="checkbox"
+                        checked={isEnabled}
+                        onChange={(e) => setIsEnabled(e.target.checked)}
+                        className="mr-2"
+                    />
+                    <label>Is Enabled</label>
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1">Description</label>
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="input input-bordered w-full"
+                    ></textarea>
+                </div>
+                <div className="flex justify-end space-x-2">
+                    <button onClick={onClose} className="btn btn-outline">
+                        Cancel
+                    </button>
+                    <button onClick={onClose} className="btn btn-primary">
+                        Create
+                    </button>
+                </div>
+            </div>
         </div>
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
-          <form onSubmit={handleSubmit} className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                name="name"
-                type="text"
-                required
-                value={customerData.name}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Contact</label>
-              <input
-                name="contact"
-                type="text"
-                required
-                value={customerData.contact}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                name="email"
-                type="email"
-                required
-                value={customerData.email}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Balance</label>
-              <input
-                name="balance"
-                type="number"
-                required
-                value={customerData.balance}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Last Login</label>
-              <input
-                name="lastLogin"
-                type="date"
-                value={customerData.lastLogin}
-                onChange={handleInputChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </div>
-
-            <div className="mt-4 sm:mt-6">
-                <button
-                  type="submit"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:text-sm"
-                >
-                  Create Customer
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-500 text-base font-medium text-white hover:bg-gray-600 sm:text-sm mt-2"
-                >
-                  Cancel
-                </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default CreateCustomerModal;

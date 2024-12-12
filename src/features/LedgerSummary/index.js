@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import moment from 'moment';
 import { CloudArrowDownIcon, FunnelIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import TitleCard from "../../components/Cards/TitleCard";
-import dummyData from "../../utils/dummyData";
+const dummyData = require('../../utils/dummyData');
 
 const TopSideButtons = ({ applyDateFilter, removeFilter }) => {
     const [startDate, setStartDate] = useState("");

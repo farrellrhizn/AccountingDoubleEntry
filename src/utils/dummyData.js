@@ -111,8 +111,6 @@ const dummyProductData = [
       unit: "Inch",
       openingStock: "19",
       type: "Product",
-      createdAt: moment().subtract(5, 'days').endOf('day'),
-      updatedAt: moment().subtract(3, 'days').endOf('day'),
     },
     {
       name: "Car engine",
@@ -124,10 +122,7 @@ const dummyProductData = [
       unit: "Piece",
       openingStock: "5",
       type: "Product",
-      createdAt: moment().subtract(10, 'days').endOf('day'),
-      updatedAt: moment().subtract(2, 'days').endOf('day'),
     },
-    // Tambahkan data dummy lainnya di sini
   ];
 
     // Dummy customer data
@@ -138,8 +133,6 @@ const dummyProductData = [
       phone: "+1234567890",
       address: "123 Main St, Cityville",
       companyName: "Smith Corp",
-      createdAt: moment().subtract(15, 'days').endOf('day'),
-      updatedAt: moment().subtract(2, 'days').endOf('day'),
     },
     {
       name: "Jane Doe",
@@ -147,38 +140,10 @@ const dummyProductData = [
       phone: "+0987654321",
       address: "456 Elm St, Townsville",
       companyName: "Doe Enterprises",
-      createdAt: moment().subtract(20, 'days').endOf('day'),
-      updatedAt: moment().subtract(5, 'days').endOf('day'),
     },
   ];
 
-  // Create new customer
-  const createCustomer = (customer) => {
-    customer.createdAt = moment().endOf('day');
-    customer.updatedAt = moment().endOf('day');
-    dummyCustomerData.push(customer);
-    return customer; // Return the newly created customer object
-  };
-  
-
-  // Update customer
-  const updateCustomer = (index, updatedCustomer) => {
-    dummyCustomerData[index] = { ...dummyCustomerData[index], ...updatedCustomer, updatedAt: moment().endOf('day') };
-  };
-    
-  const createProduct = (product) => {
-    product.createdAt = moment().endOf('day');
-    product.updatedAt = moment().endOf('day');
-    return product;
-  };
-  
-  const uploadProducts = (products) => {
-    return products.map(product => ({
-      ...product,
-      createdAt: moment().endOf('day'),
-      updatedAt: moment().endOf('day'),
-    }));
-  };
+ 
   
  
   const PRODUCT_STOCK = [
@@ -452,8 +417,4 @@ module.exports = Object.freeze({
     ROLE_DATA,
     TRANSACTION_DATA,
     ACCOUNTSTATEMENT_DATA,
-    createCustomer,
-    updateCustomer,
-    createProduct,
-    uploadProducts,
 });

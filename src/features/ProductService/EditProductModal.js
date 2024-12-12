@@ -22,7 +22,7 @@ const EditProductModal = ({ product, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-auto">
         <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="mb-4">
+          <div className="mb-1">
             <label className="block text-sm font-medium text-gray-700">Name</label>
             <input 
               type="text" 
