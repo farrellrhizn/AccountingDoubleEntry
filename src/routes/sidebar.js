@@ -1,24 +1,14 @@
 /** Icons are imported separatly to reduce build time */
 // import BellIcon from '@heroicons/react/24/outline/BellIcon'
-import DocumentTextIcon from '@heroicons/react/24/outline/DocumentTextIcon'
-import { CubeIcon } from '@heroicons/react/24/outline';
+import { BellIcon, CubeIcon, DocumentTextIcon, ShoppingCartIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
 import TableCellsIcon from '@heroicons/react/24/outline/TableCellsIcon'
 import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
-import CodeBracketSquareIcon from '@heroicons/react/24/outline/CodeBracketSquareIcon'
-import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon'
-import ExclamationTriangleIcon from '@heroicons/react/24/outline/ExclamationTriangleIcon'
-import CalendarDaysIcon from '@heroicons/react/24/outline/CalendarDaysIcon'
 import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon'
 import UserIcon from '@heroicons/react/24/outline/UserIcon'
-import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
-import BoltIcon from '@heroicons/react/24/outline/BoltIcon'
-import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
 import CurrencyDollarIcon from '@heroicons/react/24/outline/CurrencyDollarIcon'
 import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
-import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
-import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
 import BuildingLibraryIcon from '@heroicons/react/24/outline/BuildingLibraryIcon'
 import CreditCardIcon from '@heroicons/react/24/outline/CreditCardIcon'
 import BanknotesIcon from '@heroicons/react/24/outline/BanknotesIcon'
@@ -27,7 +17,7 @@ import ChartBarSquareIcon from '@heroicons/react/24/outline/ChartBarSquareIcon'
 import ClipBoardIcon from '@heroicons/react/24/outline/ClipboardIcon'
 import ScaleIcon from '@heroicons/react/24/outline/ScaleIcon'
 import DocumentChartBarIcon from '@heroicons/react/24/outline/DocumentChartBarIcon'
-
+import BuildingStorefrontIcon from '@heroicons/react/24/outline/BuildingStorefrontIcon';
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -67,12 +57,12 @@ const routes = [
   },
   {
     path: '/app/Customers', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <UserIcon className={iconClasses}/>, // icon component
     name: 'Customers', // name that appear in Sidebar
   },
   {
     path: '/app/VendorAcc', // url
-    icon: <WalletIcon className={iconClasses}/>, // icon component
+    icon: <BuildingStorefrontIcon className={iconClasses}/>, // icon component
     name: 'Vendor', // name that appear in Sidebar}
   },
   {
@@ -187,32 +177,32 @@ const routes = [
       },    
   {
     path: '/app/BudgetPlanners', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <CreditCardIcon className={iconClasses}/>, // icon component
     name: 'Budget Planner', // name that appear in Sidebar
   },
   {
     path: '/app/Contract', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <DocumentTextIcon className={iconClasses}/>, // icon component
     name: 'Contract', // name that appear in Sidebar
   },
   {
     path: '/app/Goals', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <TrophyIcon className={iconClasses}/>, // icon component
     name: 'Goals', // name that appear in Sidebar
   },
   {
     path: '/app/AssetPage', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <BanknotesIcon className={iconClasses}/>, // icon component
     name: 'Assets', // name that appear in Sidebar
   },
   {
     path: '/app/OrderPage', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <ShoppingCartIcon className={iconClasses}/>, // icon component
     name: 'Order', // name that appear in Sidebar
   },
   {
     path: '/app/NotificationTemplate', // url
-    icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+    icon: <BellIcon className={iconClasses}/>, // icon component
     name: 'Notification Template', // name that appear in Sidebar
   },
   {
